@@ -24,7 +24,15 @@ def main():
 
     combat.start()
 
-    print(combat)
+    print(combat.current_combatant.name)
+
+    combat.next_turn()
+
+    print(combat.current_combatant.name)
+
+    combat.next_turn()
+
+    print(combat.current_combatant.name)
 
 
 if __name__ == "__main__":

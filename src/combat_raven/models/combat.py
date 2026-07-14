@@ -31,5 +31,24 @@ class Combat:
         )
 
         self.current_round = 1
-        self.current_turn = 0
+        self.current_turn_index = 0
         self.started = True
+
+    @property
+    def current_combatant(self) -> Combatant:
+        """
+        Returns the combatant whose turn it currently is.
+        """
+
+        return self.combatants[self.current_turn_index]
+    
+    def next_turn(self) -> None:
+        """
+        Advances to the next combatant's turn.
+        """
+        self.current_turn_index += 1
+
+        if self.current_turn_index >= len(self.combatants):
+            self.current_turn_index = 0
+            self.current_round += 1
+    
