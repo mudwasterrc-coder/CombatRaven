@@ -1,5 +1,5 @@
-from models.combat import Combat
-from models.combatant import Combatant
+from combat_raven.models.combat import Combat
+from combat_raven.models.combatant import Combatant
 
 
 def main():

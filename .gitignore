@@ -1,9 +1,4 @@
 __pycache__/
-*.py[cod]
-*.sqlite3
+*.pyc
 .venv/
-venv/
-.env
-.pytest_cache/
-.coverage
-htmlcov/
+.vscode/

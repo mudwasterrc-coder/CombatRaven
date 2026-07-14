@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from models.combatant import Combatant 
+from combat_raven.models.combatant import Combatant 
 
 @dataclass
 class Combat:
