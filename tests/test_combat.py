@@ -60,3 +60,32 @@ def test_next_turn_advances_new_current_combatants_effects():
 
     assert combat.current_combatant is goblin
     assert goblin.effects[0].remaining_rounds == 1
+
+def test_next_turn_restores_current_combatants_reaction():
+    fighter = Combatant(
+        name="Fighter",
+        max_hp=30,
+        current_hp=30,
+        initiative=20,
+    )
+
+    goblin = Combatant(
+        name="Goblin",
+        max_hp=7,
+        current_hp=7,
+        initiative=10,
+    )
+
+    goblin.use_reaction()
+
+    combat = Combat()
+
+    combat.add_combatant(fighter)
+    combat.add_combatant(goblin)
+
+    combat.start()
+
+    combat.next_turn()
+
+    assert combat.current_combatant is goblin
+    assert goblin.can_react() is True

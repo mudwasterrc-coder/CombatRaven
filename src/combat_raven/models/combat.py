@@ -53,4 +53,5 @@ class Combat:
             self.current_round += 1
 
         self.current_combatant.advance_effects()
+        self.current_combatant.reset_reaction()
     
