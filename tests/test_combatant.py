@@ -116,3 +116,17 @@ def test_expired_effects_are_removed():
 
     assert fighter.has_effect("Bless") is False
     assert len(fighter.effects) == 0
+
+def test_combatant_can_use_reaction():
+    fighter = Combatant(
+        name="Fighter",
+        max_hp=30,
+        current_hp=30,
+        initiative=15,
+    )
+
+    assert fighter.can_react() is True
+
+    fighter.use_reaction()
+
+    assert fighter.can_react() is False

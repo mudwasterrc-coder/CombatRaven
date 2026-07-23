@@ -61,4 +61,23 @@ class Combatant:
             for effect in self.effects
             if effect.remaining_rounds > 0  
         ]
-        
+
+    reaction_available: bool = True
+
+    def can_react(self) -> bool:
+        """
+        Checks if the combatant can use a reaction.
+        """
+        return self.reaction_available
+
+    def use_reaction(self) -> None:
+        """
+        Marks the combatant's reaction as used for the current round.
+        """
+        self.reaction_available = False
+
+    def reset_reaction(self) -> None:
+        """
+        Resets the combatant's reaction availability for the next round.
+        """
+        self.reaction_available = True
