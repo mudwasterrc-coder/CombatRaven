@@ -51,4 +51,6 @@ class Combat:
         if self.current_turn_index >= len(self.combatants):
             self.current_turn_index = 0
             self.current_round += 1
+
+        self.current_combatant.advance_effects()
     
