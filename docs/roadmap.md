@@ -30,3 +30,23 @@
 - Initiative editing
 - Encounter serialization
 - GUI
+
+## Completed
+
+- [x] Combat coordinator
+- [x] Initiative order
+- [x] Turn progression
+- [x] Round tracking
+- [x] Active effects
+- [x] Effect expiration
+- [x] Reaction tracking
+- [x] Reaction refresh
+- [x] Concentration state
+
+## Next
+
+- [ ] Concentration effects
+- [ ] Saving throws
+- [ ] Conditions
+- [ ] Actions
+- [ ] Attack resolution
