@@ -130,3 +130,21 @@ def test_combatant_can_use_reaction():
     fighter.use_reaction()
 
     assert fighter.can_react() is False
+
+def test_combatant_can_start_and_end_concentration():
+    fighter = Combatant(
+        name="Fighter",
+        max_hp=30,
+        current_hp=30,
+        initiative=15,
+    )
+
+    assert fighter.is_concentrating() is False
+
+    fighter.start_concentration()
+
+    assert fighter.is_concentrating() is True
+
+    fighter.end_concentration()
+
+    assert fighter.is_concentrating() is False

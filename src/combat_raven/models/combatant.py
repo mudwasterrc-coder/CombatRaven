@@ -15,6 +15,9 @@ class Combatant:
     max_hp: int
 
     effects: list[Effect] = field(default_factory=list)
+
+    _reaction_available: bool = field(default=True, init=False, repr=False)
+    _concentrating: bool = field(default=False, init=False, repr=False)
     
     def damage(self, amount: int) -> None:
         """
@@ -62,22 +65,38 @@ class Combatant:
             if effect.remaining_rounds > 0  
         ]
 
-    reaction_available: bool = True
-
     def can_react(self) -> bool:
         """
         Checks if the combatant can use a reaction.
         """
-        return self.reaction_available
+        return self._reaction_available
 
     def use_reaction(self) -> None:
         """
         Marks the combatant's reaction as used for the current round.
         """
-        self.reaction_available = False
+        self._reaction_available = False
 
     def reset_reaction(self) -> None:
         """
         Resets the combatant's reaction availability for the next round.
         """
-        self.reaction_available = True
+        self._reaction_available = True
+
+    def is_concentrating(self) -> bool:
+        """
+        Checks if the combatant is currently concentrating on any effect.
+        """
+        return self._concentrating
+
+    def start_concentration(self) -> None:
+        """
+        Marks the combatant as concentrating on an effect.
+        """
+        self._concentrating = True
+
+    def end_concentration(self) -> None:
+        """
+        Marks the combatant as no longer concentrating on any effect.
+        """
+        self._concentrating = False
