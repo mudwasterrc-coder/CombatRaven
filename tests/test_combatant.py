@@ -139,12 +139,42 @@ def test_combatant_can_start_and_end_concentration():
         initiative=15,
     )
 
-    assert fighter.is_concentrating() is False
+    bless = Effect.from_template(
+        EffectTemplate(
+            name="Bless",
+            default_duration=10,
+            concentration=True,
+        )
+    )
 
-    fighter.start_concentration()
+    fighter.start_concentration(bless)
 
-    assert fighter.is_concentrating() is True
+    assert fighter.is_concentrating()
 
     fighter.end_concentration()
 
+    assert not fighter.is_concentrating()
+    assert fighter.concentration_effects() == []
+
+def test_combatant_can_concentrate_on_an_effect():
+    fighter = Combatant(
+        name="Fighter",
+        max_hp=30,
+        current_hp=30,
+        initiative=15,
+    )
+
+    bless_template = EffectTemplate(
+            name="Bless",
+            default_duration=10,
+            concentration=True,
+        )
+
+    bless = Effect.from_template(bless_template)
+
     assert fighter.is_concentrating() is False
+
+    fighter.start_concentration(bless)
+
+    assert fighter.is_concentrating() is True
+    assert fighter.concentration_effects() == [bless]

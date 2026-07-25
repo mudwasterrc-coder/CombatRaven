@@ -17,7 +17,12 @@ class Combatant:
     effects: list[Effect] = field(default_factory=list)
 
     _reaction_available: bool = field(default=True, init=False, repr=False)
-    _concentrating: bool = field(default=False, init=False, repr=False)
+
+    _concentration_effects: list[Effect] = field(
+        default_factory=list, 
+        init=False,
+        repr=False 
+    )
     
     def damage(self, amount: int) -> None:
         """
@@ -87,16 +92,24 @@ class Combatant:
         """
         Checks if the combatant is currently concentrating on any effect.
         """
-        return self._concentrating
+        return len(self._concentration_effects) > 0
 
-    def start_concentration(self) -> None:
+    def start_concentration(self, effect: Effect) -> None:
         """
         Marks the combatant as concentrating on an effect.
         """
-        self._concentrating = True
+        self._concentration_effects.append(effect)
+
+    @property
+    def concentration_effects(self) -> tuple[Effect, ...]:
+        """
+        Returns the effects the combatant is currently concentrating on.
+        """
+        return tuple(self._concentration_effects)
+        
 
     def end_concentration(self) -> None:
         """
-        Marks the combatant as no longer concentrating on any effect.
+       Ends concentration on all effects.
         """
-        self._concentrating = False
+        self._concentration_effects.clear()
