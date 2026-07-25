@@ -96,8 +96,9 @@ class Combatant:
 
     def start_concentration(self, effect: Effect) -> None:
         """
-        Marks the combatant as concentrating on an effect.
+        Starts concentration on an effect, replacing any existing concentration.
         """
+        self._concentration_effects.clear()
         self._concentration_effects.append(effect)
 
     @property
