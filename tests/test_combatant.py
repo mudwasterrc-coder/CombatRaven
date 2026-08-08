@@ -208,3 +208,28 @@ def test_starting_a_new_concentration_replaces_the_previous_one():
 
     assert fighter.is_concentrating()
     assert fighter.concentration_effects == (fly,)
+
+def test_ending_concentration_removes_the_concentrated_effect():
+    fighter = Combatant(
+        name="Fighter",
+        max_hp=30,
+        current_hp=30,
+        initiative=15,
+    )
+
+    bless = Effect.from_template(
+        EffectTemplate(
+            name="Bless",
+            default_duration=10,
+            concentration=True,
+        )
+    )
+
+    fighter.add_effect(bless)
+    fighter.start_concentration(bless)
+
+    fighter.end_concentration()
+
+    assert fighter.is_concentrating() is False
+    assert fighter.concentration_effects == ()
+    assert fighter.effects == []

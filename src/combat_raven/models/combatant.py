@@ -111,6 +111,11 @@ class Combatant:
 
     def end_concentration(self) -> None:
         """
-       Ends concentration on all effects.
+       Ends concentration on all concentration effects.
         """
+
+        for effect in self._concentration_effects:
+            if effect in self.effects:
+                self.effects.remove(effect)
+                
         self._concentration_effects.clear()
