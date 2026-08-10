@@ -13,6 +13,7 @@ class Combatant:
     initiative: int
     current_hp: int
     max_hp: int
+    legendary_action_limit: int = 0
 
     effects: list[Effect] = field(default_factory=list)
 
@@ -23,6 +24,18 @@ class Combatant:
         init=False,
         repr=False 
     )
+
+    _legendary_actions_used: int = field(
+        default=0,
+        init=False,
+        repr=False 
+    )
+    @property
+    def legendary_actions_used(self) -> int:
+        """
+        Returns the number of legendary actions used during the current round.
+        """
+        return self._legendary_actions_used
     
     def damage(self, amount: int) -> None:
         """
@@ -88,6 +101,31 @@ class Combatant:
         """
         self._reaction_available = True
 
+    def use_legendary_action(self) -> bool:
+        """
+        Uses one legendary action if one is available.
+
+        Returns True if the action was successfully used, or False if no legendary actions are available.
+        """
+
+        if not self.can_use_legendary_action():
+            return False
+        
+        self._legendary_actions_used += 1
+        return True
+
+    def reset_legendary_actions(self) -> None:
+        """
+        Resets legendary actions for the next round.
+        """
+        self._legendary_actions_used = 0
+
+    def can_use_legendary_action(self) -> bool:
+        """
+        Returns True if the combatant has a legendary action available to use.
+        """
+        return self._legendary_actions_used < self.legendary_action_limit
+
     def is_concentrating(self) -> bool:
         """
         Checks if the combatant is currently concentrating on any effect.
@@ -117,5 +155,5 @@ class Combatant:
         for effect in self._concentration_effects:
             if effect in self.effects:
                 self.effects.remove(effect)
-                
+
         self._concentration_effects.clear()

@@ -89,3 +89,40 @@ def test_next_turn_restores_current_combatants_reaction():
 
     assert combat.current_combatant is goblin
     assert goblin.can_react() is True
+
+def test_next_round_restores_legendary_actions():
+    fighter = Combatant(
+        name="Fighter",
+        max_hp=30,
+        current_hp=30,
+        initiative=20,
+        legendary_action_limit=3,
+    )
+
+    goblin = Combatant(
+        name="Goblin",
+        max_hp=7,
+        current_hp=7,
+        initiative=10,
+    )
+
+    combat = Combat()
+
+    combat.add_combatant(fighter)
+    combat.add_combatant(goblin)
+
+    combat.start()
+
+    fighter.use_legendary_action()
+    fighter.use_legendary_action()
+    fighter.use_legendary_action()
+
+    assert fighter.legendary_actions_used == 3
+
+    combat.next_turn()
+    assert combat.current_round == 1
+
+    combat.next_turn()
+
+    assert combat.current_round == 2
+    assert fighter.legendary_actions_used == 0

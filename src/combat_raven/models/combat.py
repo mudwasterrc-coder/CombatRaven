@@ -52,6 +52,9 @@ class Combat:
             self.current_turn_index = 0
             self.current_round += 1
 
+            for combatant in self.combatants:
+                combatant.reset_legendary_actions()
+
         self.current_combatant.advance_effects()
         self.current_combatant.reset_reaction()
     

@@ -233,3 +233,69 @@ def test_ending_concentration_removes_the_concentrated_effect():
     assert fighter.is_concentrating() is False
     assert fighter.concentration_effects == ()
     assert fighter.effects == []
+
+def test_combatant_starts_with_no_legendary_actions_used():
+    fighter = Combatant(
+        name="Fighter",
+        initiative=15,
+        current_hp=30,
+        max_hp=30,
+    )
+
+    assert fighter.legendary_actions_used == 0  
+
+def test_combatant_has_a_legendary_action_limit():
+    fighter = Combatant(
+        name="Fighter",
+        initiative=15,
+        current_hp=30,
+        max_hp=30,
+        legendary_action_limit=3,
+    )   
+
+    assert fighter.legendary_action_limit == 3
+
+def test_combatant_can_use_a_legendary_action():
+    fighter = Combatant(
+        name="Fighter",
+        initiative=15,
+        current_hp=30,
+        max_hp=30,
+        legendary_action_limit=3,
+    )   
+
+    fighter.use_legendary_action()
+
+    assert fighter.legendary_actions_used == 1
+
+def test_combatant_cannot_use_more_legendary_actions_than_limit():
+    fighter = Combatant(
+        name="Fighter",
+        initiative=15,
+        current_hp=30,
+        max_hp=30,
+        legendary_action_limit=3,
+    )
+
+    assert fighter.can_use_legendary_action() is True
+
+    fighter.use_legendary_action()
+    fighter.use_legendary_action()
+    fighter.use_legendary_action()
+
+    assert fighter.can_use_legendary_action() is False
+
+def test_using_a_legendary_action_when_none_are_available_fails():
+    fighter = Combatant(
+        name="Fighter",
+        initiative=15,
+        current_hp=30,
+        max_hp=30,
+        legendary_action_limit=1,
+    )
+
+    fighter.use_legendary_action()
+
+    assert fighter.can_use_legendary_action() is False
+    assert fighter.use_legendary_action() is False
+    assert fighter.legendary_actions_used == 1
