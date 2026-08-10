@@ -9,6 +9,11 @@ src/combat_raven.egg-info/top_level.txt
 src/combat_raven/models/__init__.py
 src/combat_raven/models/combat.py
 src/combat_raven/models/combatant.py
+src/combat_raven/models/effect.py
+src/combat_raven/models/effect_template.py
 src/combat_raven/services/__init__.py
 src/combat_raven/ui/__init__.py
+tests/test_combat.py
 tests/test_combatant.py
+tests/test_effect.py
+tests/test_effect_template.py

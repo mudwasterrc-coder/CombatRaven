@@ -5,6 +5,9 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "combat-raven"
 version = "0.1.0"
+dependencies = [
+    "PySide6",
+]
 
 [tool.setuptools]
 package-dir = {"" = "src"}

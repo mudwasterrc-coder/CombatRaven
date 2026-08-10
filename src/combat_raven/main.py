@@ -1,8 +1,15 @@
+import sys
+
+from PySide6.QtWidgets import QApplication
+
 from combat_raven.models.combat import Combat
 from combat_raven.models.combatant import Combatant
+from combat_raven.ui.main_window import MainWindow
 
 
-def main():
+def main() -> None:
+    app = QApplication(sys.argv)
+
     combat = Combat()
 
     aaron = Combatant(
@@ -24,15 +31,10 @@ def main():
 
     combat.start()
 
-    print(combat.current_combatant.name)
+    window = MainWindow(combat)
+    window.show()
 
-    combat.next_turn()
-
-    print(combat.current_combatant.name)
-
-    combat.next_turn()
-
-    print(combat.current_combatant.name)
+    sys.exit(app.exec())
 
 
 if __name__ == "__main__":
