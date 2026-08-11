@@ -1,12 +1,14 @@
 from PySide6.QtWidgets import (QFrame, QVBoxLayout, QLabel, QPushButton)
 
 from combat_raven.models.combatant import Combatant
+from PySide6.QtCore import Signal
 
 
 class CombatantWidget(QFrame):
     """
     Visual representation of a combatant.
     """
+    remove_requested = Signal(Combatant)
 
     def __init__(
         self,
@@ -29,6 +31,10 @@ class CombatantWidget(QFrame):
         self.use_legendary_action_button = QPushButton(
             "USE LEGENDARY ACTION"
         )
+        self.remove_button = QPushButton("REMOVE")
+        self.remove_button.clicked.connect(
+            lambda: self.remove_requested.emit(self.combatant)
+        )
         self.use_legendary_action_button.clicked.connect(
             self.use_legendary_action
         )
@@ -42,6 +48,7 @@ class CombatantWidget(QFrame):
         layout.addWidget(self.use_reaction_button)
         layout.addWidget(self.use_legendary_action_button)
         self.refresh()
+        layout.addWidget(self.remove_button)
 
     def refresh(self) -> None:
         """

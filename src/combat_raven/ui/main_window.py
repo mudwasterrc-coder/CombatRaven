@@ -71,6 +71,11 @@ class MainWindow(QMainWindow):
                     combatant is self.combat.current_combatant
                 ),
             )
+
+            widget.remove_requested.connect(
+                self.remove_combatant
+            )
+
             self.combatants_layout.addWidget(widget)
 
         if self.combat.combatants:
@@ -121,3 +126,10 @@ class MainWindow(QMainWindow):
             combatant = dialog.create_combatant()
             self.combat.add_combatant(combatant)
             self.refresh()
+
+    def remove_combatant(self, combatant: Combatant) -> None:
+        """
+        Removes a combatant from the current combat and refreshes the UI.
+        """
+        self.combat.remove_combatant(combatant)
+        self.refresh()

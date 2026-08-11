@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from operator import index
 
 from combat_raven.models.combatant import Combatant 
 
@@ -20,6 +21,20 @@ class Combat:
         Adds a combatant to the encounter.
         """
         self.combatants.append(combatant)
+
+    def remove_combatant(self, combatant: Combatant) -> None:
+        """
+        Removes a combatant from the encounter.
+        """
+        index = self.combatants.index(combatant)
+
+        self.combatants.remove(combatant)
+
+        if index < self.current_turn_index:
+            self.current_turn_index -= 1
+
+        if self.current_turn_index >= len(self.combatants):
+            self.current_turn_index = 0
 
     def start(self) -> None:
         """

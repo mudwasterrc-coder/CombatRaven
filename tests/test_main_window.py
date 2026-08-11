@@ -124,3 +124,24 @@ def test_main_window_does_not_add_combatant_when_dialog_is_cancelled(
     window.open_combatant_dialog()
 
     assert combat.combatants == []
+
+def test_main_window_can_remove_a_combatant(qtbot):
+    combat = Combat()
+
+    fighter = Combatant(
+        name="Fighter",
+        initiative=15,
+        current_hp=30,
+        max_hp=30,
+    )
+
+    combat.add_combatant(fighter)
+
+    window = MainWindow(combat)
+    qtbot.addWidget(window)
+
+    widget = window.combatants_layout.itemAt(0).widget()
+
+    widget.remove_button.click()
+
+    assert combat.combatants == []

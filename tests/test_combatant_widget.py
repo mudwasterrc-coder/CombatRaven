@@ -156,3 +156,35 @@ def test_combatant_widget_disables_legendary_action_button_at_limit(qtbot):
 
     assert fighter.legendary_actions_used == 3
     assert widget.use_legendary_action_button.isEnabled() is False
+
+def test_combatant_widget_has_remove_button(qtbot):
+    fighter = Combatant(
+        name="Fighter",
+        initiative=15,
+        current_hp=30,
+        max_hp=30,
+    )
+
+    widget = CombatantWidget(fighter)
+    qtbot.addWidget(widget)
+
+    assert widget.remove_button.text() == "REMOVE"
+
+def test_combatant_widget_emits_remove_request(qtbot):
+    fighter = Combatant(
+        name="Fighter",
+        initiative=15,
+        current_hp=30,
+        max_hp=30,
+    )
+
+    widget = CombatantWidget(fighter)
+    qtbot.addWidget(widget)
+
+    received = []
+
+    widget.remove_requested.connect(received.append)
+
+    widget.remove_button.click()
+
+    assert received == [fighter]
