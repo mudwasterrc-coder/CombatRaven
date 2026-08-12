@@ -539,3 +539,112 @@ def test_next_turn_follows_new_order_after_moving_combatant():
     combat.next_turn()
 
     assert combat.current_combatant is fighter
+
+def test_combat_can_sort_combatants_by_initiative():
+    fighter = Combatant(
+        name="Fighter",
+        max_hp=30,
+        current_hp=30,
+        initiative=20,
+    )
+
+    wizard = Combatant(
+        name="Wizard",
+        max_hp=20,
+        current_hp=20,
+        initiative=15,
+    )
+
+    goblin = Combatant(
+        name="Goblin",
+        max_hp=7,
+        current_hp=7,
+        initiative=10,
+    )
+
+    combat = Combat()
+
+    combat.add_combatant(goblin)
+    combat.add_combatant(fighter)
+    combat.add_combatant(wizard)
+
+    combat.sort_by_initiative()
+
+    assert combat.combatants == [
+        fighter,
+        wizard,
+        goblin,
+    ]
+
+def test_sort_by_initiative_preserves_order_for_equal_initiative():
+    fighter = Combatant(
+        name="Fighter",
+        max_hp=30,
+        current_hp=30,
+        initiative=15,
+    )
+
+    wizard = Combatant(
+        name="Wizard",
+        max_hp=20,
+        current_hp=20,
+        initiative=15,
+    )
+
+    goblin = Combatant(
+        name="Goblin",
+        max_hp=7,
+        current_hp=7,
+        initiative=10,
+    )
+
+    combat = Combat()
+
+    combat.add_combatant(goblin)
+    combat.add_combatant(fighter)
+    combat.add_combatant(wizard)
+
+    combat.sort_by_initiative()
+
+    assert combat.combatants == [
+        fighter,
+        wizard,
+        goblin,
+    ]
+
+def test_sort_by_initiative_keeps_current_combatant():
+    fighter = Combatant(
+        name="Fighter",
+        max_hp=30,
+        current_hp=30,
+        initiative=20,
+    )
+
+    wizard = Combatant(
+        name="Wizard",
+        max_hp=20,
+        current_hp=20,
+        initiative=15,
+    )
+
+    goblin = Combatant(
+        name="Goblin",
+        max_hp=7,
+        current_hp=7,
+        initiative=10,
+    )
+
+    combat = Combat()
+
+    combat.add_combatant(goblin)
+    combat.add_combatant(fighter)
+    combat.add_combatant(wizard)
+
+    combat.start()
+    combat.next_turn()
+
+    assert combat.current_combatant is wizard
+
+    combat.sort_by_initiative()
+
+    assert combat.current_combatant is wizard

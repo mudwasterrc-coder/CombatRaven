@@ -95,4 +95,13 @@ class Combat:
 
         self.current_combatant.advance_effects()
         self.current_combatant.reset_reaction()
+
+    def sort_by_initiative(self) -> None:
+        """
+        Sorts combatants by initiative, in descending order.
+        """
+        self.combatants.sort(
+            key=lambda combatant: combatant.initiative,
+            reverse=True,
+        )
     

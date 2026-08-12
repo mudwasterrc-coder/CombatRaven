@@ -213,3 +213,51 @@ def  test_main_window_moves_combatant_when_move_is_requested(qtbot):
         wizard,
         fighter,
     ]
+
+def test_main_window_has_sort_by_initiative_button(qtbot):
+    combat = Combat()
+    window = MainWindow(combat)
+    qtbot.addWidget(window)
+
+    assert (
+        window.sort_by_initiative_button.text() == "SORT BY INITIATIVE"
+    )
+
+def test_main_window_sorts_combatants_by_initiative(qtbot):
+    combat = Combat()
+
+    goblin = Combatant(
+        name="Goblin",
+        max_hp=7,
+        current_hp=7,
+        initiative=10,
+    )
+
+    fighter = Combatant(
+        name="Fighter",
+        max_hp=30,
+        current_hp=30,
+        initiative=20,
+    )
+
+    wizard = Combatant(
+        name="Wizard",
+        max_hp=20,
+        current_hp=20,
+        initiative=15,
+    )
+
+    combat.add_combatant(goblin)
+    combat.add_combatant(fighter)
+    combat.add_combatant(wizard)
+
+    window = MainWindow(combat)
+    qtbot.addWidget(window)
+
+    window.sort_by_initiative_button.click()
+
+    assert combat.combatants == [
+        fighter,
+        wizard,
+        goblin,
+    ]

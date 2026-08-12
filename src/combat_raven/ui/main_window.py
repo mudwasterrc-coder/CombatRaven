@@ -49,12 +49,18 @@ class MainWindow(QMainWindow):
         )
 
         self.end_turn_button.clicked.connect(self.end_turn)
+        self.sort_by_initiative_button = QPushButton("SORT BY INITIATIVE")
+        self.sort_by_initiative_button.clicked.connect(
+            self.sort_by_initiative
+        )
 
         layout.addWidget(self.round_label)
         layout.addWidget(self.current_turn_label)
         layout.addWidget(self.combatants_scroll_area)
+        layout.addWidget(self.sort_by_initiative_button)
         layout.addWidget(self.add_combatant_button)
         layout.addWidget(self.end_turn_button)
+        
 
         self.refresh()
 
@@ -158,4 +164,11 @@ class MainWindow(QMainWindow):
             combatant,
             new_index,
         )
+        self.refresh()
+
+    def sort_by_initiative(self) -> None:
+        """
+        Sorts combatants by initiative and refreshes the UI.
+        """
+        self.combat.sort_by_initiative()
         self.refresh()
