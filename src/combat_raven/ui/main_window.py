@@ -2,9 +2,9 @@ from PySide6.QtWidgets import (
     QMainWindow,
     QWidget,
     QVBoxLayout,
-    QHBoxLayout,
     QLabel,
     QPushButton,
+    QScrollArea,
 )
 
 from combat_raven.models.combat import Combat
@@ -33,7 +33,15 @@ class MainWindow(QMainWindow):
 
         self.round_label = QLabel()
         self.current_turn_label = QLabel()
-        self.combatants_layout = QHBoxLayout()
+        self.combatants_scroll_area = QScrollArea()
+        self.combatants_scroll_area.setWidgetResizable(True)
+        self.combatants_container = QWidget()
+        self.combatants_layout = QVBoxLayout(
+            self.combatants_container
+        )
+        self.combatants_scroll_area.setWidget(
+            self.combatants_container
+        )
         self.end_turn_button = QPushButton("END TURN")
         self.add_combatant_button = QPushButton("ADD COMBATANT")
         self.add_combatant_button.clicked.connect(
@@ -44,7 +52,7 @@ class MainWindow(QMainWindow):
 
         layout.addWidget(self.round_label)
         layout.addWidget(self.current_turn_label)
-        layout.addLayout(self.combatants_layout)
+        layout.addWidget(self.combatants_scroll_area)
         layout.addWidget(self.add_combatant_button)
         layout.addWidget(self.end_turn_button)
 
@@ -74,6 +82,10 @@ class MainWindow(QMainWindow):
 
             widget.remove_requested.connect(
                 self.remove_combatant
+            )
+
+            widget.move_requested.connect(
+                self.move_combatant
             )
 
             self.combatants_layout.addWidget(widget)
@@ -132,4 +144,18 @@ class MainWindow(QMainWindow):
         Removes a combatant from the current combat and refreshes the UI.
         """
         self.combat.remove_combatant(combatant)
+        self.refresh()
+
+    def move_combatant(
+        self,
+        combatant: Combatant,
+        new_index: int,
+    ) -> None:
+        """
+        Moves a combatant to a new position and resfreshes the UI.
+        """
+        self.combat.move_combatant(
+            combatant,
+            new_index,
+        )
         self.refresh()

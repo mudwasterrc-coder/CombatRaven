@@ -36,6 +36,29 @@ class Combat:
         if self.current_turn_index >= len(self.combatants):
             self.current_turn_index = 0
 
+    def move_combatant(
+            self,
+            combatant: Combatant,
+            new_index: int,
+    ) -> None:
+        """
+        Moves a combatant to a new position in the encounter order.
+        """
+        old_index = self.combatants.index(combatant)
+        moving_current = old_index == self.current_turn_index
+
+        self.combatants.remove(combatant)
+        self.combatants.insert(new_index, combatant)
+
+        if moving_current:
+            self.current_turn_index = new_index
+
+        elif old_index < self.current_turn_index <= new_index:
+            self.current_turn_index -= 1
+
+        elif new_index <= self.current_turn_index < old_index:
+            self.current_turn_index += 1
+
     def start(self) -> None:
         """
         Starts the combat encounter.

@@ -145,3 +145,71 @@ def test_main_window_can_remove_a_combatant(qtbot):
     widget.remove_button.click()
 
     assert combat.combatants == []
+
+def test_main_window_has_scrollable_combatants_list(qtbot):
+    combat = Combat()
+    window = MainWindow(combat)
+    qtbot.addWidget(window)
+
+    assert window.combatants_scroll_area is not None
+
+def test_main_window_displays_many_combatants(qtbot):
+    combat = Combat()
+
+    for index in range(15):
+        combat.add_combatant(
+            Combatant(
+                name=f"Combatant {index}",
+                max_hp=100,
+                current_hp=100,
+                initiative=20 - index,
+            )
+        )
+
+    window = MainWindow(combat)
+    qtbot.addWidget(window)
+
+    assert window.combatants_layout.count() == 15
+
+def test_main_window_scroll_area_resizes_content(qtbot):
+    combat = Combat()
+    window = MainWindow(combat)
+    qtbot.addWidget(window)
+
+    assert window.combatants_scroll_area.widget() is (
+        window.combatants_container
+    )
+
+    assert window.combatants_scroll_area.widgetResizable() is True
+
+def  test_main_window_moves_combatant_when_move_is_requested(qtbot):
+    combat = Combat()
+
+    fighter = Combatant(
+        name="Fighter",
+        initiative=20,
+        max_hp=30,
+        current_hp=30,
+    )
+
+    wizard = Combatant(
+        name="Wizard",
+        initiative=15,
+        max_hp=20,
+        current_hp=20,
+    )
+
+    combat.add_combatant(fighter)
+    combat.add_combatant(wizard)
+
+    window = MainWindow(combat)
+    qtbot.addWidget(window)
+
+    widget = window.combatants_layout.itemAt(0).widget()
+
+    widget.request_move(1)
+
+    assert combat.combatants == [
+        wizard,
+        fighter,
+    ]

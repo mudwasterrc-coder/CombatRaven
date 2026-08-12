@@ -188,3 +188,26 @@ def test_combatant_widget_emits_remove_request(qtbot):
     widget.remove_button.click()
 
     assert received == [fighter]
+
+def test_combatant_widget_can_request_move(qtbot):
+    fighter = Combatant(
+        name="Fighter",
+        initiative=15,
+        current_hp=30,
+        max_hp=30,
+    )
+
+    widget = CombatantWidget(fighter)
+    qtbot.addWidget(widget)
+
+    received = []
+
+    widget.move_requested.connect(
+        lambda combatant, index: received.append(
+            (combatant, index)
+        )
+    )
+
+    widget.request_move(2)
+
+    assert received == [(fighter, 2)]

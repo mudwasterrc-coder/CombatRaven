@@ -9,6 +9,7 @@ class CombatantWidget(QFrame):
     Visual representation of a combatant.
     """
     remove_requested = Signal(Combatant)
+    move_requested = Signal(Combatant, int)
 
     def __init__(
         self,
@@ -111,3 +112,8 @@ class CombatantWidget(QFrame):
         self.combatant.use_legendary_action()
         self.refresh()
 
+    def request_move(self, index: int) -> None:
+        """
+        Requests that this combatant be moved to a new position.
+        """
+        self.move_requested.emit(self.combatant, index)

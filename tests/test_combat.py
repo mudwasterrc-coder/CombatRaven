@@ -316,3 +316,226 @@ def test_removing_only_combatant_leaves_combat_empty():
 
     assert combat.combatants == []
     assert combat.current_turn_index == 0
+
+def test_combat_can_move_a_combatant():
+    fighter = Combatant(
+        name="Fighter",
+        max_hp=30,
+        current_hp=30,
+        initiative=20,
+    )
+
+    wizard = Combatant(
+        name="Wizard",
+        max_hp=20,
+        current_hp=20,
+        initiative=15,
+    )
+
+    goblin = Combatant(
+        name="Goblin",
+        max_hp=7,
+        current_hp=7,
+        initiative=10,
+    )
+
+    combat = Combat()
+
+    combat.add_combatant(fighter)
+    combat.add_combatant(wizard)
+    combat.add_combatant(goblin)
+
+    combat.move_combatant(goblin, 0)
+
+    assert combat.combatants == [
+        goblin,
+        fighter,
+        wizard,
+    ]
+
+def test_moving_combatant_after_current_turn_keeps_current_turn():
+    fighter = Combatant(
+        name="Fighter",
+        max_hp=30,
+        current_hp=30,
+        initiative=20,
+    )
+
+    wizard = Combatant(
+        name="Wizard",
+        max_hp=20,
+        current_hp=20,
+        initiative=15,
+    )
+
+    goblin = Combatant(
+        name="Goblin",
+        max_hp=7,
+        current_hp=7,
+        initiative=10,
+    )
+
+    combat = Combat()
+
+    combat.add_combatant(fighter)
+    combat.add_combatant(wizard)
+    combat.add_combatant(goblin)
+
+    combat.start()
+
+    assert combat.current_combatant is fighter
+
+    combat.move_combatant(goblin, 1)
+
+    assert combat.current_combatant is fighter
+
+def test_moving_combatant_before_current_turn_keeps_current_turn():
+    fighter = Combatant(
+        name="Fighter",
+        max_hp=30,
+        current_hp=30,
+        initiative=20,
+    )
+
+    wizard = Combatant(
+        name="Wizard",
+        max_hp=20,
+        current_hp=20,
+        initiative=15,
+    )
+
+    goblin = Combatant(
+        name="Goblin",
+        max_hp=7,
+        current_hp=7,
+        initiative=10,
+    )
+
+    combat = Combat()
+
+    combat.add_combatant(fighter)
+    combat.add_combatant(wizard)
+    combat.add_combatant(goblin)
+
+    combat.start()
+
+    combat.next_turn()
+
+    assert combat.current_combatant is wizard
+
+    combat.move_combatant(fighter, 2)
+
+    assert combat.current_combatant is wizard
+
+def test_moving_combatant_after_current_turn_keeps_current_turn():
+    fighter = Combatant(
+        name="Fighter",
+        max_hp=30,
+        current_hp=30,
+        initiative=20,
+    )
+
+    wizard = Combatant(
+        name="Wizard",
+        max_hp=20,
+        current_hp=20,
+        initiative=15,
+    )
+
+    goblin = Combatant(
+        name="Goblin",
+        max_hp=7,
+        current_hp=7,
+        initiative=10,
+    )
+
+    combat = Combat()
+
+    combat.add_combatant(fighter)
+    combat.add_combatant(wizard)
+    combat.add_combatant(goblin)
+
+    combat.start()
+    combat.next_turn()
+
+    assert combat.current_combatant is wizard
+
+    combat.move_combatant(goblin, 0)
+
+    assert combat.current_combatant is wizard
+
+def test_moving_current_combatant_keeps_it_as_current():
+    fighter = Combatant(
+        name="Fighter",
+        max_hp=30,
+        current_hp=30,
+        initiative=20,
+    )
+
+    wizard = Combatant(
+        name="Wizard",
+        max_hp=20,
+        current_hp=20,
+        initiative=15,
+    )
+
+    goblin = Combatant(
+        name="Goblin",
+        max_hp=7,
+        current_hp=7,
+        initiative=10,
+    )
+
+    combat = Combat()
+
+    combat.add_combatant(fighter)
+    combat.add_combatant(wizard)
+    combat.add_combatant(goblin)
+
+    combat.start()
+    combat.next_turn()
+
+    assert combat.current_combatant is wizard
+
+    combat.move_combatant(wizard, 2)
+
+    assert combat.current_combatant is wizard
+
+def test_next_turn_follows_new_order_after_moving_combatant():
+    fighter = Combatant(
+        name="Fighter",
+        max_hp=30,
+        current_hp=30,
+        initiative=20,
+    )
+
+    wizard = Combatant(
+        name="Wizard",
+        max_hp=20,
+        current_hp=20,
+        initiative=15,
+    )
+
+    goblin = Combatant(
+        name="Goblin",
+        max_hp=7,
+        current_hp=7,
+        initiative=10,
+    )
+
+    combat = Combat()
+
+    combat.add_combatant(fighter)
+    combat.add_combatant(wizard)
+    combat.add_combatant(goblin)
+
+    combat.start()
+    combat.next_turn()
+
+    assert combat.current_combatant is wizard
+
+    combat.move_combatant(wizard, 2)
+
+    combat.next_turn()
+
+    assert combat.current_combatant is fighter
