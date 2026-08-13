@@ -11,6 +11,7 @@ from combat_raven.models.combat import Combat
 from combat_raven.models.combatant import Combatant
 from combat_raven.ui.combatant_widget import CombatantWidget
 from combat_raven.ui.combatant_dialog import CombatantDialog
+from combat_raven.ui.combatants_container import CombatantsContainer
 
 
 class MainWindow(QMainWindow):
@@ -35,13 +36,18 @@ class MainWindow(QMainWindow):
         self.current_turn_label = QLabel()
         self.combatants_scroll_area = QScrollArea()
         self.combatants_scroll_area.setWidgetResizable(True)
-        self.combatants_container = QWidget()
+        self.combatants_container = CombatantsContainer()
         self.combatants_layout = QVBoxLayout(
             self.combatants_container
         )
         self.combatants_scroll_area.setWidget(
             self.combatants_container
         )
+
+        self.combatants_container.drop_requested.connect(
+            self.move_combatant
+        )
+
         self.end_turn_button = QPushButton("END TURN")
         self.add_combatant_button = QPushButton("ADD COMBATANT")
         self.add_combatant_button.clicked.connect(

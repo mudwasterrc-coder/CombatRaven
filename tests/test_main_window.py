@@ -1,6 +1,7 @@
 from combat_raven.models.combat import Combat
 from combat_raven.ui.main_window import MainWindow
 from combat_raven.models.combatant import Combatant
+from combat_raven.ui.combatants_container import CombatantsContainer
 
 
 def test_main_window_can_start_with_no_combatants(qtbot):
@@ -261,3 +262,90 @@ def test_main_window_sorts_combatants_by_initiative(qtbot):
         wizard,
         goblin,
     ]
+
+def test_main_window_uses_combatants_container(qtbot):
+    combat = Combat()
+
+    window = MainWindow(combat)
+    qtbot.addWidget(window)
+
+    assert isinstance(
+        window.combatants_container,
+        CombatantsContainer,
+    )
+
+def test_main_window_moves_combatant_when_drop_is_requested(qtbot):
+    combat = Combat()
+
+    fighter = Combatant(
+        name="Fighter",
+        initiative=20,
+        max_hp=30,
+        current_hp=30,
+    )
+
+    wizard = Combatant(
+        name="Wizard",
+        initiative=15,
+        max_hp=20,
+        current_hp=20,
+    )
+
+    combat.add_combatant(fighter)
+    combat.add_combatant(wizard)
+
+    window = MainWindow(combat)
+    qtbot.addWidget(window)
+
+    window.combatants_container.drop_requested.emit(
+        wizard,
+        0,
+    )
+
+    assert combat.combatants == [
+        wizard,
+        fighter,
+    ]
+
+def test_main_window_reorders_widgets_when_combatant_is_moved(qtbot):
+    combat = Combat()
+
+    fighter = Combatant(
+        name="Fighter",
+        initiative=20,
+        max_hp=30,
+        current_hp=30,
+    )
+
+    wizard = Combatant(
+        name="Wizard",
+        initiative=15,
+        max_hp=20,
+        current_hp=20,
+    )
+
+    combat.add_combatant(fighter)
+    combat.add_combatant(wizard)
+
+    window = MainWindow(combat)
+    qtbot.addWidget(window)
+
+    window.combatants_container.drop_requested.emit(
+        wizard,
+        0,
+    )
+
+    first_widget = (
+        window.combatants_container.layout()
+        .itemAt(0)
+        .widget()
+    )
+
+    second_widget = (
+        window.combatants_container.layout()
+        .itemAt(1)
+        .widget()
+    )
+
+    assert first_widget.combatant is wizard
+    assert second_widget.combatant is fighter
