@@ -1,6 +1,9 @@
 from combat_raven.models.combatant import Combatant
 from combat_raven.ui.combatant_widget import CombatantWidget
 from combat_raven.models.combat import Combat
+from PySide6.QtCore import QPoint
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QMouseEvent
 
 
 def test_combatant_widget_can_use_reaction(qtbot):
@@ -211,3 +214,160 @@ def test_combatant_widget_can_request_move(qtbot):
     widget.request_move(2)
 
     assert received == [(fighter, 2)]
+
+def test_combatant_widget_stores_drag_start_position(qtbot):
+    fighter = Combatant(
+        name="Fighter",
+        initiative=15,
+        current_hp=30,
+        max_hp=30,
+    )
+
+    widget = CombatantWidget(fighter)
+    qtbot.addWidget(widget)
+
+    assert widget.drag_start_position is None
+
+def test_combatant_widget_stores_mouse_press_position(qtbot):
+    fighter = Combatant(
+        name="Fighter",
+        initiative=15,
+        current_hp=30,
+        max_hp=30,
+    )
+
+    widget = CombatantWidget(fighter)
+    qtbot.addWidget(widget)
+
+    widget.show()
+
+    position = QPoint(20, 30)
+
+    qtbot.mousePress(
+        widget,
+        Qt.MouseButton.LeftButton,
+        pos=position,
+    )
+
+    assert widget.drag_start_position == position
+
+def test_combatant_widget_does_not_start_drag_for_small_mouse_move(
+        qtbot,
+):
+    fighter = Combatant(
+        name="Fighter",
+        initiative=15,
+        current_hp=30,
+        max_hp=30,
+    )
+
+    widget = CombatantWidget(fighter)
+    qtbot.addWidget(widget)
+
+    widget.drag_start_position = QPoint(20, 30)
+
+    position = QPoint(21, 31)  # Small move, should not trigger drag
+
+    assert not widget.should_start_drag(position)
+
+def test_combatant_widget_starts_drag_for_large_mouse_move(qtbot):
+    fighter = Combatant(
+        name="Fighter",
+        initiative=15,
+        current_hp=30,
+        max_hp=30,
+    )
+
+    widget = CombatantWidget(fighter)
+    qtbot.addWidget(widget)
+
+    widget.drag_start_position = QPoint(20, 30)
+
+    position = QPoint(50, 60)
+
+    assert widget.should_start_drag(position)
+
+def test_combatant_widget_requests_drag_for_large_mouse_move(qtbot):
+    fighter = Combatant(
+        name="Fighter",
+        initiative=15,
+        current_hp=30,
+        max_hp=30,
+    )
+
+    widget = CombatantWidget(fighter)
+    qtbot.addWidget(widget)
+
+    widget.drag_start_position = QPoint(20, 30)
+
+    called = []
+
+    def fake_start_drag():
+        called.append(True)
+
+    widget.start_drag = fake_start_drag
+
+    widget.mouseMoveEvent(
+        QMouseEvent(
+            QMouseEvent.Type.MouseMove,
+            QPoint(50, 60),
+            Qt.MouseButton.NoButton,
+            Qt.MouseButton.LeftButton,
+            Qt.KeyboardModifier.NoModifier
+        )
+    )
+
+    assert called == [True]
+
+def test_combatant_widget_can_create_drag(qtbot):
+    fighter = Combatant(
+        name="Fighter",
+        initiative=15,
+        current_hp=30,
+        max_hp=30,
+    )
+
+    widget = CombatantWidget(fighter)
+    qtbot.addWidget(widget)
+
+    drag = widget.create_drag()
+
+    assert drag.source() is widget
+
+def test_combatant_widget_starts_drag(qtbot):
+    fighter = Combatant(
+        name="Fighter",
+        initiative=15,
+        current_hp=30,
+        max_hp=30,
+    )
+
+    widget = CombatantWidget(fighter)
+    qtbot.addWidget(widget)
+
+    executed = []
+
+    class FakeDrag:
+        def exec(self):
+            executed.append(True)
+
+    widget.create_drag = lambda: FakeDrag()
+
+    widget.start_drag()
+
+    assert executed == [True]
+
+def test_combatant_widget_drag_has_mime_data(qtbot):
+    fighter = Combatant(
+        name="Fighter",
+        initiative=15,
+        current_hp=30,
+        max_hp=30,
+    )
+
+    widget = CombatantWidget(fighter)
+    qtbot.addWidget(widget)
+
+    drag = widget.create_drag()
+
+    assert drag.mimeData() is not None

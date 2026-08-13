@@ -1,7 +1,8 @@
-from PySide6.QtWidgets import (QFrame, QVBoxLayout, QLabel, QPushButton)
+from PySide6.QtWidgets import (QFrame, QVBoxLayout, QLabel, QPushButton, QApplication)
 
 from combat_raven.models.combatant import Combatant
-from PySide6.QtCore import Signal
+from PySide6.QtCore import Qt, Signal, QMimeData
+from PySide6.QtGui import QDrag
 
 
 class CombatantWidget(QFrame):
@@ -20,6 +21,7 @@ class CombatantWidget(QFrame):
 
         self.combatant = combatant
         self.is_current = is_current
+        self.drag_start_position = None
 
         layout = QVBoxLayout(self)
 
@@ -117,3 +119,58 @@ class CombatantWidget(QFrame):
         Requests that this combatant be moved to a new position.
         """
         self.move_requested.emit(self.combatant, index)
+
+    def mousePressEvent(self, event) -> None:
+        """
+        Stores the starting position for a possible drag operation.
+        """
+        if event.button() == Qt.MouseButton.LeftButton:
+            self.drag_start_position = event.position().toPoint()
+
+        super().mousePressEvent(event)
+
+    def should_start_drag(self, position) -> bool:
+        """
+        Returns whether the mouse has moved far enough to start a drag.
+        """
+        if self.drag_start_position is None:
+            return False
+
+        distance = (position - self.drag_start_position)
+
+        return (
+            abs(distance.x()) >= QApplication.startDragDistance()
+            or abs(distance.y()) >= QApplication.startDragDistance()
+        )
+
+    def mouseMoveEvent(self, event) -> None:
+        """
+        Starts a drag operation when the mouse moves far enough.
+        """
+        if (
+            event.buttons() & Qt.MouseButton.LeftButton
+            and self.should_start_drag(
+                event.position().toPoint()
+            )
+        ):
+            self.start_drag()
+
+        super().mouseMoveEvent(event)
+
+    def create_drag(self) -> QDrag:
+        """
+        Creates a drag operation for this combatant.
+        """
+        drag = QDrag(self)
+
+        mime_data = QMimeData()
+        drag.setMimeData(mime_data)
+
+        return drag
+
+    def start_drag(self) -> None:
+        """
+        Starts a drag operation for this combatant.
+        """
+        drag = self.create_drag()
+        drag.exec()
