@@ -2,7 +2,11 @@ from dataclasses import dataclass, field
 
 from combat_raven.models.effect import Effect
  
+from enum import Enum
 
+class CombatantType(Enum):
+    ALLY = "ally"
+    ENEMY = "enemy"
 
 @dataclass
 class Combatant:
@@ -14,6 +18,7 @@ class Combatant:
     current_hp: int
     max_hp: int
     legendary_action_limit: int = 0
+    combatant_type: CombatantType = CombatantType.ALLY
 
     effects: list[Effect] = field(default_factory=list)
 

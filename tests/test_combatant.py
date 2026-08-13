@@ -1,6 +1,7 @@
-from combat_raven.models.combatant import Combatant
+from combat_raven.models.combatant import Combatant, CombatantType
 from combat_raven.models.effect import Effect
 from combat_raven.models.effect_template import EffectTemplate
+
 
 
 def test_damage_reduces_hp():
@@ -299,3 +300,24 @@ def test_using_a_legendary_action_when_none_are_available_fails():
     assert fighter.can_use_legendary_action() is False
     assert fighter.use_legendary_action() is False
     assert fighter.legendary_actions_used == 1
+
+def test_combatant_defaults_to_ally():
+    combatant = Combatant(
+        name="Fighter",
+        initiative=20,
+        current_hp=30,
+        max_hp=30,
+    )
+
+    assert combatant.combatant_type == CombatantType.ALLY
+
+def test_combatant_can_be_an_enemy():
+    goblin = Combatant(
+        name="Goblin",
+        initiative=10,
+        current_hp=7,
+        max_hp=7,
+        combatant_type=CombatantType.ENEMY,
+    )
+
+    assert goblin.combatant_type == CombatantType.ENEMY
