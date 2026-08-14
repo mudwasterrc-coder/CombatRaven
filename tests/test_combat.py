@@ -1,3 +1,5 @@
+import pytest
+
 from combat_raven.models.combat import Combat
 from combat_raven.models.combatant import Combatant
 from combat_raven.models.effect import Effect
@@ -648,3 +650,99 @@ def test_sort_by_initiative_keeps_current_combatant():
     combat.sort_by_initiative()
 
     assert combat.current_combatant is wizard
+
+def test_combat_can_restore_turn_state():
+    combat = Combat()
+
+    fighter = Combatant(
+        name="Fighter",
+        initiative=20,
+        current_hp=30,
+        max_hp=30,
+    )
+
+    wizard = Combatant(
+        name="Wizard",
+        initiative=15,
+        current_hp=20,
+        max_hp=20,
+    )
+
+    combat.add_combatant(fighter)
+    combat.add_combatant(wizard)
+
+    combat.restore_state(
+        current_round=3,
+        current_turn_index=1,
+    )
+
+    assert combat.current_round == 3
+    assert combat.current_turn_index == 1
+    assert combat.started is True
+    assert combat.current_combatant is wizard
+
+def test_combat_cannot_restore_state_without_combatants():
+    combat = Combat()
+
+    with pytest.raises(ValueError):
+        combat.restore_state(
+            current_round=1,
+            current_turn_index=0,
+        )
+
+
+def test_combat_cannot_restore_invalid_round():
+    combat = Combat()
+
+    fighter = Combatant(
+        name="Fighter",
+        initiative=20,
+        current_hp=30,
+        max_hp=30,
+    )
+
+    combat.add_combatant(fighter)
+
+    with pytest.raises(ValueError):
+        combat.restore_state(
+            current_round=0,
+            current_turn_index=0,
+        )
+
+
+def test_combat_cannot_restore_invalid_turn_index():
+    combat = Combat()
+
+    fighter = Combatant(
+        name="Fighter",
+        initiative=20,
+        current_hp=30,
+        max_hp=30,
+    )
+
+    combat.add_combatant(fighter)
+
+    with pytest.raises(ValueError):
+        combat.restore_state(
+            current_round=1,
+            current_turn_index=1,
+        )
+
+
+def test_combat_cannot_restore_negative_turn_index():
+    combat = Combat()
+
+    fighter = Combatant(
+        name="Fighter",
+        initiative=20,
+        current_hp=30,
+        max_hp=30,
+    )
+
+    combat.add_combatant(fighter)
+
+    with pytest.raises(ValueError):
+        combat.restore_state(
+            current_round=1,
+            current_turn_index=-1,
+        )

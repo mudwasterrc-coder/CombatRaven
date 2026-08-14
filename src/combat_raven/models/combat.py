@@ -104,4 +104,28 @@ class Combat:
             key=lambda combatant: combatant.initiative,
             reverse=True,
         )
-    
+
+    def restore_state(
+        self,
+        current_round: int,
+        current_turn_index: int,
+    ) -> None:
+        """
+        Restores an existing combat to a previously saved state.
+        """
+        if not self.combatants:
+            raise ValueError("Cannot restore a combat with no combatants.")
+
+        if not 0 <= current_turn_index < len(self.combatants):
+            raise ValueError(
+                "Current turn index is out of range."
+            )
+
+        if current_round < 1:
+            raise ValueError(
+                "Current round must be at least 1."
+            )
+
+        self.current_round = current_round
+        self.current_turn_index = current_turn_index
+        self.started = True
