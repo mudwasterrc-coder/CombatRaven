@@ -746,3 +746,23 @@ def test_combat_cannot_restore_negative_turn_index():
             current_round=1,
             current_turn_index=-1,
         )
+
+def test_combat_has_unique_id():
+    first = Combat()
+    second = Combat()
+
+    assert first.id != second.id 
+
+def test_combat_can_have_a_name():
+    combat = Combat(name="Assault on the Tower")
+
+    assert combat.name == "Assault on the Tower"
+
+def test_combat_can_have_specific_id():
+    combat = Combat(
+        id="encounter-123",
+        name="Assault on the Tower",
+    )
+
+    assert combat.id == "encounter-123"
+    assert combat.name == "Assault on the Tower"

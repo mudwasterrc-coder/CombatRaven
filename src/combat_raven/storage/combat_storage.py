@@ -18,6 +18,8 @@ class CombatStorage:
         Saves a combat encounter to disk
         """
         data = {
+            "id": combat.id,
+            "name": combat.name,
             "current_round": combat.current_round,
             "current_turn_index": combat.current_turn_index,
             "started": combat.started,
@@ -61,7 +63,11 @@ class CombatStorage:
             self.path.read_text(encoding="utf-8")
         )
 
-        combat = Combat()
+        combat = Combat(
+            name=data.get("name", "Unnamed Encounter"),
+        )
+        if "id" in data:
+            combat.id = data["id"]
 
         for item in data["combatants"]:
             combatant = Combatant(

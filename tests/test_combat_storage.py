@@ -251,3 +251,50 @@ def test_storage_preserves_combatant_effect(tmp_path):
     assert loaded_effect.concentration is True
     assert loaded_effect.enabled is True
     assert loaded_effect.notes == "+1d4 to attack rolls and saving throws"
+
+def test_storage_preserves_combat_identity(tmp_path):
+    path = tmp_path / "combat.json"
+
+    combat = Combat(
+        id="encounter-123",
+        name="Assault on the Tower",
+    )
+
+    fighter = Combatant(
+        name="Fighter",
+        initiative=20,
+        current_hp=30,
+        max_hp=30,
+    )
+
+    combat.add_combatant(fighter)
+
+    storage = CombatStorage(path)
+    storage.save(combat)
+
+    loaded = storage.load()
+
+    assert loaded.id == "encounter-123"
+    assert loaded.name == "Assault on the Tower"
+
+def test_storage_loads_legacy_combat_without_identity(tmp_path):
+    path = tmp_path / "legacy_combat.json"
+
+    path.write_text(
+        """
+        {
+            "current_round": 0,
+            "current_turn_index": 0,
+            "started": false,
+            "combatants": []
+        }
+        """,
+        encoding="utf-8",
+    )
+
+    storage = CombatStorage(path)
+
+    loaded = storage.load()
+
+    assert loaded.id
+    assert loaded.name == "Unnamed Encounter"

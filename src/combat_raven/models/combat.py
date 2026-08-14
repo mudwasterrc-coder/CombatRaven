@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from operator import index
+from uuid import uuid4
 
 from combat_raven.models.combatant import Combatant 
 
@@ -9,12 +9,11 @@ class Combat:
     Represents an ongoing combat encounter.
     """
     combatants: list[Combatant] = field(default_factory=list)
-
     current_round: int = 0
-
     current_turn_index: int = 0
-
     started: bool = False
+    id: str = field(default_factory=lambda: str(uuid4()))
+    name: str = "Unnamed Encounter"
 
     def add_combatant(self, combatant: Combatant) -> None:
         """
