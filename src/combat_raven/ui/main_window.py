@@ -56,6 +56,10 @@ class MainWindow(QMainWindow):
 
         self.end_turn_button = QPushButton("END TURN")
         self.add_combatant_button = QPushButton("ADD COMBATANT")
+        self.save_combat_button = QPushButton("SAVE COMBAT")
+        self.save_combat_button.clicked.connect(
+            self.save_combat
+        )
         self.add_combatant_button.clicked.connect(
             self.open_combatant_dialog
         )
@@ -71,6 +75,7 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.combatants_scroll_area)
         layout.addWidget(self.sort_by_initiative_button)
         layout.addWidget(self.add_combatant_button)
+        layout.addWidget(self.save_combat_button)
         layout.addWidget(self.end_turn_button)
         
 
@@ -184,3 +189,14 @@ class MainWindow(QMainWindow):
         """
         self.combat.sort_by_initiative()
         self.refresh()
+
+    def save_combat(self) -> None:
+        """
+        Saves the current combat through the combat repository.
+        """
+        if self.combat_repository is None:
+            raise RuntimeError(
+                "Cannot save combat without a combat repository."
+            )
+
+        self.combat_repository.save(self.combat)

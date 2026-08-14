@@ -1,3 +1,5 @@
+from PySide6.QtCore import Qt
+
 from combat_raven.models.combat import Combat
 from combat_raven.ui.main_window import MainWindow
 from combat_raven.models.combatant import Combatant
@@ -359,3 +361,81 @@ def test_main_window_has_combat_repository(qtbot, tmp_path):
     qtbot.addWidget(window)
 
     assert window.combat_repository is repository
+
+def test_main_window_can_save_current_combat(
+    qtbot,
+    tmp_path,
+):
+    combat = Combat(
+        name="Assault on the Tower",
+    )
+
+    repository = CombatRepository(tmp_path)
+
+    window = MainWindow(
+        combat,
+        repository,
+    )
+    qtbot.addWidget(window)
+
+    window.save_combat()
+
+    loaded = repository.get_by_id(combat.id)
+
+    assert loaded is not None
+    assert loaded.id == combat.id
+    assert loaded.name == "Assault on the Tower"
+
+def test_main_window_can_update_saved_combat(qtbot, tmp_path):
+    combat = Combat(
+        name="Assault on the Tower",
+    )
+
+    repository = CombatRepository(tmp_path)
+
+    window = MainWindow(
+        combat,
+        repository,
+    )
+    qtbot.addWidget(window)
+
+    window.save_combat()
+
+    combat.name = "Assault on the Tower - Final Battle"
+
+    window.save_combat()
+
+    loaded = repository.get_by_id(combat.id)
+
+    assert loaded is not None
+    assert loaded.name == "Assault on the Tower - Final Battle"
+
+def test_main_window_has_save_combat_button(qtbot, tmp_path):
+    combat = Combat()
+    repository = CombatRepository(tmp_path)
+
+    window = MainWindow(combat, repository)
+    qtbot.addWidget(window)
+
+    assert window.save_combat_button is not None
+    assert window.save_combat_button.text() == "SAVE COMBAT"
+
+def test_main_window_save_combat_button_saves_combat(
+    qtbot,
+    tmp_path,
+):
+    combat = Combat(name="Assault on the Tower")
+    repository = CombatRepository(tmp_path)
+
+    window = MainWindow(combat, repository)
+    qtbot.addWidget(window)
+
+    qtbot.mouseClick(
+        window.save_combat_button,
+        Qt.MouseButton.LeftButton,
+    )
+
+    loaded = repository.get_by_id(combat.id)
+
+    assert loaded is not None
+    assert loaded.name == "Assault on the Tower"
