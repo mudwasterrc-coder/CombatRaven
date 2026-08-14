@@ -2,6 +2,7 @@ from combat_raven.models.combat import Combat
 from combat_raven.ui.main_window import MainWindow
 from combat_raven.models.combatant import Combatant
 from combat_raven.ui.combatants_container import CombatantsContainer
+from combat_raven.repositories.combat_repository import CombatRepository
 
 
 def test_main_window_can_start_with_no_combatants(qtbot):
@@ -349,3 +350,12 @@ def test_main_window_reorders_widgets_when_combatant_is_moved(qtbot):
 
     assert first_widget.combatant is wizard
     assert second_widget.combatant is fighter
+
+def test_main_window_has_combat_repository(qtbot, tmp_path):
+    combat = Combat()
+    repository = CombatRepository(tmp_path)
+
+    window = MainWindow(combat, repository)
+    qtbot.addWidget(window)
+
+    assert window.combat_repository is repository

@@ -12,6 +12,7 @@ from combat_raven.models.combatant import Combatant
 from combat_raven.ui.combatant_widget import CombatantWidget
 from combat_raven.ui.combatant_dialog import CombatantDialog
 from combat_raven.ui.combatants_container import CombatantsContainer
+from combat_raven.repositories.combat_repository import CombatRepository
 
 
 class MainWindow(QMainWindow):
@@ -19,10 +20,15 @@ class MainWindow(QMainWindow):
     Main application window for Combat Raven.
     """
 
-    def __init__(self, combat: Combat) -> None:
+    def __init__(
+            self,
+            combat: Combat,
+            combat_repository: CombatRepository | None = None,
+            ) -> None:
         super().__init__()
 
         self.combat = combat
+        self.combat_repository = combat_repository
 
         self.setWindowTitle("Combat Raven")
         self.resize(1000, 700)
