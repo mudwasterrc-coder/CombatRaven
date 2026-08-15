@@ -439,3 +439,53 @@ def test_main_window_save_combat_button_saves_combat(
 
     assert loaded is not None
     assert loaded.name == "Assault on the Tower"
+
+def test_main_window_has_open_combat_button(qtbot, tmp_path):
+    combat = Combat()
+    repository = CombatRepository(tmp_path)
+
+    window = MainWindow(combat, repository)
+    qtbot.addWidget(window)
+
+    assert window.open_combat_button is not None
+    assert window.open_combat_button.text() == "OPEN ENCOUNTER"
+
+def test_main_window_can_open_combat_dialog(qtbot, tmp_path):
+    combat = Combat()
+    repository = CombatRepository(tmp_path)
+
+    window = MainWindow(combat, repository)
+    qtbot.addWidget(window)
+
+    window.open_combat()
+
+    assert window.open_combat_dialog is not None
+
+def test_main_window_can_load_selected_combat(
+    qtbot,
+    tmp_path,
+):
+    repository = CombatRepository(tmp_path)
+
+    saved_combat = Combat(
+        name="Assault on the Tower",
+    )
+    repository.save(saved_combat)
+
+    current_combat = Combat(
+        name="Current Encounter",
+    )
+
+    window = MainWindow(
+        current_combat,
+        repository,
+    )
+    qtbot.addWidget(window)
+
+    window.open_combat()
+
+    window.open_combat_dialog.combat_list.setCurrentRow(0)
+    window.open_combat_dialog.open_button.click()
+
+    assert window.combat.id == saved_combat.id
+    assert window.combat.name == "Assault on the Tower"

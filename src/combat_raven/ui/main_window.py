@@ -13,6 +13,7 @@ from combat_raven.ui.combatant_widget import CombatantWidget
 from combat_raven.ui.combatant_dialog import CombatantDialog
 from combat_raven.ui.combatants_container import CombatantsContainer
 from combat_raven.repositories.combat_repository import CombatRepository
+from combat_raven.ui.open_combat_dialog import OpenCombatDialog
 
 
 class MainWindow(QMainWindow):
@@ -60,6 +61,7 @@ class MainWindow(QMainWindow):
         self.save_combat_button.clicked.connect(
             self.save_combat
         )
+        self.open_combat_button = QPushButton("OPEN ENCOUNTER")
         self.add_combatant_button.clicked.connect(
             self.open_combatant_dialog
         )
@@ -76,6 +78,7 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.sort_by_initiative_button)
         layout.addWidget(self.add_combatant_button)
         layout.addWidget(self.save_combat_button)
+        layout.addWidget(self.open_combat_button)
         layout.addWidget(self.end_turn_button)
         
 
@@ -200,3 +203,33 @@ class MainWindow(QMainWindow):
             )
 
         self.combat_repository.save(self.combat)
+
+    def open_combat(self) -> None:
+        """
+        Opens the dialog for selecting a saved combat encounter.
+        """
+        self.open_combat_dialog = OpenCombatDialog(
+            self.combat_repository
+        )
+
+        self.open_combat_dialog.accepted.connect(
+            self._load_selected_combat
+        )
+
+        self.open_combat_dialog.show()
+
+    def _load_selected_combat(self) -> None:
+        """
+        Loads the combat selected in the open combat dialog.
+        """
+        combat_id = self.open_combat_dialog.selected_combat_id
+
+        if combat_id is None:
+            return
+
+        combat = self.combat_repository.get_by_id(combat_id)
+
+        if combat is None:
+            return
+
+        self.combat = combat

@@ -35,15 +35,18 @@ class CombatRepository:
 
     def list(self) -> list[Combat]:
         """
-        Returns all saved combat encounters.
+        Returns all saved combat encounters sorted by name
         """
         combats = []
 
-        for path in sorted(self.directory.glob("*.json")):
+        for path in self.directory.glob("*.json"):
             combat = CombatStorage(path).load()
             combats.append(combat)
 
-        return combats
+        return sorted(
+            combats,
+            key=lambda combat: combat.name.lower(),
+        )
 
     def delete(self, combat_id: str) -> None:
         """

@@ -78,3 +78,19 @@ def test_combat_repository_allows_duplicate_names(tmp_path):
         first.id,
         second.id,
     }
+
+def test_combat_repository_lists_combats_by_name(tmp_path):
+    repository = CombatRepository(tmp_path)
+
+    first = Combat(name="Zariel's Throne")
+    second = Combat(name="Assault on the Tower")
+
+    repository.save(first)
+    repository.save(second)
+
+    combats = repository.list()
+
+    assert [combat.name for combat in combats] == [
+        "Assault on the Tower",
+        "Zariel's Throne",
+    ]
