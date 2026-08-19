@@ -5,6 +5,8 @@ from combat_raven.ui.main_window import MainWindow
 from combat_raven.models.combatant import Combatant
 from combat_raven.ui.combatants_container import CombatantsContainer
 from combat_raven.repositories.combat_repository import CombatRepository
+from combat_raven.models.effect import Effect
+from combat_raven.models.effect_template import EffectTemplate
 
 
 def test_main_window_can_start_with_no_combatants(qtbot):
@@ -489,3 +491,144 @@ def test_main_window_can_load_selected_combat(
 
     assert window.combat.id == saved_combat.id
     assert window.combat.name == "Assault on the Tower"
+
+def test_main_window_refreshes_after_loading_combat(
+    qtbot,
+    tmp_path,
+):
+    repository = CombatRepository(tmp_path)
+
+    saved_combat = Combat(name="Saved Encounter")
+
+    fighter = Combatant(
+        name="Fighter",
+        initiative=20,
+        max_hp=30,
+        current_hp=17,
+    )
+
+    saved_combat.add_combatant(fighter)
+    repository.save(saved_combat)
+
+    current_combat = Combat(name="Current Encounter")
+
+    window = MainWindow(
+        current_combat,
+        repository,
+    )
+    qtbot.addWidget(window)
+
+    window.open_combat()
+
+    window.open_combat_dialog.combat_list.setCurrentRow(0)
+    window.open_combat_dialog.open_button.click()
+
+    assert window.round_label.text() == "ROUND 0"
+    assert window.current_turn_label.text() == "CURRENT TURN: Fighter"
+    assert (
+        window.combatants_layout.itemAt(0).widget().combatant
+        is window.combat.combatants[0]
+    )
+
+def test_main_window_restores_saved_combat_state(
+        qtbot,
+        tmp_path,
+):
+    repository = CombatRepository(tmp_path)
+
+    saved_combat = Combat(name="Boss Fight")
+
+    fighter = Combatant(
+        name="Fighter",
+        initiative=20,
+        max_hp=30,
+        current_hp=17,
+    )
+
+    wizard = Combatant(
+        name="Wizard",
+        initiative=15,
+        max_hp=20,
+        current_hp=8,
+    )
+
+    saved_combat.add_combatant(fighter)
+    saved_combat.add_combatant(wizard)
+
+    saved_combat.start()
+    saved_combat.next_turn()
+
+    repository.save(saved_combat)
+
+    current_combat = Combat(name="Empty Encounter")
+
+    window = MainWindow(
+        current_combat,
+        repository,
+    )
+    qtbot.addWidget(window)
+
+    window.open_combat()
+
+    window.open_combat_dialog.combat_list.setCurrentRow(0)
+    window.open_combat_dialog.open_button.click()
+
+    assert window.combat.id == saved_combat.id
+    assert window.combat.name == "Boss Fight"
+    assert window.combat.current_round == 1
+    assert window.combat.current_turn_index == 1
+    assert window.combat.current_combatant.name == "Wizard"
+    assert window.combat.combatants[0].current_hp == 17
+    assert window.combat.combatants[1].current_hp == 8
+
+def test_main_window_restores_saved_combat_effects(
+    qtbot,
+    tmp_path,
+):
+    repository = CombatRepository(tmp_path)
+
+    saved_combat = Combat(name="Blessed Battle")
+
+    fighter = Combatant(
+        name="Fighter",
+        initiative=20,
+        max_hp=30,
+        current_hp=17,
+    )
+
+    bless = EffectTemplate(
+        name="Bless",
+        default_duration=10,
+        concentration=True,
+        notes="+1d4 to attack rolls and saving throws",
+    )
+
+    effect = Effect.from_template(bless)
+    effect.tick()
+    effect.tick()
+
+    fighter.effects.append(effect)
+    saved_combat.add_combatant(fighter)
+
+    repository.save(saved_combat)
+
+    current_combat = Combat(name="Empty Encounter")
+
+    window = MainWindow(
+        current_combat,
+        repository,
+    )
+    qtbot.addWidget(window)
+
+    window.open_combat()
+
+    window.open_combat_dialog.combat_list.setCurrentRow(0)
+    window.open_combat_dialog.open_button.click()
+
+    loaded_effect = window.combat.combatants[0].effects[0]
+
+    assert loaded_effect.template.name == "Bless"
+    assert loaded_effect.remaining_rounds == 8
+    assert loaded_effect.concentration is True
+    assert loaded_effect.enabled is True
+    assert loaded_effect.notes == "+1d4 to attack rolls and saving throws"

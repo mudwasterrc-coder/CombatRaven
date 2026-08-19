@@ -233,3 +233,4 @@ class MainWindow(QMainWindow):
             return
 
         self.combat = combat
+        self.refresh()
