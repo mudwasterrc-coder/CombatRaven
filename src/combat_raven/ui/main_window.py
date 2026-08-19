@@ -14,6 +14,7 @@ from combat_raven.ui.combatant_dialog import CombatantDialog
 from combat_raven.ui.combatants_container import CombatantsContainer
 from combat_raven.repositories.combat_repository import CombatRepository
 from combat_raven.ui.open_combat_dialog import OpenCombatDialog
+from combat_raven.ui.new_combat_dialog import NewCombatDialog
 
 
 class MainWindow(QMainWindow):
@@ -233,4 +234,25 @@ class MainWindow(QMainWindow):
             return
 
         self.combat = combat
+        self.refresh()
+
+    def new_combat(self) -> None:
+        """
+        Opens the dialog for creating a new combat encounter.
+        """
+        self.new_combat_dialog = NewCombatDialog()
+
+        self.new_combat_dialog.accepted.connect(
+            self._create_new_combat
+        )
+
+        self.new_combat_dialog.show()
+
+    def _create_new_combat(self) -> None:
+        """
+        Creates a new combat using the name entered in the dialog.
+        """
+        name = self.new_combat_dialog.selected_name
+
+        self.combat = Combat(name=name)
         self.refresh()

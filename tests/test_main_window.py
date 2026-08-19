@@ -632,3 +632,82 @@ def test_main_window_restores_saved_combat_effects(
     assert loaded_effect.concentration is True
     assert loaded_effect.enabled is True
     assert loaded_effect.notes == "+1d4 to attack rolls and saving throws"
+
+def test_main_window_can_create_new_combat(qtbot, tmp_path):
+    current_combat = Combat(
+        name="Current Encounter",
+    )
+
+    repository = CombatRepository(tmp_path)
+
+    window = MainWindow(
+        current_combat,
+        repository,
+    )
+    qtbot.addWidget(window)
+
+    window.new_combat()
+
+    window.new_combat_dialog.name_input.setText(
+        "New Encounter"
+    )
+
+    window.new_combat_dialog.create_button.click()
+
+    assert window.combat is not current_combat
+    assert window.combat.name == "New Encounter"
+    assert window.combat.combatants == []
+
+def test_main_window_can_create_named_combat(
+    qtbot,
+    tmp_path,
+):
+    repository = CombatRepository(tmp_path)
+
+    current_combat = Combat(
+        name="Current Encounter",
+    )
+
+    window = MainWindow(
+        current_combat,
+        repository,
+    )
+    qtbot.addWidget(window)
+
+    window.new_combat()
+
+    window.new_combat_dialog.name_input.setText(
+        "Assault on the Tower"
+    )
+
+    window.new_combat_dialog.create_button.click()
+
+    assert window.combat.name == "Assault on the Tower"
+    assert window.combat.combatants == []
+
+def test_main_window_cancel_new_combat_keeps_current_combat(
+    qtbot,
+    tmp_path,
+):
+    repository = CombatRepository(tmp_path)
+
+    current_combat = Combat(
+        name="Current Encounter",
+    )
+
+    window = MainWindow(
+        current_combat,
+        repository,
+    )
+    qtbot.addWidget(window)
+
+    window.new_combat()
+
+    window.new_combat_dialog.name_input.setText(
+        "Assault on the Tower"
+    )
+
+    window.new_combat_dialog.cancel_button.click()
+
+    assert window.combat is current_combat
+    assert window.combat.name == "Current Encounter"

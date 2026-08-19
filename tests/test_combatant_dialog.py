@@ -18,3 +18,4 @@ def test_combatant_dialog_creates_a_combatant(qtbot):
     assert combatant.current_hp == 350
     assert combatant.initiative == 22
     assert combatant.legendary_action_limit == 3
+
