@@ -905,3 +905,27 @@ def test_main_window_open_button_loads_selected_combat(
     assert window.status_label.text() == (
         "COMBAT LOADED: Assault on the Tower"
     )
+
+def test_main_window_open_button_opens_dialog_after_delete(
+    qtbot,
+    tmp_path,
+):
+    repository = CombatRepository(tmp_path)
+
+    combat = Combat(name="Assault on the Tower")
+    repository.save(combat)
+
+    window = MainWindow(
+        Combat(name="Current Encounter"),
+        repository,
+    )
+    qtbot.addWidget(window)
+
+    qtbot.mouseClick(
+        window.open_combat_button,
+        Qt.MouseButton.LeftButton,
+    )
+
+    assert hasattr(window, "open_combat_dialog")
+    assert window.open_combat_dialog.isVisible()
+

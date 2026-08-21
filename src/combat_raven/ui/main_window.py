@@ -223,6 +223,7 @@ class MainWindow(QMainWindow):
         """
         Opens the dialog for selecting a saved combat encounter.
         """
+
         self.open_combat_dialog = OpenCombatDialog(
             self.combat_repository
         )

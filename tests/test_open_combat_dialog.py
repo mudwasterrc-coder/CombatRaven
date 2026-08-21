@@ -1,5 +1,5 @@
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QDialog
+from PySide6.QtWidgets import QDialog, QMessageBox
 
 from combat_raven.models.combat import Combat
 from combat_raven.repositories.combat_repository import CombatRepository
@@ -134,3 +134,87 @@ def test_open_combat_dialog_open_does_not_accept_without_selection(
     )
 
     assert dialog.result() == 0
+
+def test_open_combat_dialog_has_delete_button(qtbot, tmp_path):
+    repository = CombatRepository(tmp_path)
+
+    dialog = OpenCombatDialog(repository)
+    qtbot.addWidget(dialog)
+
+    assert dialog.delete_button is not None
+    assert dialog.delete_button.text() == "DELETE"
+
+def test_open_combat_dialog_delete_removes_selected_combat(
+    qtbot,
+    tmp_path,
+    monkeypatch,
+):
+    repository = CombatRepository(tmp_path)
+
+    first = Combat(name="Assault on the Tower")
+    second = Combat(name="Crypt of Ravenloft")
+
+    repository.save(first)
+    repository.save(second)
+
+    dialog = OpenCombatDialog(repository)
+    qtbot.addWidget(dialog)
+
+    dialog.combat_list.setCurrentRow(0)
+
+    monkeypatch.setattr(
+        "combat_raven.ui.open_combat_dialog.QMessageBox.question",
+        lambda *args, **kwargs: QMessageBox.StandardButton.Yes,
+)
+    qtbot.mouseClick(
+        dialog.delete_button,
+        Qt.MouseButton.LeftButton,
+    )
+
+    assert repository.get_by_id(first.id) is None
+    assert repository.get_by_id(second.id) is not None
+
+def test_open_combat_dialog_delete_does_nothing_without_selection(qtbot, tmp_path,):
+    repository = CombatRepository(tmp_path)
+
+    combat = Combat(name="Assault on the Tower")
+    repository.save(combat)
+
+    dialog = OpenCombatDialog(repository)
+    qtbot.addWidget(dialog)
+
+    dialog.combat_list.clearSelection()
+
+    qtbot.mouseClick(
+        dialog.delete_button,
+        Qt.MouseButton.LeftButton,
+    )
+
+    assert repository.get_by_id(combat.id) is not None
+
+def test_open_combat_dialog_delete_can_be_cancelled(
+    qtbot,
+    tmp_path,
+    monkeypatch,
+):
+    repository = CombatRepository(tmp_path)
+
+    combat = Combat(name="Assault on the Tower")
+    repository.save(combat)
+
+    dialog = OpenCombatDialog(repository)
+    qtbot.addWidget(dialog)
+
+    dialog.combat_list.setCurrentRow(0)
+
+    monkeypatch.setattr(
+        "combat_raven.ui.open_combat_dialog.QMessageBox.question",
+        lambda *args, **kwargs: QMessageBox.StandardButton.No,
+    )
+
+    qtbot.mouseClick(
+        dialog.delete_button,
+        Qt.MouseButton.LeftButton,
+    )
+
+    assert repository.get_by_id(combat.id) is not None

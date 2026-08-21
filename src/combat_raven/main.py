@@ -1,9 +1,11 @@
 import sys
+from pathlib import Path
 
 from PySide6.QtWidgets import QApplication
 
 from combat_raven.models.combat import Combat
 from combat_raven.models.combatant import Combatant
+from combat_raven.repositories.combat_repository import CombatRepository
 from combat_raven.ui.main_window import MainWindow
 
 
@@ -31,7 +33,14 @@ def main() -> None:
 
     combat.start()
 
-    window = MainWindow(combat)
+    repository = CombatRepository(
+        Path.home() / "CombatRaven" / "encounters"
+    )
+
+    window = MainWindow(
+        combat,
+        repository,
+    )
     window.show()
 
     sys.exit(app.exec())

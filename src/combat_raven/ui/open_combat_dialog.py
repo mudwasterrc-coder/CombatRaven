@@ -5,6 +5,7 @@ from PySide6.QtWidgets import (
     QListWidgetItem,
     QPushButton,
     QVBoxLayout,
+    QMessageBox,
 )
 
 from combat_raven.repositories.combat_repository import CombatRepository
@@ -31,11 +32,17 @@ class OpenCombatDialog(QDialog):
         self.open_button = QPushButton("OPEN")
         self.open_button.clicked.connect(self._open_selected_combat)
 
+        self.delete_button = QPushButton("DELETE", self)
+        self.delete_button.clicked.connect(
+            self._delete_selected_combat
+        )
+
         self._load_combats()
 
         layout = QVBoxLayout()
         layout.addWidget(self.combat_list)
         layout.addWidget(self.open_button)
+        layout.addWidget(self.delete_button)
         layout.addWidget(self.cancel_button)
 
         self.setLayout(layout)
@@ -44,6 +51,8 @@ class OpenCombatDialog(QDialog):
         """
         Loads saved combats into the list.
         """
+        self.combat_list.clear()
+        
         for combat in self.repository.list():
             item = QListWidgetItem(combat.name)
             item.setData(Qt.ItemDataRole.UserRole, combat.id)
@@ -69,3 +78,27 @@ class OpenCombatDialog(QDialog):
             return None
 
         return item.data(Qt.ItemDataRole.UserRole)
+
+    def _delete_selected_combat(self) -> None:
+        """
+        Deletes the selected combat from the repository
+        after confirmation.
+        """
+        combat_id = self.selected_combat_id
+
+        if combat_id is None:
+            return
+
+        answer = QMessageBox.question(
+            self,
+            "DELETE ENCOUNTER",
+            "Are you sure you want to delete this encounter?",
+            QMessageBox.StandardButton.Yes
+            | QMessageBox.StandardButton.No,
+        )
+
+        if answer != QMessageBox.StandardButton.Yes:
+            return
+
+        self.repository.delete(combat_id)
+        self._load_combats()
