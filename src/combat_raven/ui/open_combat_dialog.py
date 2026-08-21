@@ -9,6 +9,7 @@ from PySide6.QtWidgets import (
 )
 
 from combat_raven.repositories.combat_repository import CombatRepository
+from combat_raven.ui.rename_combat_dialog import RenameCombatDialog
 
 
 class OpenCombatDialog(QDialog):
@@ -37,11 +38,17 @@ class OpenCombatDialog(QDialog):
             self._delete_selected_combat
         )
 
+        self.rename_button = QPushButton("RENAME", self)
+        self.rename_button.clicked.connect(
+            self.rename_combat
+        )
+
         self._load_combats()
 
         layout = QVBoxLayout()
         layout.addWidget(self.combat_list)
         layout.addWidget(self.open_button)
+        layout.addWidget(self.rename_button)
         layout.addWidget(self.delete_button)
         layout.addWidget(self.cancel_button)
 
@@ -101,4 +108,47 @@ class OpenCombatDialog(QDialog):
             return
 
         self.repository.delete(combat_id)
+        self._load_combats()
+
+    def rename_combat(self) -> None:
+        """
+        Opens the dialog for renaming the selected combat.
+        """
+        combat_id = self.selected_combat_id
+
+        if combat_id is None:
+            return
+
+        combat = self.repository.get_by_id(combat_id)
+
+        if combat is None:
+            return
+
+        self.rename_combat_dialog = RenameCombatDialog(
+            combat.name
+        )
+
+        self.rename_combat_dialog.accepted.connect(
+            self._apply_rename
+        )
+
+        self.rename_combat_dialog.show()
+
+    def _apply_rename(self) -> None:
+        """
+        Applies the new name to the selected combat and saves it.
+        """
+        combat_id = self.selected_combat_id
+
+        if combat_id is None:
+            return
+
+        combat = self.repository.get_by_id(combat_id)
+
+        if combat is None:
+            return
+
+        combat.name = self.rename_combat_dialog.selected_name
+
+        self.repository.save(combat)
         self._load_combats()
