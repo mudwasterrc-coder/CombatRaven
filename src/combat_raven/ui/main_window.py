@@ -42,6 +42,7 @@ class MainWindow(QMainWindow):
 
         self.round_label = QLabel()
         self.current_turn_label = QLabel()
+        self.status_label = QLabel()
         self.combatants_scroll_area = QScrollArea()
         self.combatants_scroll_area.setWidgetResizable(True)
         self.combatants_container = CombatantsContainer()
@@ -63,6 +64,9 @@ class MainWindow(QMainWindow):
             self.save_combat
         )
         self.open_combat_button = QPushButton("OPEN ENCOUNTER")
+        self.open_combat_button.clicked.connect(
+            self.open_combat
+        )
         self.add_combatant_button.clicked.connect(
             self.open_combatant_dialog
         )
@@ -72,6 +76,10 @@ class MainWindow(QMainWindow):
         self.sort_by_initiative_button.clicked.connect(
             self.sort_by_initiative
         )
+        self.new_combat_button = QPushButton("NEW ENCOUNTER")
+        self.new_combat_button.clicked.connect(
+            self.new_combat
+        )
 
         layout.addWidget(self.round_label)
         layout.addWidget(self.current_turn_label)
@@ -79,8 +87,10 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.sort_by_initiative_button)
         layout.addWidget(self.add_combatant_button)
         layout.addWidget(self.save_combat_button)
+        layout.addWidget(self.new_combat_button)
         layout.addWidget(self.open_combat_button)
         layout.addWidget(self.end_turn_button)
+        layout.addWidget(self.status_label)
         
 
         self.refresh()
@@ -205,6 +215,10 @@ class MainWindow(QMainWindow):
 
         self.combat_repository.save(self.combat)
 
+        self.status_label.setText(
+            f"COMBAT SAVED: {self.combat.name}"
+        )
+
     def open_combat(self) -> None:
         """
         Opens the dialog for selecting a saved combat encounter.
@@ -235,6 +249,10 @@ class MainWindow(QMainWindow):
 
         self.combat = combat
         self.refresh()
+
+        self.status_label.setText(
+            f"COMBAT LOADED: {self.combat.name}"
+        )
 
     def new_combat(self) -> None:
         """

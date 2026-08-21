@@ -58,3 +58,28 @@ def test_new_combat_dialog_cancel_rejects(qtbot):
     )
 
     assert dialog.result() == 0
+
+def test_new_combat_dialog_has_name_label(qtbot):
+    dialog = NewCombatDialog()
+    qtbot.addWidget(dialog)
+
+    assert dialog.name_label is not None
+    assert dialog.name_label.text() == "ENCOUNTER NAME"
+
+def test_new_combat_dialog_has_title(qtbot):
+    dialog = NewCombatDialog()
+    qtbot.addWidget(dialog)
+
+    assert dialog.windowTitle() == "NEW ENCOUNTER"
+
+def test_new_combat_dialog_has_main_layout(qtbot):
+    dialog = NewCombatDialog()
+    qtbot.addWidget(dialog)
+
+    assert dialog.layout() is not None
+
+def test_new_combat_dialog_has_button_layout(qtbot):
+    dialog = NewCombatDialog()
+    qtbot.addWidget(dialog)
+
+    assert dialog.button_layout is not None

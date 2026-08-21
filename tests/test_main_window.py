@@ -711,3 +711,197 @@ def test_main_window_cancel_new_combat_keeps_current_combat(
 
     assert window.combat is current_combat
     assert window.combat.name == "Current Encounter"
+
+def test_main_window_has_new_combat_button(qtbot, tmp_path):
+    combat = Combat()
+    repository = CombatRepository(tmp_path)
+
+    window = MainWindow(combat, repository)
+    qtbot.addWidget(window)
+
+    assert window.new_combat_button is not None
+    assert window.new_combat_button.text() == "NEW ENCOUNTER"
+
+def test_main_window_new_combat_button_opens_dialog(
+    qtbot,
+    tmp_path,
+):
+    combat = Combat()
+    repository = CombatRepository(tmp_path)
+
+    window = MainWindow(combat, repository)
+    qtbot.addWidget(window)
+
+    qtbot.mouseClick(
+        window.new_combat_button,
+        Qt.MouseButton.LeftButton,
+    )
+
+    assert window.new_combat_dialog is not None
+    assert window.new_combat_dialog.isVisible()
+
+def test_main_window_can_create_named_combat_from_button(
+    qtbot,
+    tmp_path,
+):
+    repository = CombatRepository(tmp_path)
+
+    current_combat = Combat(
+        name="Current Encounter",
+    )
+
+    window = MainWindow(
+        current_combat,
+        repository,
+    )
+    qtbot.addWidget(window)
+
+    qtbot.mouseClick(
+        window.new_combat_button,
+        Qt.MouseButton.LeftButton,
+    )
+
+    window.new_combat_dialog.name_input.setText(
+        "Assault on the Tower"
+    )
+
+    qtbot.mouseClick(
+        window.new_combat_dialog.create_button,
+        Qt.MouseButton.LeftButton,
+    )
+
+    assert window.combat is not current_combat
+    assert window.combat.name == "Assault on the Tower"
+    assert window.combat.combatants == []
+
+def test_main_window_has_status_label(qtbot, tmp_path):
+    combat = Combat(name="Assault on the Tower")
+    repository = CombatRepository(tmp_path)
+
+    window = MainWindow(combat, repository)
+    qtbot.addWidget(window)
+
+    assert window.status_label is not None
+
+def test_main_window_save_combat_shows_status(
+    qtbot,
+    tmp_path,
+):
+    combat = Combat(name="Assault on the Tower")
+    repository = CombatRepository(tmp_path)
+
+    window = MainWindow(combat, repository)
+    qtbot.addWidget(window)
+
+    window.save_combat()
+
+    assert window.status_label.text() == (
+        "COMBAT SAVED: Assault on the Tower"
+    )
+
+def test_main_window_open_combat_shows_status(
+    qtbot,
+    tmp_path,
+):
+    repository = CombatRepository(tmp_path)
+
+    saved_combat = Combat(name="Assault on the Tower")
+    repository.save(saved_combat)
+
+    current_combat = Combat(name="Current Encounter")
+
+    window = MainWindow(current_combat, repository)
+    qtbot.addWidget(window)
+
+    window.open_combat()
+
+    window.open_combat_dialog.combat_list.setCurrentRow(0)
+    window.open_combat_dialog.open_button.click()
+
+    assert window.status_label.text() == (
+        "COMBAT LOADED: Assault on the Tower"
+    )
+
+def test_main_window_save_button_saves_combat(
+    qtbot,
+    tmp_path,
+):
+    combat = Combat(name="Assault on the Tower")
+    repository = CombatRepository(tmp_path)
+
+    window = MainWindow(combat, repository)
+    qtbot.addWidget(window)
+
+    qtbot.mouseClick(
+        window.save_combat_button,
+        Qt.MouseButton.LeftButton,
+    )
+
+    loaded = repository.get_by_id(combat.id)
+
+    assert loaded is not None
+    assert loaded.name == "Assault on the Tower"
+    assert window.status_label.text() == (
+        "COMBAT SAVED: Assault on the Tower"
+    )
+
+def test_main_window_open_button_opens_dialog(
+    qtbot,
+    tmp_path,
+):
+    repository = CombatRepository(tmp_path)
+
+    combat = Combat(name="Assault on the Tower")
+    repository.save(combat)
+
+    current_combat = Combat(name="Current Encounter")
+
+    window = MainWindow(current_combat, repository)
+    qtbot.addWidget(window)
+
+    qtbot.mouseClick(
+        window.open_combat_button,
+        Qt.MouseButton.LeftButton,
+    )
+
+    assert window.open_combat_dialog is not None
+    assert window.open_combat_dialog.isVisible()
+
+def test_main_window_open_button_loads_selected_combat(
+    qtbot,
+    tmp_path,
+):
+    repository = CombatRepository(tmp_path)
+
+    saved_combat = Combat(
+        name="Assault on the Tower",
+    )
+    repository.save(saved_combat)
+
+    current_combat = Combat(
+        name="Current Encounter",
+    )
+
+    window = MainWindow(
+        current_combat,
+        repository,
+    )
+    qtbot.addWidget(window)
+
+    qtbot.mouseClick(
+        window.open_combat_button,
+        Qt.MouseButton.LeftButton,
+    )
+
+    window.open_combat_dialog.combat_list.setCurrentRow(0)
+
+    qtbot.mouseClick(
+        window.open_combat_dialog.open_button,
+        Qt.MouseButton.LeftButton,
+    )
+
+    assert window.combat.id == saved_combat.id
+    assert window.combat.name == "Assault on the Tower"
+    assert window.status_label.text() == (
+        "COMBAT LOADED: Assault on the Tower"
+    )
