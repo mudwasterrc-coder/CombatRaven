@@ -15,6 +15,7 @@ from combat_raven.ui.combatants_container import CombatantsContainer
 from combat_raven.repositories.combat_repository import CombatRepository
 from combat_raven.ui.open_combat_dialog import OpenCombatDialog
 from combat_raven.ui.new_combat_dialog import NewCombatDialog
+from combat_raven.ui.unsaved_changes_dialog import UnsavedChangesDialog
 
 
 class MainWindow(QMainWindow):
@@ -31,6 +32,7 @@ class MainWindow(QMainWindow):
 
         self.combat = combat
         self.combat_repository = combat_repository
+        self.has_unsaved_changes = False
 
         self.setWindowTitle("Combat Raven")
         self.resize(1000, 700)
@@ -163,6 +165,7 @@ class MainWindow(QMainWindow):
         )
 
         self.combat.add_combatant(combatant)
+        self.has_unsaved_changes = True
         self.refresh()
 
     def open_combatant_dialog(self) -> None:
@@ -181,6 +184,7 @@ class MainWindow(QMainWindow):
         Removes a combatant from the current combat and refreshes the UI.
         """
         self.combat.remove_combatant(combatant)
+        self.has_unsaved_changes = True
         self.refresh()
 
     def move_combatant(
@@ -195,6 +199,7 @@ class MainWindow(QMainWindow):
             combatant,
             new_index,
         )
+        self.has_unsaved_changes = True
         self.refresh()
 
     def sort_by_initiative(self) -> None:
@@ -202,6 +207,7 @@ class MainWindow(QMainWindow):
         Sorts combatants by initiative and refreshes the UI.
         """
         self.combat.sort_by_initiative()
+        self.has_unsaved_changes = True 
         self.refresh()
 
     def save_combat(self) -> None:
@@ -214,6 +220,7 @@ class MainWindow(QMainWindow):
             )
 
         self.combat_repository.save(self.combat)
+        self.has_unsaved_changes = False
 
         self.status_label.setText(
             f"COMBAT SAVED: {self.combat.name}"
@@ -223,6 +230,15 @@ class MainWindow(QMainWindow):
         """
         Opens the dialog for selecting a saved combat encounter.
         """
+        if self.has_unsaved_changes:
+            self.unsaved_changes_dialog = UnsavedChangesDialog()
+
+            self.unsaved_changes_dialog.accepted.connect(
+                self._continue_open_combat
+            )
+
+            self.unsaved_changes_dialog.show()
+            return
 
         self.open_combat_dialog = OpenCombatDialog(
             self.combat_repository
@@ -259,6 +275,17 @@ class MainWindow(QMainWindow):
         """
         Opens the dialog for creating a new combat encounter.
         """
+        if self.has_unsaved_changes:
+            self.unsaved_changes_dialog = UnsavedChangesDialog()
+
+            self.unsaved_changes_dialog.accepted.connect(
+                self._continue_new_combat
+            )
+
+            self.unsaved_changes_dialog.show()
+            return
+
+        
         self.new_combat_dialog = NewCombatDialog()
 
         self.new_combat_dialog.accepted.connect(
@@ -275,3 +302,32 @@ class MainWindow(QMainWindow):
 
         self.combat = Combat(name=name)
         self.refresh()
+
+    def _continue_new_combat(self) -> None:
+        """
+        Continues creating a new combat after resolving unsaved changes.
+        """
+        if self.unsaved_changes_dialog.selected_action == "save":
+            self. save_combat()
+
+        self.has_unsaved_changes = False
+        self.new_combat()
+
+    def _continue_open_combat(self) -> None:
+        """
+        Continues opening a combat after resolving unsaved changes.
+        """
+        if self.unsaved_changes_dialog.selected_action == "save":
+            self.save_combat()
+
+        self.has_unsaved_changes = False
+
+        self.open_combat_dialog = OpenCombatDialog(
+            self.combat_repository
+        )
+
+        self.open_combat_dialog.accepted.connect(
+            self._load_selected_combat
+        )
+
+        self.open_combat_dialog.show()

@@ -7,6 +7,7 @@ from combat_raven.ui.combatants_container import CombatantsContainer
 from combat_raven.repositories.combat_repository import CombatRepository
 from combat_raven.models.effect import Effect
 from combat_raven.models.effect_template import EffectTemplate
+from combat_raven.ui.unsaved_changes_dialog import UnsavedChangesDialog
 
 
 def test_main_window_can_start_with_no_combatants(qtbot):
@@ -929,3 +930,454 @@ def test_main_window_open_button_opens_dialog_after_delete(
     assert hasattr(window, "open_combat_dialog")
     assert window.open_combat_dialog.isVisible()
 
+def test_main_window_starts_without_unsaved_changes(
+    qtbot,
+    tmp_path,
+):
+    combat = Combat(name="Assault on the Tower")
+    repository = CombatRepository(tmp_path)
+
+    window = MainWindow(combat, repository)
+    qtbot.addWidget(window)
+
+    assert window.has_unsaved_changes is False
+
+def test_main_window_marks_changes_after_adding_combatant(
+    qtbot,
+    tmp_path,
+):
+    combat = Combat(name="Assault on the Tower")
+    repository = CombatRepository(tmp_path)
+
+    window = MainWindow(combat, repository)
+    qtbot.addWidget(window)
+
+    window.add_combatant(
+        name="Goblin",
+        max_hp=7,
+        current_hp=7,
+        initiative=15,
+    )
+
+    assert window.has_unsaved_changes is True
+
+def test_main_window_marks_changes_after_removing_combatant(
+    qtbot,
+    tmp_path,
+):
+    combat = Combat(name="Assault on the Tower")
+    repository = CombatRepository(tmp_path)
+
+    window = MainWindow(combat, repository)
+    qtbot.addWidget(window)
+
+    window.add_combatant(
+        name="Goblin",
+        max_hp=7,
+        current_hp=7,
+        initiative=15,
+    )
+
+    window.has_unsaved_changes = False
+
+    combatant = combat.combatants[0]
+    window.remove_combatant(combatant)
+
+    assert window.has_unsaved_changes is True
+
+def test_main_window_marks_changes_after_moving_combatant(
+    qtbot,
+    tmp_path,
+):
+    combat = Combat(name="Assault on the Tower")
+    repository = CombatRepository(tmp_path)
+
+    window = MainWindow(combat, repository)
+    qtbot.addWidget(window)
+
+    window.add_combatant(
+        name="Goblin",
+        max_hp=7,
+        current_hp=7,
+        initiative=15,
+    )
+
+    window.add_combatant(
+        name="Orc",
+        max_hp=15,
+        current_hp=15,
+        initiative=10,
+    )
+
+    window.has_unsaved_changes = False
+
+    combatant = combat.combatants[0]
+    window.move_combatant(combatant, 1)
+
+    assert window.has_unsaved_changes is True
+
+def test_main_window_marks_changes_after_sorting_combatants(
+    qtbot,
+    tmp_path,
+):
+    combat = Combat(name="Assault on the Tower")
+    repository = CombatRepository(tmp_path)
+
+    window = MainWindow(combat, repository)
+    qtbot.addWidget(window)
+
+    window.add_combatant(
+        name="Goblin",
+        max_hp=7,
+        current_hp=7,
+        initiative=10,
+    )
+
+    window.add_combatant(
+        name="Orc",
+        max_hp=15,
+        current_hp=15,
+        initiative=20,
+    )
+
+    window.has_unsaved_changes = False
+
+    window.sort_by_initiative()
+
+    assert window.has_unsaved_changes is True
+
+def test_main_window_save_clears_unsaved_changes(
+    qtbot,
+    tmp_path,
+):
+    combat = Combat(name="Assault on the Tower")
+    repository = CombatRepository(tmp_path)
+
+    window = MainWindow(combat, repository)
+    qtbot.addWidget(window)
+
+    window.add_combatant(
+        name="Goblin",
+        max_hp=7,
+        current_hp=7,
+        initiative=15,
+    )
+
+    assert window.has_unsaved_changes is True
+
+    window.save_combat()
+
+    assert window.has_unsaved_changes is False
+
+def test_unsaved_changes_dialog_has_save_button(qtbot):
+    dialog = UnsavedChangesDialog()
+    qtbot.addWidget(dialog)
+
+    assert dialog.save_button is not None
+
+def test_unsaved_changes_dialog_has_discard_button(qtbot):
+    dialog = UnsavedChangesDialog()
+    qtbot.addWidget(dialog)
+
+    assert dialog.discard_button is not None
+
+def test_unsaved_changes_dialog_has_cancel_button(qtbot):
+    dialog = UnsavedChangesDialog()
+    qtbot.addWidget(dialog)
+
+    assert dialog.cancel_button is not None
+
+def test_unsaved_changes_dialog_has_title(qtbot):
+    dialog = UnsavedChangesDialog()
+    qtbot.addWidget(dialog)
+
+    assert dialog.windowTitle() == "UNSAVED CHANGES"
+
+def test_unsaved_changes_dialog_has_main_layout(qtbot):
+    dialog = UnsavedChangesDialog()
+    qtbot.addWidget(dialog)
+
+    assert dialog.layout() is not None
+
+def test_unsaved_changes_dialog_has_button_layout(qtbot):
+    dialog = UnsavedChangesDialog()
+    qtbot.addWidget(dialog)
+
+    assert dialog.button_layout is not None
+
+def test_unsaved_changes_dialog_cancel_rejects(qtbot):
+    dialog = UnsavedChangesDialog()
+    qtbot.addWidget(dialog)
+
+    dialog.cancel_button.click()
+
+    assert dialog.result() == 0
+
+def test_unsaved_changes_dialog_discard_accepts(qtbot):
+    dialog = UnsavedChangesDialog()
+    qtbot.addWidget(dialog)
+
+    dialog.discard_button.click()
+
+    assert dialog.result() == 1
+
+def test_unsaved_changes_dialog_save_sets_selected_action(qtbot):
+    dialog = UnsavedChangesDialog()
+    qtbot.addWidget(dialog)
+
+    dialog.save_button.click()
+
+    assert dialog.selected_action == "save"
+
+def test_main_window_new_combat_shows_unsaved_changes_dialog(
+     qtbot,
+      tmp_path,
+    ):
+    repository= CombatRepository(tmp_path)
+
+    combat = Combat(name="Current Encounter")
+
+    window = MainWindow(
+        combat,
+         repository,
+     )
+    qtbot.addWidget(window)
+
+    window.has_unsaved_changes = True
+
+    window.new_combat()
+
+    assert window.unsaved_changes_dialog is not None
+
+def test_main_window_new_combat_cancel_keeps_current_combat(
+        qtbot,
+        tmp_path,
+    ):
+        repository = CombatRepository(tmp_path)
+
+        combat = Combat(name="Current Encounter")
+
+        window = MainWindow( combat, repository)
+
+        qtbot.addWidget(window)
+
+        window.has_unsaved_changes = True
+
+        window.new_combat()
+
+        window.unsaved_changes_dialog.cancel_button.click()
+
+        assert window.combat.name == "Current Encounter"
+        assert window.has_unsaved_changes is True
+
+def test_main_window_new_combat_discard_opens_new_combat_dialog(
+    qtbot,
+    tmp_path,
+):
+    repository = CombatRepository(tmp_path)
+
+    combat = Combat(name="Current Encounter")
+
+    window = MainWindow(
+        combat,
+        repository,
+    )
+    qtbot.addWidget(window)
+
+    window.has_unsaved_changes = True
+
+    window.new_combat()
+
+    window.unsaved_changes_dialog.discard_button.click()
+
+    assert window.new_combat_dialog is not None
+
+def test_main_window_new_combat_save_opens_new_combat_dialog(
+    qtbot,
+    tmp_path,
+):
+    repository = CombatRepository(tmp_path)
+
+    combat = Combat(name="Current Encounter")
+
+    window = MainWindow(
+        combat,
+        repository,
+    )
+    qtbot.addWidget(window)
+
+    window.has_unsaved_changes = True
+
+    window.new_combat()
+
+    window.unsaved_changes_dialog.save_button.click()
+
+    assert window.has_unsaved_changes is False
+    assert window.new_combat_dialog is not None
+
+def test_main_window_new_combat_save_persists_current_combat(
+    qtbot,
+    tmp_path,
+):
+    repository = CombatRepository(tmp_path)
+
+    combat = Combat(name="Current Encounter")
+
+    window = MainWindow(
+        combat,
+        repository,
+    )
+    qtbot.addWidget(window)
+
+    window.add_combatant(
+        name="Goblin",
+        max_hp=7,
+        current_hp=7,
+        initiative=15,
+    )
+
+    window.new_combat()
+
+    window.unsaved_changes_dialog.save_button.click()
+
+    saved = repository.get_by_id(combat.id)
+
+    assert saved is not None
+    assert saved.name == "Current Encounter"
+    assert len(saved.combatants) == 1
+    assert saved.combatants[0].name == "Goblin"
+
+def test_main_window_open_combat_shows_unsaved_changes_dialog(
+    qtbot,
+    tmp_path,
+):
+    repository = CombatRepository(tmp_path)
+
+    combat = Combat(name="Current Encounter")
+
+    window = MainWindow(
+        combat,
+        repository,
+    )
+    qtbot.addWidget(window)
+
+    window.has_unsaved_changes = True
+
+    window.open_combat()
+
+    assert window.unsaved_changes_dialog is not None
+
+def test_main_window_open_combat_discard_opens_open_combat_dialog(
+    qtbot,
+    tmp_path,
+):
+    repository = CombatRepository(tmp_path)
+
+    saved_combat = Combat(name="Saved Encounter")
+    repository.save(saved_combat)
+
+    current_combat = Combat(name="Current Encounter")
+
+    window = MainWindow(
+        current_combat,
+        repository,
+    )
+    qtbot.addWidget(window)
+
+    window.has_unsaved_changes = True
+
+    window.open_combat()
+
+    window.unsaved_changes_dialog.discard_button.click()
+
+    assert window.open_combat_dialog is not None
+
+def test_main_window_open_combat_save_opens_open_combat_dialog(
+    qtbot,
+    tmp_path,
+):
+    repository = CombatRepository(tmp_path)
+
+    saved_combat = Combat(name="Saved Encounter")
+    repository.save(saved_combat)
+
+    current_combat = Combat(name="Current Encounter")
+
+    window = MainWindow(
+        current_combat,
+        repository,
+    )
+    qtbot.addWidget(window)
+
+    window.has_unsaved_changes = True
+
+    window.open_combat()
+
+    window.unsaved_changes_dialog.save_button.click()
+
+    assert window.has_unsaved_changes is False
+    assert window.open_combat_dialog is not None
+
+def test_main_window_open_combat_after_save_can_load_selected_combat(
+    qtbot,
+    tmp_path,
+):
+    repository = CombatRepository(tmp_path)
+
+    saved_combat = Combat(name="Saved Encounter")
+    repository.save(saved_combat)
+
+    current_combat = Combat(name="Current Encounter")
+
+    window = MainWindow(
+        current_combat,
+        repository,
+    )
+    qtbot.addWidget(window)
+
+    window.has_unsaved_changes = True
+
+    window.open_combat()
+
+    window.unsaved_changes_dialog.save_button.click()
+
+    for row in range(
+        window.open_combat_dialog.combat_list.count()
+    ):
+        item = window.open_combat_dialog.combat_list.item(row)
+
+        if item.text() == "Saved Encounter":
+            window.open_combat_dialog.combat_list.setCurrentRow(row)
+            break    
+
+    window.open_combat_dialog.open_button.click()
+
+    assert window.combat.name == "Saved Encounter"
+    assert window.has_unsaved_changes is False
+
+def test_main_window_open_combat_cancel_keeps_current_combat(
+    qtbot,
+    tmp_path,
+):
+    repository = CombatRepository(tmp_path)
+
+    saved_combat = Combat(name="Saved Encounter")
+    repository.save(saved_combat)
+
+    current_combat = Combat(name="Current Encounter")
+
+    window = MainWindow(
+        current_combat,
+        repository,
+    )
+    qtbot.addWidget(window)
+
+    window.has_unsaved_changes = True
+
+    window.open_combat()
+
+    window.unsaved_changes_dialog.cancel_button.click()
+
+    assert window.combat.name == "Current Encounter"
+    assert window.has_unsaved_changes is True
+    assert not hasattr(window, "open_combat_dialog")
