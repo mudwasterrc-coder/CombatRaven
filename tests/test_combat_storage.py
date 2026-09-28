@@ -357,3 +357,27 @@ def test_storage_preserves_used_reaction(tmp_path):
     loaded = storage.load()
 
     assert loaded.combatants[0].can_react() is False
+
+def test_storage_preserves_concentration_effect(tmp_path):
+    path = tmp_path / "combat.json"
+    combat = Combat()
+
+    cleric = Combatant(
+        name="Cleric",
+        initiative=10,
+        current_hp=25,
+        max_hp=25,
+    )
+    bless = Effect.from_template(
+        EffectTemplate(name="Bless", default_duration=10, concentration=True)
+    )
+    cleric.add_effect(bless)
+    cleric.start_concentration(bless)
+    combat.add_combatant(cleric)
+
+    storage = CombatStorage(path)
+    storage.save(combat)
+    loaded_cleric = storage.load().combatants[0]
+
+    assert loaded_cleric.is_concentrating()
+    assert loaded_cleric.concentration_effects[0] is loaded_cleric.effects[0]
