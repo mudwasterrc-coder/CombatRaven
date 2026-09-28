@@ -34,3 +34,18 @@ Combat now coordinates turn flow while Combatant remains responsible for managin
 
 Status:
 15 tests passing.
+
+## 2026-09-28
+
+### Fixed (branch fix/core-bugs)
+- Combatants and effects compare by identity (duplicate goblins / Bless removed correctly).
+- Combat storage now persists legendary action limit, legendary actions used, reaction and concentration target.
+- Effects without duration no longer crash when advancing turns.
+- Next turn with no combatants does nothing instead of crashing.
+- Sorting by initiative keeps the turn on the same combatant.
+
+### Tests
+218 passing.
+
+### Next
+UI bugs: unsaved changes (ADD / END TURN / closeEvent), rename CANCEL, rename overwritten on save, default current HP 0.
