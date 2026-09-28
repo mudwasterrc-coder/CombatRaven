@@ -779,3 +779,11 @@ def test_remove_combatant_removes_the_exact_instance():
 
     assert len(combat.combatants) == 1
     assert combat.combatants[0] is first_goblin
+
+def test_next_turn_with_no_combatants_does_nothing():
+    combat = Combat()
+
+    combat.next_turn()
+
+    assert combat.current_round == 0
+    assert combat.current_turn_index == 0

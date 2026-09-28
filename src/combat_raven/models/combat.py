@@ -83,6 +83,9 @@ class Combat:
         """
         Advances to the next combatant's turn.
         """
+        if not self.combatants:
+            return
+        
         self.current_turn_index += 1
 
         if self.current_turn_index >= len(self.combatants):
