@@ -101,11 +101,19 @@ class Combat:
     def sort_by_initiative(self) -> None:
         """
         Sorts combatants by initiative, in descending order.
+        Keeps the turn on the same combatant.
         """
+        if not self.combatants:
+            return
+
+        current = self.current_combatant
+
         self.combatants.sort(
             key=lambda combatant: combatant.initiative,
             reverse=True,
         )
+
+        self.current_turn_index = self.combatants.index(current)
 
     def restore_state(
         self,

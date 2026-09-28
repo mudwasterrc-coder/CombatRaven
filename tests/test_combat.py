@@ -787,3 +787,17 @@ def test_next_turn_with_no_combatants_does_nothing():
 
     assert combat.current_round == 0
     assert combat.current_turn_index == 0
+
+def test_sort_by_initiative_keeps_the_current_combatant():
+    combat = Combat()
+    fighter = Combatant(name="Fighter", initiative=20, current_hp=30, max_hp=30)
+    wizard = Combatant(name="Wizard", initiative=10, current_hp=18, max_hp=18)
+    combat.add_combatant(fighter)
+    combat.add_combatant(wizard)
+    combat.start()
+    combat.next_turn()
+
+    wizard.initiative = 25
+    combat.sort_by_initiative()
+
+    assert combat.current_combatant is wizard
