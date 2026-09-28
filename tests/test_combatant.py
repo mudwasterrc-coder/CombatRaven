@@ -341,3 +341,20 @@ def test_end_concentration_removes_the_exact_effect_instance():
 
     assert len(fighter.effects) == 1
     assert fighter.effects[0] is first_bless
+
+def test_effect_without_duration_survives_advancing_effects():
+    barbarian = Combatant(
+        name="Barbarian",
+        initiative=14,
+        current_hp=45,
+        max_hp=45,
+    )
+    rage = Effect.from_template(
+        EffectTemplate(name="Rage", default_duration=None)
+    )
+    barbarian.add_effect(rage)
+
+    barbarian.advance_effects()
+
+    assert barbarian.effects == [rage]
+    assert rage.remaining_rounds is None

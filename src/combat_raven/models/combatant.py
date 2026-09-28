@@ -85,7 +85,7 @@ class Combatant:
         self.effects = [
             effect
             for effect in self.effects
-            if effect.remaining_rounds > 0  
+            if not effect.is_expired
         ]
 
     def can_react(self) -> bool:

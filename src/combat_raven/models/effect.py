@@ -32,6 +32,20 @@ class Effect:
     def tick(self) -> None:
         """
         Advances the effect by one round, reducing the remaining rounds by 1.
+        Effects without a duration never tick down.
         """
+        if self.remaining_rounds is None:
+            return
 
         self.remaining_rounds -= 1
+
+    @property
+    def is_expired(self) -> bool:
+        """
+        Returns True if the effect has run out of rounds.
+        Effects without a duration never expire on their own.
+        """
+        return (
+            self.remaining_rounds is not None
+            and self.remaining_rounds <= 0
+        )
