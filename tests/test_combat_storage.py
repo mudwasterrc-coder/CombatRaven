@@ -317,3 +317,24 @@ def test_storage_preserves_legendary_action_limit(tmp_path):
     loaded = storage.load()
 
     assert loaded.combatants[0].legendary_action_limit == 3
+
+def test_storage_preserves_legendary_actions_used(tmp_path):
+    path = tmp_path / "combat.json"
+    combat = Combat()
+
+    strahd = Combatant(
+        name="Strahd",
+        initiative=22,
+        current_hp=350,
+        max_hp=350,
+        legendary_action_limit=3,
+    )
+    strahd.use_legendary_action()
+    strahd.use_legendary_action()
+    combat.add_combatant(strahd)
+
+    storage = CombatStorage(path)
+    storage.save(combat)
+    loaded = storage.load()
+
+    assert loaded.combatants[0].legendary_actions_used == 2

@@ -31,6 +31,8 @@ class CombatStorage:
                     "max_hp": combatant.max_hp,
                     "combatant_type": combatant.combatant_type.value,
                     "legendary_action_limit": combatant.legendary_action_limit,
+                    "legendary_action_limit": combatant.legendary_action_limit,
+                    "legendary_actions_used": combatant.legendary_actions_used,
                     "effects": [
                         {
                             "template": {
@@ -78,6 +80,10 @@ class CombatStorage:
                 max_hp=item["max_hp"],
                 combatant_type=CombatantType(item["combatant_type"]),
                 legendary_action_limit=item.get("legendary_action_limit", 0),
+            )
+
+            combatant.restore_legenday_actions_used(
+                item.get ("legendary_actions_used", 0)
             )
 
             for effect_data in item.get("effects", []):
