@@ -16,6 +16,8 @@ from combat_raven.repositories.combat_repository import CombatRepository
 from combat_raven.ui.open_combat_dialog import OpenCombatDialog
 from combat_raven.ui.new_combat_dialog import NewCombatDialog
 from combat_raven.ui.unsaved_changes_dialog import UnsavedChangesDialog
+from combat_raven.repositories.participant_repository import ParticipantRepository
+from combat_raven.ui.add_participant_dialog import AddParticipantDialog
 
 
 class MainWindow(QMainWindow):
@@ -32,6 +34,7 @@ class MainWindow(QMainWindow):
 
         self.combat = combat
         self.combat_repository = combat_repository
+        self.participant_repository = ParticipantRepository()
         self.has_unsaved_changes = False
 
         self.setWindowTitle("Combat Raven")
@@ -331,3 +334,13 @@ class MainWindow(QMainWindow):
         )
 
         self.open_combat_dialog.show()
+
+    def open_add_participant_dialog(self) -> None:
+        """
+        Opens the dialog for selecting a participant template.
+        """
+        self.add_participant_dialog = AddParticipantDialog(
+            self.participant_repository
+        )
+
+        self.add_participant_dialog.show()

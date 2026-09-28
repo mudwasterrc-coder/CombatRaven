@@ -8,6 +8,7 @@ from combat_raven.repositories.combat_repository import CombatRepository
 from combat_raven.models.effect import Effect
 from combat_raven.models.effect_template import EffectTemplate
 from combat_raven.ui.unsaved_changes_dialog import UnsavedChangesDialog
+from combat_raven.ui.add_participant_dialog import AddParticipantDialog
 
 
 def test_main_window_can_start_with_no_combatants(qtbot):
@@ -1381,3 +1382,20 @@ def test_main_window_open_combat_cancel_keeps_current_combat(
     assert window.combat.name == "Current Encounter"
     assert window.has_unsaved_changes is True
     assert not hasattr(window, "open_combat_dialog")
+
+def test_main_window_add_participant_opens_dialog(
+    qtbot,
+    tmp_path,
+):
+    repository = CombatRepository(tmp_path)
+    combat = Combat(name="Current Encounter")
+
+    window = MainWindow(
+        combat,
+        repository,
+    )
+    qtbot.addWidget(window)
+
+    window.open_add_participant_dialog()
+
+    assert window.add_participant_dialog is not None
