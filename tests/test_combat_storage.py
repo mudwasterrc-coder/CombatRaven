@@ -338,3 +338,22 @@ def test_storage_preserves_legendary_actions_used(tmp_path):
     loaded = storage.load()
 
     assert loaded.combatants[0].legendary_actions_used == 2
+
+def test_storage_preserves_used_reaction(tmp_path):
+    path = tmp_path / "combat.json"
+    combat = Combat()
+
+    fighter = Combatant(
+        name="Fighter",
+        initiative=15,
+        current_hp=30,
+        max_hp=30,
+    )
+    fighter.use_reaction()
+    combat.add_combatant(fighter)
+
+    storage = CombatStorage(path)
+    storage.save(combat)
+    loaded = storage.load()
+
+    assert loaded.combatants[0].can_react() is False

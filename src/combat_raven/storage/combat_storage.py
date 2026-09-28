@@ -33,6 +33,7 @@ class CombatStorage:
                     "legendary_action_limit": combatant.legendary_action_limit,
                     "legendary_action_limit": combatant.legendary_action_limit,
                     "legendary_actions_used": combatant.legendary_actions_used,
+                    "reaction_available": combatant.can_react(),
                     "effects": [
                         {
                             "template": {
@@ -85,6 +86,9 @@ class CombatStorage:
             combatant.restore_legenday_actions_used(
                 item.get ("legendary_actions_used", 0)
             )
+
+            if not item.get("reaction_available", True):
+                combatant.use_reaction()
 
             for effect_data in item.get("effects", []):
                 template_data = effect_data["template"]
