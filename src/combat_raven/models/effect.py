@@ -5,7 +5,7 @@ from combat_raven.models.effect_template import EffectTemplate
 
 
 
-@dataclass
+@dataclass(eq=False)
 class Effect:
     """
     Represents an effect applied to a combatant.

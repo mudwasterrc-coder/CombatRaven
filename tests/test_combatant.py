@@ -321,3 +321,23 @@ def test_combatant_can_be_an_enemy():
     )
 
     assert goblin.combatant_type == CombatantType.ENEMY
+
+def test_end_concentration_removes_the_exact_effect_instance():
+    fighter = Combatant(
+        name="Fighter",
+        initiative=15,
+        current_hp=30,
+        max_hp=30,
+    )
+    bless = EffectTemplate(name="Bless", default_duration=10, concentration=True)
+    first_bless = Effect.from_template(bless)
+    second_bless = Effect.from_template(bless)
+
+    fighter.add_effect(first_bless)
+    fighter.add_effect(second_bless)
+    fighter.start_concentration(second_bless)
+
+    fighter.end_concentration()
+
+    assert len(fighter.effects) == 1
+    assert fighter.effects[0] is first_bless
