@@ -298,3 +298,22 @@ def test_storage_loads_legacy_combat_without_identity(tmp_path):
 
     assert loaded.id
     assert loaded.name == "Unnamed Encounter"
+
+def test_storage_preserves_legendary_action_limit(tmp_path):
+    path = tmp_path / "combat.json"
+    combat = Combat()
+
+    strahd = Combatant(
+        name="Strahd",
+        initiative=22,
+        current_hp=350,
+        max_hp=350,
+        legendary_action_limit=3,
+    )
+    combat.add_combatant(strahd)
+
+    storage = CombatStorage(path)
+    storage.save(combat)
+    loaded = storage.load()
+
+    assert loaded.combatants[0].legendary_action_limit == 3
