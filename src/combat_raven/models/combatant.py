@@ -8,7 +8,7 @@ class CombatantType(Enum):
     ALLY = "ally"
     ENEMY = "enemy"
 
-@dataclass
+@dataclass(eq=False)
 class Combatant:
     """
     Represents a participant in combat.

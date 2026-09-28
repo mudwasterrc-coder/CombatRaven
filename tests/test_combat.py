@@ -766,3 +766,16 @@ def test_combat_can_have_specific_id():
 
     assert combat.id == "encounter-123"
     assert combat.name == "Assault on the Tower"
+
+def test_remove_combatant_removes_the_exact_instance():
+    combat = Combat()
+    first_goblin = Combatant(name="Goblin", initiative=12, current_hp=7, max_hp=7)
+    second_goblin = Combatant(name="Goblin", initiative=12, current_hp=7, max_hp=7)
+
+    combat.add_combatant(first_goblin)
+    combat.add_combatant(second_goblin)
+
+    combat.remove_combatant(second_goblin)
+
+    assert len(combat.combatants) == 1
+    assert combat.combatants[0] is first_goblin
