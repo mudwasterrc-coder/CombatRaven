@@ -371,3 +371,15 @@ def test_combatant_widget_drag_has_mime_data(qtbot):
     drag = widget.create_drag()
 
     assert drag.mimeData() is not None
+
+def test_combatant_widget_emits_changed_when_reaction_is_used(qtbot):
+    fighter = Combatant(name="Fighter", initiative=15, current_hp=30, max_hp=30)
+    widget = CombatantWidget(fighter)
+    qtbot.addWidget(widget)
+
+    received = []
+    widget.changed.connect(lambda: received.append(True))
+
+    widget.use_reaction_button.click()
+
+    assert received == [True]

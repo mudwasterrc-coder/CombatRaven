@@ -11,6 +11,7 @@ class CombatantWidget(QFrame):
     """
     remove_requested = Signal(Combatant)
     move_requested = Signal(Combatant, int)
+    changed = Signal()
 
     def __init__(
         self,
@@ -106,6 +107,7 @@ class CombatantWidget(QFrame):
         """
         self.combatant.use_reaction()
         self.refresh()
+        self.changed.emit()
 
     def use_legendary_action(self) -> None:
         """
