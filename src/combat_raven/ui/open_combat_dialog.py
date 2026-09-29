@@ -1,4 +1,4 @@
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
     QDialog,
     QListWidget,
@@ -16,6 +16,7 @@ class OpenCombatDialog(QDialog):
     """
     Dialog for selecting a saved combat encounter.
     """
+    combat_renamed = Signal(str, str)
 
     def __init__(
         self,
@@ -152,3 +153,5 @@ class OpenCombatDialog(QDialog):
 
         self.repository.save(combat)
         self._load_combats()
+
+        self.combat_renamed.emit(combat.id, combat.name)

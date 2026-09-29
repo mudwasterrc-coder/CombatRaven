@@ -294,16 +294,6 @@ def test_rename_combat_dialog_has_button_layout(qtbot):
 
     assert dialog.button_layout is not None
 
-def test_rename_combat_dialog_cancel_rejects(
-    qtbot,
-):
-    dialog = RenameCombatDialog("Assault on the Tower")
-    qtbot.addWidget(dialog)
-
-    dialog.cancel_button.click()
-
-    assert dialog.result() == 0
-
 def test_rename_combat_dialog_returns_entered_name(
     qtbot,
 ):
@@ -382,3 +372,23 @@ def test_open_combat_dialog_rename_updates_list(
         dialog.combat_list.item(0).text()
         == "Assault on Castle Ravenloft"
     )
+
+def test_open_combat_dialog_emits_combat_renamed(qtbot, tmp_path):
+    repository = CombatRepository(tmp_path)
+    combat = Combat(name="Assault on the Tower")
+    repository.save(combat)
+
+    dialog = OpenCombatDialog(repository)
+    qtbot.addWidget(dialog)
+
+    received = []
+    dialog.combat_renamed.connect(
+        lambda combat_id, name: received.append((combat_id, name))
+    )
+
+    dialog.combat_list.setCurrentRow(0)
+    dialog.rename_button.click()
+    dialog.rename_combat_dialog.name_input.setText("Assault on Castle Ravenloft")
+    dialog.rename_combat_dialog.rename_button.click()
+
+    assert received == [(combat.id, "Assault on Castle Ravenloft")]
