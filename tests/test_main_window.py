@@ -1464,3 +1464,27 @@ def test_closing_with_unsaved_changes_can_be_cancelled(qtbot, monkeypatch):
     window.closeEvent(event)
 
     assert event.isAccepted() is False
+
+def test_closing_with_save_saves_the_combat(qtbot, monkeypatch, tmp_path):
+    repository = CombatRepository(tmp_path)
+    combat = Combat(name="Cripta de Strahd")
+    window = MainWindow(combat, repository)
+    qtbot.addWidget(window)
+    window.has_unsaved_changes = True
+
+    class FakeDialog:
+        selected_action = "save"
+
+        def exec(self):
+            return 1
+
+    monkeypatch.setattr(
+        "combat_raven.ui.main_window.UnsavedChangesDialog",
+        FakeDialog,
+    )
+
+    event = QCloseEvent()
+    window.closeEvent(event)
+
+    assert repository.get_by_id(combat.id) is not None
+    assert event.isAccepted() is True

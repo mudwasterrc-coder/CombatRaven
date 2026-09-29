@@ -316,6 +316,7 @@ class MainWindow(QMainWindow):
         if self.unsaved_changes_dialog.selected_action == "save":
             self. save_combat()
 
+
         self.has_unsaved_changes = False
         self.new_combat()
 
@@ -354,5 +355,8 @@ class MainWindow(QMainWindow):
             if not dialog.exec():
                 event.ignore()
                 return
+
+            if dialog.selected_action == "save":
+                self.save_combat()
 
         event.accept()
