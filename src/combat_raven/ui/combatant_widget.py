@@ -111,10 +111,11 @@ class CombatantWidget(QFrame):
 
     def use_legendary_action(self) -> None:
         """
-        Uses one legenday action and refreshes the widget.
+        Uses one legendary action and refreshes the widget.
         """
         self.combatant.use_legendary_action()
         self.refresh()
+        self.changed.emit()
 
     def request_move(self, index: int) -> None:
         """

@@ -383,3 +383,21 @@ def test_combatant_widget_emits_changed_when_reaction_is_used(qtbot):
     widget.use_reaction_button.click()
 
     assert received == [True]
+
+def test_combatant_widget_emits_changed_when_legendary_action_is_used(qtbot):
+    strahd = Combatant(
+        name="Strahd",
+        initiative=22,
+        current_hp=350,
+        max_hp=350,
+        legendary_action_limit=3,
+    )
+    widget = CombatantWidget(strahd)
+    qtbot.addWidget(widget)
+
+    received = []
+    widget.changed.connect(lambda: received.append(True))
+
+    widget.use_legendary_action_button.click()
+
+    assert received == [True]
