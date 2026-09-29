@@ -1,4 +1,5 @@
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QCloseEvent
 
 from combat_raven.models.combat import Combat
 from combat_raven.ui.main_window import MainWindow
@@ -1442,3 +1443,24 @@ def test_using_reaction_in_widget_marks_unsaved_changes(qtbot):
     widget.use_reaction_button.click()
 
     assert window.has_unsaved_changes is True
+
+def test_closing_with_unsaved_changes_can_be_cancelled(qtbot, monkeypatch):
+    window = MainWindow(Combat())
+    qtbot.addWidget(window)
+    window.has_unsaved_changes = True
+
+    class FakeDialog:
+        selected_action = None
+
+        def exec(self):
+            return 0
+
+    monkeypatch.setattr(
+        "combat_raven.ui.main_window.UnsavedChangesDialog",
+        FakeDialog,
+    )
+
+    event = QCloseEvent()
+    window.closeEvent(event)
+
+    assert event.isAccepted() is False

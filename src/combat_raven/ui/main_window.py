@@ -343,3 +343,16 @@ class MainWindow(QMainWindow):
         Marks the current combat as having unsaved changes.
         """
         self.has_unsaved_changes = True
+
+    def closeEvent(self, event) -> None:
+        """
+        Asks what to do with unsaved changes before closing the window.
+        """
+        if self.has_unsaved_changes:
+            dialog = UnsavedChangesDialog()
+
+            if not dialog.exec():
+                event.ignore()
+                return
+
+        event.accept()
