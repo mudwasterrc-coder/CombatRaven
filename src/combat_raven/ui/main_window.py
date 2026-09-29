@@ -143,6 +143,7 @@ class MainWindow(QMainWindow):
         Advances the combat to the next turn and refreshes the UI.
         """
         self.combat.next_turn()
+        self.has_unsaved_changes = True
         self.refresh()
 
     def add_combatant(

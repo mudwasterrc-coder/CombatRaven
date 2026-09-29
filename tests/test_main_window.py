@@ -1410,3 +1410,20 @@ def test_adding_combatant_from_dialog_marks_unsaved_changes(
     window.add_combatant_button.click()
 
     assert window.has_unsaved_changes is True
+
+def test_end_turn_marks_unsaved_changes(qtbot):
+    combat = Combat()
+    combat.add_combatant(
+        Combatant(name="Fighter", initiative=20, current_hp=30, max_hp=30)
+    )
+    combat.add_combatant(
+        Combatant(name="Wizard", initiative=10, current_hp=18, max_hp=18)
+    )
+    combat.start()
+
+    window = MainWindow(combat)
+    qtbot.addWidget(window)
+
+    window.end_turn_button.click()
+
+    assert window.has_unsaved_changes is True
