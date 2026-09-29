@@ -49,3 +49,22 @@ Status:
 
 ### Next
 UI bugs: unsaved changes (ADD / END TURN / closeEvent), rename CANCEL, rename overwritten on save, default current HP 0.
+
+## 2026-09-29
+
+### Fixed (branch fix/ui-bugs)
+- Unsaved changes flag is set by ADD COMBATANT, END TURN, reactions and legendary actions (CombatantWidget.changed signal).
+- Closing the window asks what to do with unsaved changes (SAVE / DISCARD / CANCEL).
+- Rename dialog CANCEL button works.
+- Renaming the open encounter keeps MainWindow in sync (OpenCombatDialog.combat_renamed signal).
+- Current HP follows max HP in the combatant dialog.
+
+### Refactor
+- Extracted open combat dialog setup into a single method.
+
+### Tests
+228 passing. Replaced a cancel test that could never fail.
+
+### Next
+- Phase 2: damage/healing from the UI, START button, apply/remove effects.
+- Pending: new concentration should end the previous one, drag down off by one, label borders, compact cards, app starts with demo combat / unnamed save.
