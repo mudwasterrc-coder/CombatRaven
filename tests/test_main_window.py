@@ -1381,3 +1381,32 @@ def test_main_window_open_combat_cancel_keeps_current_combat(
     assert window.combat.name == "Current Encounter"
     assert window.has_unsaved_changes is True
     assert not hasattr(window, "open_combat_dialog")
+
+def test_adding_combatant_from_dialog_marks_unsaved_changes(
+    qtbot,
+    monkeypatch,
+):
+    combat = Combat()
+    window = MainWindow(combat)
+    qtbot.addWidget(window)
+
+    class FakeDialog:
+        def exec(self):
+            return 1
+
+        def create_combatant(self):
+            return Combatant(
+                name="Goblin",
+                initiative=12,
+                current_hp=7,
+                max_hp=7,
+            )
+
+    monkeypatch.setattr(
+        "combat_raven.ui.main_window.CombatantDialog",
+        FakeDialog,
+    )
+
+    window.add_combatant_button.click()
+
+    assert window.has_unsaved_changes is True

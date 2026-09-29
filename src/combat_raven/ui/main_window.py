@@ -177,6 +177,7 @@ class MainWindow(QMainWindow):
         if dialog.exec():
             combatant = dialog.create_combatant()
             self.combat.add_combatant(combatant)
+            self.has_unsaved_changes = True
             self.refresh()
 
     def remove_combatant(self, combatant: Combatant) -> None:
