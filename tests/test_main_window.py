@@ -1427,3 +1427,18 @@ def test_end_turn_marks_unsaved_changes(qtbot):
     window.end_turn_button.click()
 
     assert window.has_unsaved_changes is True
+
+def test_using_reaction_in_widget_marks_unsaved_changes(qtbot):
+    combat = Combat()
+    combat.add_combatant(
+        Combatant(name="Fighter", initiative=15, current_hp=30, max_hp=30)
+    )
+    combat.start()
+
+    window = MainWindow(combat)
+    qtbot.addWidget(window)
+
+    widget = window.combatants_layout.itemAt(0).widget()
+    widget.use_reaction_button.click()
+
+    assert window.has_unsaved_changes is True

@@ -127,6 +127,10 @@ class MainWindow(QMainWindow):
                 self.move_combatant
             )
 
+            widget.changed.connect(
+                self._mark_unsaved_changes
+            )
+
             self.combatants_layout.addWidget(widget)
 
         if self.combat.combatants:
@@ -333,3 +337,9 @@ class MainWindow(QMainWindow):
         )
 
         self.open_combat_dialog.show()
+
+    def _mark_unsaved_changes(self) -> None:
+        """
+        Marks the current combat as having unsaved changes.
+        """
+        self.has_unsaved_changes = True
