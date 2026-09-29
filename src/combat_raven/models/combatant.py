@@ -125,7 +125,7 @@ class Combatant:
         """
         self._legendary_actions_used = 0
 
-    def restore_legenday_actions_used(self, count: int) -> None:
+    def restore_legendary_actions_used(self, count: int) -> None:
         """
         Restores the number of legendary actions used, e.g. when loading a saved combat.
         """
