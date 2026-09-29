@@ -25,6 +25,7 @@ class RenameCombatDialog(QDialog):
         self.rename_button.clicked.connect(
             self._rename
         )
+        self.cancel_button.clicked.connect(self.reject)
 
         self.button_layout = QHBoxLayout()
         self.button_layout.addWidget(self.rename_button)
