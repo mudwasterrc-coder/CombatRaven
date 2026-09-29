@@ -254,6 +254,10 @@ class MainWindow(QMainWindow):
             self._load_selected_combat
         )
 
+        self.open_combat_dialog.combat_renamed.connect(
+            self._on_combat_renamed
+        )
+
         self.open_combat_dialog.show()
 
     def _load_selected_combat(self) -> None:
@@ -276,6 +280,15 @@ class MainWindow(QMainWindow):
         self.status_label.setText(
             f"COMBAT LOADED: {self.combat.name}"
         )
+
+    def _on_combat_renamed(self, combat_id: str, name: str) -> None:
+        """
+        Updates the current combat's name if it was renamed elsewhere
+        """
+        if combat_id != self.combat.id:
+            return
+
+        self.combat.name = name
 
     def new_combat(self) -> None:
         """
@@ -335,6 +348,10 @@ class MainWindow(QMainWindow):
 
         self.open_combat_dialog.accepted.connect(
             self._load_selected_combat
+        )
+
+        self.open_combat_dialog.combat_renamed.connect(
+            self._on_combat_renamed
         )
 
         self.open_combat_dialog.show()

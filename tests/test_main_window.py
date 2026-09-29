@@ -1488,3 +1488,16 @@ def test_closing_with_save_saves_the_combat(qtbot, monkeypatch, tmp_path):
 
     assert repository.get_by_id(combat.id) is not None
     assert event.isAccepted() is True
+
+def test_renaming_current_combat_updates_window_combat_name(qtbot, tmp_path):
+    repository = CombatRepository(tmp_path)
+    combat = Combat(name="Cripta")
+    repository.save(combat)
+
+    window = MainWindow(combat, repository)
+    qtbot.addWidget(window)
+
+    window.open_combat()
+    window.open_combat_dialog.combat_renamed.emit(combat.id, "Cripta de Strahd")
+
+    assert window.combat.name == "Cripta de Strahd"
