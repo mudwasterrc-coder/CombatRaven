@@ -19,3 +19,12 @@ def test_combatant_dialog_creates_a_combatant(qtbot):
     assert combatant.initiative == 22
     assert combatant.legendary_action_limit == 3
 
+def test_combatant_dialog_current_hp_follows_max_hp(qtbot):
+    dialog = CombatantDialog()
+    qtbot.addWidget(dialog)
+
+    assert dialog.current_hp_input.value() == dialog.max_hp_input.value()
+
+    dialog.max_hp_input.setValue(45)
+
+    assert dialog.current_hp_input.value() == 45

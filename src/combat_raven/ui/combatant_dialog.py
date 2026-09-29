@@ -28,6 +28,10 @@ class CombatantDialog(QDialog):
 
         self.current_hp_input = QSpinBox()
         self.current_hp_input.setRange(0, 9999)
+        self.current_hp_input.setValue(self.max_hp_input.value())
+        self.max_hp_input.valueChanged.connect(
+            self.current_hp_input.setValue
+        )
 
         self.initiative_input = QSpinBox()
         self.initiative_input.setRange(-100, 100)
