@@ -246,6 +246,12 @@ class MainWindow(QMainWindow):
             self.unsaved_changes_dialog.show()
             return
 
+        self._show_open_combat_dialog()
+
+    def _show_open_combat_dialog(self) -> None:
+        """
+        Creates, connects and shows the dialog for opening a saved combat.
+        """
         self.open_combat_dialog = OpenCombatDialog(
             self.combat_repository
         )
@@ -342,20 +348,8 @@ class MainWindow(QMainWindow):
 
         self.has_unsaved_changes = False
 
-        self.open_combat_dialog = OpenCombatDialog(
-            self.combat_repository
-        )
-
-        self.open_combat_dialog.accepted.connect(
-            self._load_selected_combat
-        )
-
-        self.open_combat_dialog.combat_renamed.connect(
-            self._on_combat_renamed
-        )
-
-        self.open_combat_dialog.show()
-
+        self._show_open_combat_dialog()
+        
     def _mark_unsaved_changes(self) -> None:
         """
         Marks the current combat as having unsaved changes.
