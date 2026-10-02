@@ -197,6 +197,7 @@ class CombatantWidget(QFrame):
         Applies the entered amount as damage to the combatant.
         """
         self.combatant.damage(self.amount_input.value())
+        self.amount_input.setValue(0)
         self.refresh()
         self.changed.emit()
 
