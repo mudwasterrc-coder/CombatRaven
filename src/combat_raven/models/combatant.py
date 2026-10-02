@@ -49,13 +49,12 @@ class Combatant:
         self.current_hp = max(0, self.current_hp - amount)
 
     @property
-    def is_dead(self) -> bool:
-      """
-      Returns True if the combatant's current HP is 0 or less, indicating they are dead.
-      """
-
-      return self.current_hp <= 0  
-
+    def is_down(self) -> bool:
+        """
+        Returns True if the combatant's current HP is 0 or less, indicating they are down.
+        """
+        return self.current_hp <= 0
+    
     def heal(self, amount: int) -> None:
         """
         Increases the combatant's current HP by the specified amount, up to their maximum HP.

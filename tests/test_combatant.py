@@ -358,3 +358,12 @@ def test_effect_without_duration_survives_advancing_effects():
 
     assert barbarian.effects == [rage]
     assert rage.remaining_rounds is None
+
+def test_combatant_at_zero_hp_is_down():
+    goblin = Combatant(name="Goblin", initiative=12, current_hp=7, max_hp=7)
+
+    assert goblin.is_down is False
+
+    goblin.damage(7)
+
+    assert goblin.is_down is True
