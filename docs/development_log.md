@@ -68,3 +68,25 @@ UI bugs: unsaved changes (ADD / END TURN / closeEvent), rename CANCEL, rename ov
 ### Next
 - Phase 2: damage/healing from the UI, START button, apply/remove effects.
 - Pending: new concentration should end the previous one, drag down off by one, label borders, compact cards, app starts with demo combat / unnamed save.
+
+## 2026-10-02
+
+### Added (branch feature/damage-healing)
+- Damage and healing from each combatant card (amount input + DAMAGE / HEAL buttons).
+- Enter in the amount input applies damage (lineEdit returnPressed, not editingFinished, to avoid accidental damage on focus loss).
+- Amount resets to 0 after applying damage or healing.
+- HP label shows "(DOWN)" at 0 HP.
+
+### Changed
+- Renamed Combatant.is_dead to is_down (0 HP means unconscious for PCs, not always dead).
+- Fixed .gitignore rules.
+
+### Refactor
+- Shared HP change follow-up between damage and healing.
+
+### Tests
+235 passing.
+
+### Next
+- START button to begin combat from the UI.
+- Apply / remove effects from the UI.
