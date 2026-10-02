@@ -206,5 +206,6 @@ class CombatantWidget(QFrame):
         Applies the entered amount as heal to the combatant.
         """
         self.combatant.heal(self.amount_input.value())
+        self.amount_input.setValue(0)
         self.refresh()
         self.changed.emit()
