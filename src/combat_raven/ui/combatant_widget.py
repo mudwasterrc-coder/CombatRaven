@@ -74,10 +74,13 @@ class CombatantWidget(QFrame):
         """
         self.name_label.setText(self.combatant.name)
 
-        self.hp_label.setText(
-            f"HP: {self.combatant.current_hp} / {self.combatant.max_hp}"
-        )
+        hp_text = f"HP: {self.combatant.current_hp} / {self.combatant.max_hp}"
 
+        if self.combatant.is_down:
+            hp_text += " (DOWN)"
+
+        self.hp_label.setText(hp_text)
+        
         self.initiative_label.setText(
             f"Initiative: {self.combatant.initiative}"
         )
