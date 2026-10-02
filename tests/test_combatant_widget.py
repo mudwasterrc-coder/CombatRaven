@@ -412,3 +412,14 @@ def test_combatant_widget_damage_button_reduces_hp(qtbot):
 
     assert goblin.current_hp == 4
     assert widget.hp_label.text() == "HP: 4 / 7"
+
+def test_combatant_widget_heal_button_restores_hp(qtbot):
+    goblin = Combatant(name="Goblin", initiative=12, current_hp=2, max_hp=7)
+    widget = CombatantWidget(goblin)
+    qtbot.addWidget(widget)
+
+    widget.amount_input.setValue(3)
+    widget.heal_button.click()
+
+    assert goblin.current_hp == 5
+    assert widget.hp_label.text() == "HP: 5 / 7"

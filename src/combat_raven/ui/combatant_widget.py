@@ -47,6 +47,9 @@ class CombatantWidget(QFrame):
         self.damage_button = QPushButton("DAMAGE")
         self.damage_button.clicked.connect(self.apply_damage)
 
+        self.heal_button = QPushButton("HEAL")
+        self.heal_button.clicked.connect(self.apply_healing)
+
         self.amount_input = QSpinBox()
         self.amount_input.setRange(0, 9999)
         
@@ -54,7 +57,8 @@ class CombatantWidget(QFrame):
         layout.addWidget(self.name_label)
         layout.addWidget(self.hp_label)
         layout.addWidget(self.amount_input)
-        layout.addWidget(self.damage_button)        
+        layout.addWidget(self.damage_button) 
+        layout.addWidget(self.heal_button)       
         layout.addWidget(self.initiative_label)
         layout.addWidget(self.reaction_label)
         layout.addWidget(self.legendary_action_label)
@@ -193,5 +197,13 @@ class CombatantWidget(QFrame):
         Applies the entered amount as damage to the combatant.
         """
         self.combatant.damage(self.amount_input.value())
+        self.refresh()
+        self.changed.emit()
+
+    def apply_healing(self) -> None:
+        """
+        Applies the entered amount as heal to the combatant.
+        """
+        self.combatant.heal(self.amount_input.value())
         self.refresh()
         self.changed.emit()
