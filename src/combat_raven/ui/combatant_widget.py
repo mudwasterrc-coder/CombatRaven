@@ -197,15 +197,19 @@ class CombatantWidget(QFrame):
         Applies the entered amount as damage to the combatant.
         """
         self.combatant.damage(self.amount_input.value())
-        self.amount_input.setValue(0)
-        self.refresh()
-        self.changed.emit()
+        self._finish_hp_change()
 
     def apply_healing(self) -> None:
         """
-        Applies the entered amount as heal to the combatant.
+        Applies the entered amount as healing to the combatant.
         """
         self.combatant.heal(self.amount_input.value())
+        self._finish_hp_change()
+
+    def _finish_hp_change(self) -> None:
+        """
+        Clears the amount and updates the widget after an HP change.
+        """
         self.amount_input.setValue(0)
         self.refresh()
         self.changed.emit()
