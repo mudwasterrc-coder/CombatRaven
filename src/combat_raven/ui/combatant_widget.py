@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import (QFrame, QVBoxLayout, QLabel, QPushButton, QApplication)
+from PySide6.QtWidgets import (QFrame, QVBoxLayout, QLabel, QPushButton, QSpinBox, QApplication)
 
 from combat_raven.models.combatant import Combatant
 from PySide6.QtCore import Qt, Signal, QMimeData
@@ -30,6 +30,8 @@ class CombatantWidget(QFrame):
         self.hp_label = QLabel()
         self.initiative_label = QLabel()
         self.reaction_label = QLabel()
+        self.legendary_action_label = QLabel()
+
         self.use_reaction_button = QPushButton("USE REACTION")
         self.use_reaction_button.clicked.connect(self.use_reaction)
         self.use_legendary_action_button = QPushButton(
@@ -42,10 +44,17 @@ class CombatantWidget(QFrame):
         self.use_legendary_action_button.clicked.connect(
             self.use_legendary_action
         )
-        self.legendary_action_label = QLabel()
+        self.damage_button = QPushButton("DAMAGE")
+        self.damage_button.clicked.connect(self.apply_damage)
+
+        self.amount_input = QSpinBox()
+        self.amount_input.setRange(0, 9999)
+        
 
         layout.addWidget(self.name_label)
         layout.addWidget(self.hp_label)
+        layout.addWidget(self.amount_input)
+        layout.addWidget(self.damage_button)        
         layout.addWidget(self.initiative_label)
         layout.addWidget(self.reaction_label)
         layout.addWidget(self.legendary_action_label)
@@ -53,6 +62,7 @@ class CombatantWidget(QFrame):
         layout.addWidget(self.use_legendary_action_button)
         self.refresh()
         layout.addWidget(self.remove_button)
+        
 
     def refresh(self) -> None:
         """
@@ -177,3 +187,11 @@ class CombatantWidget(QFrame):
         """
         drag = self.create_drag()
         drag.exec()
+
+    def apply_damage(self) -> None:
+        """
+        Applies the entered amount as damage to the combatant.
+        """
+        self.combatant.damage(self.amount_input.value())
+        self.refresh()
+        self.changed.emit()

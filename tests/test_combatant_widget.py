@@ -401,3 +401,14 @@ def test_combatant_widget_emits_changed_when_legendary_action_is_used(qtbot):
     widget.use_legendary_action_button.click()
 
     assert received == [True]
+
+def test_combatant_widget_damage_button_reduces_hp(qtbot):
+    goblin = Combatant(name="Goblin", initiative=12, current_hp=7, max_hp=7)
+    widget = CombatantWidget(goblin)
+    qtbot.addWidget(widget)
+
+    widget.amount_input.setValue(3)
+    widget.damage_button.click()
+
+    assert goblin.current_hp == 4
+    assert widget.hp_label.text() == "HP: 4 / 7"
