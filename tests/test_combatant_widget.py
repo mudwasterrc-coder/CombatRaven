@@ -453,3 +453,13 @@ def test_combatant_widget_shows_down_at_zero_hp(qtbot):
     widget.damage_button.click()
 
     assert widget.hp_label.text() == "HP: 0 / 7 (DOWN)"
+
+def test_combatant_widget_enter_applies_damage(qtbot):
+    goblin = Combatant(name="Goblin", initiative=12, current_hp=7, max_hp=7)
+    widget = CombatantWidget(goblin)
+    qtbot.addWidget(widget)
+
+    widget.amount_input.setValue(3)
+    qtbot.keyClick(widget.amount_input, Qt.Key.Key_Return)
+
+    assert goblin.current_hp == 4

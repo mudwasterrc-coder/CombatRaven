@@ -52,6 +52,8 @@ class CombatantWidget(QFrame):
 
         self.amount_input = QSpinBox()
         self.amount_input.setRange(0, 9999)
+        self.amount_input.lineEdit().returnPressed.connect(self.apply_damage)
+
         
 
         layout.addWidget(self.name_label)
@@ -80,7 +82,7 @@ class CombatantWidget(QFrame):
             hp_text += " (DOWN)"
 
         self.hp_label.setText(hp_text)
-        
+
         self.initiative_label.setText(
             f"Initiative: {self.combatant.initiative}"
         )
