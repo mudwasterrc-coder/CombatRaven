@@ -1550,3 +1550,14 @@ def test_end_turn_is_disabled_until_combat_starts(qtbot):
     window.start_combat_button.click()
 
     assert window.end_turn_button.isEnabled() is True
+
+def test_start_button_is_disabled_without_combatants(qtbot):
+    combat = Combat()
+    window = MainWindow(combat)
+    qtbot.addWidget(window)
+
+    assert window.start_combat_button.isEnabled() is False
+
+    window.add_combatant(name="Goblin", max_hp=7, current_hp=7, initiative=12)
+
+    assert window.start_combat_button.isEnabled() is True

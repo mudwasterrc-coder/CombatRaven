@@ -145,7 +145,7 @@ class MainWindow(QMainWindow):
                 "NO COMBATANTS"
             )
 
-        self.start_combat_button.setEnabled(not self.combat.started)
+        self.start_combat_button.setEnabled(not self.combat.started and bool(self.combat.combatants))
         self.end_turn_button.setEnabled(self.combat.started)
 
     def end_turn(self) -> None:
