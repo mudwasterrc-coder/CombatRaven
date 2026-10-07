@@ -90,3 +90,20 @@ UI bugs: unsaved changes (ADD / END TURN / closeEvent), rename CANCEL, rename ov
 ### Next
 - START button to begin combat from the UI.
 - Apply / remove effects from the UI.
+
+## 2026-10-07
+
+### Added (branch feature/start-combat)
+- START COMBAT button: sorts by initiative, sets round 1, marks unsaved changes.
+- START is enabled only before the combat starts and when there are combatants.
+- END TURN is enabled only after the combat starts.
+
+### Fixed
+- Combat.start() does nothing when there are no combatants (avoids a stuck "started" empty encounter).
+
+### Tests
+240 passing.
+
+### Next
+- Apply / remove effects from the UI.
+- Pending: new concentration should end the previous one, drag down off by one, label borders, compact cards, app starts with demo combat / unnamed save.
