@@ -1535,3 +1535,18 @@ def test_start_button_is_disabled_after_starting(qtbot):
     window.start_combat_button.click()
 
     assert window.start_combat_button.isEnabled() is False
+
+def test_end_turn_is_disabled_until_combat_starts(qtbot):
+    combat = Combat()
+    combat.add_combatant(
+        Combatant(name="Fighter", initiative=20, current_hp=30, max_hp=30)
+    )
+
+    window = MainWindow(combat)
+    qtbot.addWidget(window)
+
+    assert window.end_turn_button.isEnabled() is False
+
+    window.start_combat_button.click()
+
+    assert window.end_turn_button.isEnabled() is True

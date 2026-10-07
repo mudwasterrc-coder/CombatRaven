@@ -146,6 +146,7 @@ class MainWindow(QMainWindow):
             )
 
         self.start_combat_button.setEnabled(not self.combat.started)
+        self.end_turn_button.setEnabled(self.combat.started)
 
     def end_turn(self) -> None:
         """
