@@ -1520,3 +1520,18 @@ def test_start_button_starts_the_combat(qtbot):
     assert combat.current_round == 1
     assert combat.current_combatant.name == "Fighter"
     assert window.has_unsaved_changes is True
+
+def test_start_button_is_disabled_after_starting(qtbot):
+    combat = Combat()
+    combat.add_combatant(
+        Combatant(name="Fighter", initiative=20, current_hp=30, max_hp=30)
+    )
+
+    window = MainWindow(combat)
+    qtbot.addWidget(window)
+
+    assert window.start_combat_button.isEnabled() is True
+
+    window.start_combat_button.click()
+
+    assert window.start_combat_button.isEnabled() is False

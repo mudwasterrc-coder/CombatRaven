@@ -145,6 +145,8 @@ class MainWindow(QMainWindow):
                 "NO COMBATANTS"
             )
 
+        self.start_combat_button.setEnabled(not self.combat.started)
+
     def end_turn(self) -> None:
         """
         Advances the combat to the next turn and refreshes the UI.
