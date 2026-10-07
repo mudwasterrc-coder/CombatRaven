@@ -801,3 +801,11 @@ def test_sort_by_initiative_keeps_the_current_combatant():
     combat.sort_by_initiative()
 
     assert combat.current_combatant is wizard
+
+def test_start_with_no_combatants_does_nothing():
+    combat = Combat()
+
+    combat.start()
+
+    assert combat.started is False
+    assert combat.current_round == 0

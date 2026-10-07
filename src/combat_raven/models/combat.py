@@ -62,6 +62,9 @@ class Combat:
         """
         Starts the combat encounter.
         """
+        if not self.combatants:
+                    return
+        
         self.combatants.sort(
             key=lambda combatant: combatant.initiative,
             reverse=True,
