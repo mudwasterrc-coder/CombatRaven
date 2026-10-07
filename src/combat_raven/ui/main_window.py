@@ -82,6 +82,8 @@ class MainWindow(QMainWindow):
         self.new_combat_button.clicked.connect(
             self.new_combat
         )
+        self.start_combat_button = QPushButton("START COMBAT")
+        self.start_combat_button.clicked.connect(self.start_combat)
 
         layout.addWidget(self.round_label)
         layout.addWidget(self.current_turn_label)
@@ -91,6 +93,7 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.save_combat_button)
         layout.addWidget(self.new_combat_button)
         layout.addWidget(self.open_combat_button)
+        layout.addWidget(self.start_combat_button)
         layout.addWidget(self.end_turn_button)
         layout.addWidget(self.status_label)
         
@@ -371,3 +374,11 @@ class MainWindow(QMainWindow):
                 self.save_combat()
 
         event.accept()
+
+    def start_combat(self) -> None:
+        """
+        Starts the combat and refreshes the UI.
+        """
+        self.combat.start()
+        self.has_unsaved_changes = True
+        self.refresh()

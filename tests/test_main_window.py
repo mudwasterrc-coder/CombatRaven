@@ -1501,3 +1501,22 @@ def test_renaming_current_combat_updates_window_combat_name(qtbot, tmp_path):
     window.open_combat_dialog.combat_renamed.emit(combat.id, "Cripta de Strahd")
 
     assert window.combat.name == "Cripta de Strahd"
+
+def test_start_button_starts_the_combat(qtbot):
+    combat = Combat()
+    combat.add_combatant(
+        Combatant(name="Wizard", initiative=10, current_hp=18, max_hp=18)
+    )
+    combat.add_combatant(
+        Combatant(name="Fighter", initiative=20, current_hp=30, max_hp=30)
+    )
+
+    window = MainWindow(combat)
+    qtbot.addWidget(window)
+
+    window.start_combat_button.click()
+
+    assert combat.started is True
+    assert combat.current_round == 1
+    assert combat.current_combatant.name == "Fighter"
+    assert window.has_unsaved_changes is True
