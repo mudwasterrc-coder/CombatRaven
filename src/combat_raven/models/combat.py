@@ -158,3 +158,10 @@ class Combat:
             effect = Effect.from_template(template)
             effect.source_id = caster.id
             target.add_effect(effect)
+
+    def drop_concentration(self, caster: Combatant) -> None:
+        """
+        Ends the caster's concentration, removing the effect from every combatant.
+        """
+        for combatant in self.combatants:
+            combatant.effects = [effect for effect in combatant.effects if effect.source_id != caster.id]

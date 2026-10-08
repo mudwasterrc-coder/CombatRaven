@@ -829,3 +829,22 @@ def test_apply_concentration_puts_effect_on_each_target():
     assert rogue.effects[0].source_id == cleric.id
     assert fighter.effects[0] is not rogue.effects[0]
     assert cleric.effects == []
+
+def test_drop_concentration_removes_effect_from_all_targets():
+    combat = Combat()
+    cleric = Combatant(name="Cleric", initiative=10, current_hp=25, max_hp=25)
+    fighter = Combatant(name="Fighter", initiative=20, current_hp=30, max_hp=30)
+    rogue = Combatant(name="Rogue", initiative=15, current_hp=22, max_hp=22)
+    combat.add_combatant(cleric)
+    combat.add_combatant(fighter)
+    combat.add_combatant(rogue)
+    bless = EffectTemplate(name="Bless", default_duration=10, concentration=True)
+    combat.apply_concentration(cleric, [fighter, rogue], bless)
+
+    rage = Effect.from_template(EffectTemplate(name="Rage", default_duration=10))
+    fighter.add_effect(rage)
+
+    combat.drop_concentration(cleric)
+
+    assert fighter.effects == [rage]
+    assert rogue.effects == []
