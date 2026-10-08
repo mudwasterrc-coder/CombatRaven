@@ -30,3 +30,10 @@ def test_tick_reduces_remaining_rounds():
     effect.tick()
 
     assert effect.remaining_rounds == 9
+
+def test_effect_has_no_source_by_default():
+    rage = Effect.from_template(
+        EffectTemplate(name="Rage", default_duration=10)
+    )
+
+    assert rage.source_id is None
