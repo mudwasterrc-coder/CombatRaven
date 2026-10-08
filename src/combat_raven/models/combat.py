@@ -152,10 +152,18 @@ class Combat:
         template: EffectTemplate,
     ) -> None:
         """
-        Applies a concentration effect from a caster to each target,
-        ending the caster's previous concentration first.
-        """
+        Applies a concentration effect from a caster to each target.
+        If the caster is at their concentration limit: with a limit of 1,
+        the current concentration is dropped; with a higher limit, a
+        ValueError is raised so the caller can choose what to drop first.
+        """        
         if len(self.concentration_ids_of(caster)) >= caster.concentration_limit:
+            if caster.concentration_limit > 1:
+                raise ValueError(
+                    f"{caster.name} is at their concentration limit. "
+                    "Drop a concentration before starting a new one."
+                )
+
             self.drop_concentration(caster)
 
         concentration_id = str(uuid4())
