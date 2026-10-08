@@ -152,13 +152,16 @@ class Combat:
         template: EffectTemplate,
     ) -> None:
         """
-        Applies a concentration effect from a caster to each target.
+        Applies a concentration effect from a caster to each target,
+        ending the caster's previous concentration first.
         """
+        self.drop_concentration(caster)
+
         for target in targets:
             effect = Effect.from_template(template)
             effect.source_id = caster.id
             target.add_effect(effect)
-
+            
     def drop_concentration(self, caster: Combatant) -> None:
         """
         Ends the caster's concentration, removing the effect from every combatant.

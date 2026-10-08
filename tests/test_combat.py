@@ -848,3 +848,21 @@ def test_drop_concentration_removes_effect_from_all_targets():
 
     assert fighter.effects == [rage]
     assert rogue.effects == []
+
+def test_new_concentration_ends_the_previous_one():
+    combat = Combat()
+    cleric = Combatant(name="Cleric", initiative=10, current_hp=25, max_hp=25)
+    fighter = Combatant(name="Fighter", initiative=20, current_hp=30, max_hp=30)
+    goblin = Combatant(name="Goblin", initiative=12, current_hp=7, max_hp=7)
+    combat.add_combatant(cleric)
+    combat.add_combatant(fighter)
+    combat.add_combatant(goblin)
+    bless = EffectTemplate(name="Bless", default_duration=10, concentration=True)
+    hold_person = EffectTemplate(name="Hold Person", default_duration=10, concentration=True)
+
+    combat.apply_concentration(cleric, [fighter], bless)
+    combat.apply_concentration(cleric, [goblin], hold_person)
+
+    assert fighter.effects == []
+    assert len(goblin.effects) == 1
+    assert goblin.effects[0].template is hold_person
