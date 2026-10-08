@@ -25,3 +25,17 @@ combatant that has the effect, so it cannot represent this.
 
 ## Open questions
 - Should durations tick on the caster's turn (RAW) or on the target's turn (current)?
+
+## Update (2026-10-08): Dual-Focused and concentration limits
+- Each Effect also has a concentration_id: one id per casting, shared by all
+  its targets. A caster's concentrations are counted by distinct
+  concentration_id, not by number of effects.
+- Combatant.concentration_limit (default 1; 2 for Dual-Focused).
+- At the limit: with limit 1 the previous concentration is dropped
+  automatically; with a higher limit, apply_concentration raises ValueError
+  and the UI must ask which concentration to drop (drop_concentration_by_id).
+  The model never guesses.
+- Implemented in the model: apply_concentration, drop_concentration,
+  drop_concentration_by_id, concentration_ids_of.
+- Pending: persistence, removing the old Combatant concentration API, UI,
+  Dual-Focused round counter and DC display.
