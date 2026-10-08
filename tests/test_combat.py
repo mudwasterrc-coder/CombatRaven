@@ -809,3 +809,23 @@ def test_start_with_no_combatants_does_nothing():
 
     assert combat.started is False
     assert combat.current_round == 0
+
+def test_apply_concentration_puts_effect_on_each_target():
+    combat = Combat()
+    cleric = Combatant(name="Cleric", initiative=10, current_hp=25, max_hp=25)
+    fighter = Combatant(name="Fighter", initiative=20, current_hp=30, max_hp=30)
+    rogue = Combatant(name="Rogue", initiative=15, current_hp=22, max_hp=22)
+    combat.add_combatant(cleric)
+    combat.add_combatant(fighter)
+    combat.add_combatant(rogue)
+    bless = EffectTemplate(name="Bless", default_duration=10, concentration=True)
+
+    combat.apply_concentration(cleric, [fighter, rogue], bless)
+
+    assert len(fighter.effects) == 1
+    assert len(rogue.effects) == 1
+    assert fighter.effects[0].template is bless
+    assert fighter.effects[0].source_id == cleric.id
+    assert rogue.effects[0].source_id == cleric.id
+    assert fighter.effects[0] is not rogue.effects[0]
+    assert cleric.effects == []

@@ -2,6 +2,8 @@ from dataclasses import dataclass, field
 from uuid import uuid4
 
 from combat_raven.models.combatant import Combatant 
+from combat_raven.models.effect import Effect
+from combat_raven.models.effect_template import EffectTemplate
 
 @dataclass
 class Combat:
@@ -142,3 +144,17 @@ class Combat:
         self.current_round = current_round
         self.current_turn_index = current_turn_index
         self.started = True
+
+    def apply_concentration(
+        self,
+        caster: Combatant,
+        targets: list[Combatant],
+        template: EffectTemplate,
+    ) -> None:
+        """
+        Applies a concentration effect from a caster to each target.
+        """
+        for target in targets:
+            effect = Effect.from_template(template)
+            effect.source_id = caster.id
+            target.add_effect(effect)
