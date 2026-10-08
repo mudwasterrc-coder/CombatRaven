@@ -20,6 +20,7 @@ class Combatant:
     max_hp: int
     legendary_action_limit: int = 0
     combatant_type: CombatantType = CombatantType.ALLY
+    concentration_limit: int = 1
     id: str = field(default_factory=lambda: str(uuid4()))
 
 

@@ -881,3 +881,27 @@ def test_apply_concentration_groups_targets_under_one_concentration_id():
 
     assert fighter.effects[0].concentration_id is not None
     assert fighter.effects[0].concentration_id == rogue.effects[0].concentration_id
+
+def test_caster_with_two_concentration_slots_keeps_both():
+    combat = Combat()
+    wizard = Combatant(
+        name="Wizard",
+        initiative=14,
+        current_hp=18,
+        max_hp=18,
+        concentration_limit=2,
+    )
+    fighter = Combatant(name="Fighter", initiative=20, current_hp=30, max_hp=30)
+    goblin = Combatant(name="Goblin", initiative=12, current_hp=7, max_hp=7)
+    combat.add_combatant(wizard)
+    combat.add_combatant(fighter)
+    combat.add_combatant(goblin)
+    haste = EffectTemplate(name="Haste", default_duration=10, concentration=True)
+    hold_person = EffectTemplate(name="Hold Person", default_duration=10, concentration=True)
+
+    combat.apply_concentration(wizard, [fighter], haste)
+    combat.apply_concentration(wizard, [goblin], hold_person)
+
+    assert len(fighter.effects) == 1
+    assert len(goblin.effects) == 1
+    assert fighter.effects[0].concentration_id != goblin.effects[0].concentration_id

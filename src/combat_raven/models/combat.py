@@ -155,9 +155,11 @@ class Combat:
         Applies a concentration effect from a caster to each target,
         ending the caster's previous concentration first.
         """
-        self.drop_concentration(caster)
+        if len(self.concentration_ids_of(caster)) >= caster.concentration_limit:
+            self.drop_concentration(caster)
+            
         concentration_id = str(uuid4())
-        
+
         for target in targets:
             effect = Effect.from_template(template)
             effect.source_id = caster.id
@@ -170,3 +172,14 @@ class Combat:
         """
         for combatant in self.combatants:
             combatant.effects = [effect for effect in combatant.effects if effect.source_id != caster.id]
+
+    def concentration_ids_of(self, caster: Combatant) -> set[str]:
+        """
+        Returns the ids of the concentrations the caster is currently sustaining.
+        """
+        return {
+            effect.concentration_id
+            for combatant in self.combatants
+            for effect in combatant.effects
+            if effect.source_id == caster.id
+        }
