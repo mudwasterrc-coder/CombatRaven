@@ -17,6 +17,7 @@ class Effect:
     enabled: bool = True
     notes: str = ""
     source_id: str | None = None
+    concentration_id: str | None = None
 
     @classmethod
     def from_template(cls, template: EffectTemplate) -> "Effect":

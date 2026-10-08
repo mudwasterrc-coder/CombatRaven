@@ -156,12 +156,14 @@ class Combat:
         ending the caster's previous concentration first.
         """
         self.drop_concentration(caster)
-
+        concentration_id = str(uuid4())
+        
         for target in targets:
             effect = Effect.from_template(template)
             effect.source_id = caster.id
+            effect.concentration_id = concentration_id
             target.add_effect(effect)
-            
+
     def drop_concentration(self, caster: Combatant) -> None:
         """
         Ends the caster's concentration, removing the effect from every combatant.

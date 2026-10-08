@@ -866,3 +866,18 @@ def test_new_concentration_ends_the_previous_one():
     assert fighter.effects == []
     assert len(goblin.effects) == 1
     assert goblin.effects[0].template is hold_person
+
+def test_apply_concentration_groups_targets_under_one_concentration_id():
+    combat = Combat()
+    cleric = Combatant(name="Cleric", initiative=10, current_hp=25, max_hp=25)
+    fighter = Combatant(name="Fighter", initiative=20, current_hp=30, max_hp=30)
+    rogue = Combatant(name="Rogue", initiative=15, current_hp=22, max_hp=22)
+    combat.add_combatant(cleric)
+    combat.add_combatant(fighter)
+    combat.add_combatant(rogue)
+    bless = EffectTemplate(name="Bless", default_duration=10, concentration=True)
+
+    combat.apply_concentration(cleric, [fighter, rogue], bless)
+
+    assert fighter.effects[0].concentration_id is not None
+    assert fighter.effects[0].concentration_id == rogue.effects[0].concentration_id
