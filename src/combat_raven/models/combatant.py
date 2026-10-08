@@ -3,6 +3,7 @@ from dataclasses import dataclass, field
 from combat_raven.models.effect import Effect
  
 from enum import Enum
+from uuid import uuid4
 
 class CombatantType(Enum):
     ALLY = "ally"
@@ -19,6 +20,8 @@ class Combatant:
     max_hp: int
     legendary_action_limit: int = 0
     combatant_type: CombatantType = CombatantType.ALLY
+    id: str = field(default_factory=lambda: str(uuid4()))
+
 
     effects: list[Effect] = field(default_factory=list)
 

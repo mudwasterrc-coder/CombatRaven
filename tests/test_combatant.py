@@ -367,3 +367,10 @@ def test_combatant_at_zero_hp_is_down():
     goblin.damage(7)
 
     assert goblin.is_down is True
+
+def test_each_combatant_has_a_unique_id():
+    first = Combatant(name="Goblin", initiative=12, current_hp=7, max_hp=7)
+    second = Combatant(name="Goblin", initiative=12, current_hp=7, max_hp=7)
+
+    assert first.id
+    assert first.id != second.id
