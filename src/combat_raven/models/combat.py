@@ -157,7 +157,7 @@ class Combat:
         """
         if len(self.concentration_ids_of(caster)) >= caster.concentration_limit:
             self.drop_concentration(caster)
-            
+
         concentration_id = str(uuid4())
 
         for target in targets:
@@ -183,3 +183,10 @@ class Combat:
             for effect in combatant.effects
             if effect.source_id == caster.id
         }
+
+    def drop_concentration_by_id(self, concentration_id: str) -> None:
+        """
+        Ends a concentration effect by its id, removing the effect from every combatant.
+        """
+        for combatant in self.combatants:
+            combatant.effects = [effect for effect in combatant.effects if effect.concentration_id != concentration_id]
