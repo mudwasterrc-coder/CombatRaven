@@ -39,3 +39,7 @@ combatant that has the effect, so it cannot represent this.
   drop_concentration_by_id, concentration_ids_of.
 - Pending: persistence, removing the old Combatant concentration API, UI,
   Dual-Focused round counter and DC display.
+
+## Pending
+- When a concentrating caster drops to 0 HP, the UI asks whether to drop
+  their concentration (DROP / KEEP). The model only detects it; the DM decides.
