@@ -381,3 +381,22 @@ def test_storage_preserves_concentration_effect(tmp_path):
 
     assert loaded_cleric.is_concentrating()
     assert loaded_cleric.concentration_effects[0] is loaded_cleric.effects[0]
+
+def test_storage_preserves_combatant_id_and_concentration_limit(tmp_path):
+    path = tmp_path / "combat.json"
+    combat = Combat()
+    wizard = Combatant(
+        name="Wizard",
+        initiative=14,
+        current_hp=18,
+        max_hp=18,
+        concentration_limit=2,
+    )
+    combat.add_combatant(wizard)
+
+    storage = CombatStorage(path)
+    storage.save(combat)
+    loaded = storage.load().combatants[0]
+
+    assert loaded.id == wizard.id
+    assert loaded.concentration_limit == 2

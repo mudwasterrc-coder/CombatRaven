@@ -25,6 +25,7 @@ class CombatStorage:
             "started": combat.started,
             "combatants": [
                 {
+                    "id": combatant.id,
                     "name": combatant.name,
                     "initiative": combatant.initiative,
                     "current_hp": combatant.current_hp,
@@ -33,6 +34,7 @@ class CombatStorage:
                     "legendary_action_limit": combatant.legendary_action_limit,
                     "legendary_actions_used": combatant.legendary_actions_used,
                     "reaction_available": combatant.can_react(),
+                    "concentration_limit": combatant.concentration_limit,
                     "effects": [
                         {
                             "template": {
@@ -84,7 +86,11 @@ class CombatStorage:
                 max_hp=item["max_hp"],
                 combatant_type=CombatantType(item["combatant_type"]),
                 legendary_action_limit=item.get("legendary_action_limit", 0),
+                concentration_limit=item.get("concentration_limit", 1)
             )
+
+            if "id" in item:
+                combatant.id = item["id"]
 
             combatant.restore_legendary_actions_used(
                 item.get("legendary_actions_used", 0)
