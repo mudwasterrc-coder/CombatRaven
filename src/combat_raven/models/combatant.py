@@ -28,12 +28,6 @@ class Combatant:
 
     _reaction_available: bool = field(default=True, init=False, repr=False)
 
-    _concentration_effects: list[Effect] = field(
-        default_factory=list, 
-        init=False,
-        repr=False 
-    )
-
     _legendary_actions_used: int = field(
         default=0,
         init=False,
@@ -139,35 +133,3 @@ class Combatant:
         Returns True if the combatant has a legendary action available to use.
         """
         return self._legendary_actions_used < self.legendary_action_limit
-
-    def is_concentrating(self) -> bool:
-        """
-        Checks if the combatant is currently concentrating on any effect.
-        """
-        return len(self._concentration_effects) > 0
-
-    def start_concentration(self, effect: Effect) -> None:
-        """
-        Starts concentration on an effect, replacing any existing concentration.
-        """
-        self._concentration_effects.clear()
-        self._concentration_effects.append(effect)
-
-    @property
-    def concentration_effects(self) -> tuple[Effect, ...]:
-        """
-        Returns the effects the combatant is currently concentrating on.
-        """
-        return tuple(self._concentration_effects)
-        
-
-    def end_concentration(self) -> None:
-        """
-       Ends concentration on all concentration effects.
-        """
-
-        for effect in self._concentration_effects:
-            if effect in self.effects:
-                self.effects.remove(effect)
-
-        self._concentration_effects.clear()

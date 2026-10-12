@@ -132,109 +132,6 @@ def test_combatant_can_use_reaction():
 
     assert fighter.can_react() is False
 
-def test_combatant_can_start_and_end_concentration():
-    fighter = Combatant(
-        name="Fighter",
-        max_hp=30,
-        current_hp=30,
-        initiative=15,
-    )
-
-    bless = Effect.from_template(
-        EffectTemplate(
-            name="Bless",
-            default_duration=10,
-            concentration=True,
-        )
-    )
-
-    fighter.start_concentration(bless)
-
-    assert fighter.is_concentrating()
-
-    fighter.end_concentration()
-
-    assert not fighter.is_concentrating()
-    assert fighter.concentration_effects == ()
-
-def test_combatant_can_concentrate_on_an_effect():
-    fighter = Combatant(
-        name="Fighter",
-        max_hp=30,
-        current_hp=30,
-        initiative=15,
-    )
-
-    bless_template = EffectTemplate(
-            name="Bless",
-            default_duration=10,
-            concentration=True,
-        )
-
-    bless = Effect.from_template(bless_template)
-
-    assert fighter.is_concentrating() is False
-
-    fighter.start_concentration(bless)
-
-    assert fighter.is_concentrating() is True
-    assert fighter.concentration_effects == (bless,)
-
-def test_starting_a_new_concentration_replaces_the_previous_one():
-    fighter = Combatant(
-        name="Fighter",
-        max_hp=30,
-        current_hp=30,
-        initiative=15,
-    )
-
-    bless = Effect.from_template(
-        EffectTemplate(
-            name="Bless",
-            default_duration=10,
-            concentration=True,
-        )
-    )
-
-    fly = Effect.from_template(
-        EffectTemplate(
-            name="Fly",
-            default_duration=10,
-            concentration=True,
-        )
-    )
-
-    fighter.start_concentration(bless)
-    fighter.start_concentration(fly)
-
-    assert fighter.is_concentrating()
-    assert fighter.concentration_effects == (fly,)
-
-def test_ending_concentration_removes_the_concentrated_effect():
-    fighter = Combatant(
-        name="Fighter",
-        max_hp=30,
-        current_hp=30,
-        initiative=15,
-    )
-
-    bless = Effect.from_template(
-        EffectTemplate(
-            name="Bless",
-            default_duration=10,
-            concentration=True,
-        )
-    )
-
-    fighter.add_effect(bless)
-    fighter.start_concentration(bless)
-
-    fighter.end_concentration()
-
-    assert fighter.is_concentrating() is False
-    assert fighter.concentration_effects == ()
-    assert fighter.effects == []
-
 def test_combatant_starts_with_no_legendary_actions_used():
     fighter = Combatant(
         name="Fighter",
@@ -321,26 +218,6 @@ def test_combatant_can_be_an_enemy():
     )
 
     assert goblin.combatant_type == CombatantType.ENEMY
-
-def test_end_concentration_removes_the_exact_effect_instance():
-    fighter = Combatant(
-        name="Fighter",
-        initiative=15,
-        current_hp=30,
-        max_hp=30,
-    )
-    bless = EffectTemplate(name="Bless", default_duration=10, concentration=True)
-    first_bless = Effect.from_template(bless)
-    second_bless = Effect.from_template(bless)
-
-    fighter.add_effect(first_bless)
-    fighter.add_effect(second_bless)
-    fighter.start_concentration(second_bless)
-
-    fighter.end_concentration()
-
-    assert len(fighter.effects) == 1
-    assert fighter.effects[0] is first_bless
 
 def test_effect_without_duration_survives_advancing_effects():
     barbarian = Combatant(

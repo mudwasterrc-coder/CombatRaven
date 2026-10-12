@@ -49,10 +49,6 @@ class CombatStorage:
                             "notes": effect.notes,
                             "source_id": effect.source_id,
                             "concentration_id": effect.concentration_id,
-                            "is_concentration_target": any(
-                                effect is concentrated
-                                for concentrated in combatant.concentration_effects
-                            ),
                         }
                         for effect in combatant.effects
                     ],
@@ -122,9 +118,6 @@ class CombatStorage:
                 )
 
                 combatant.effects.append(effect)
-
-                if effect_data.get("is_concentration_target", False):
-                    combatant.start_concentration(effect)
 
             combat.add_combatant(combatant)
 
