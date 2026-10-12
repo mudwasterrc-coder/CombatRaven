@@ -400,3 +400,22 @@ def test_storage_preserves_combatant_id_and_concentration_limit(tmp_path):
 
     assert loaded.id == wizard.id
     assert loaded.concentration_limit == 2
+
+def test_storage_preserves_concentration_links(tmp_path):
+    path = tmp_path / "combat.json"
+    combat = Combat()
+    cleric = Combatant(name="Cleric", initiative=10, current_hp=25, max_hp=25)
+    fighter = Combatant(name="Fighter", initiative=20, current_hp=30, max_hp=30)
+    combat.add_combatant(cleric)
+    combat.add_combatant(fighter)
+    bless = EffectTemplate(name="Bless", default_duration=10, concentration=True)
+    combat.apply_concentration(cleric, [fighter], bless)
+
+    storage = CombatStorage(path)
+    storage.save(combat)
+    loaded_combat = storage.load()
+    loaded_cleric, loaded_fighter = loaded_combat.combatants
+
+    loaded_combat.drop_concentration(loaded_cleric)
+
+    assert loaded_fighter.effects == []

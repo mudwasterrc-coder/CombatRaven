@@ -47,6 +47,8 @@ class CombatStorage:
                             "concentration": effect.concentration,
                             "enabled": effect.enabled,
                             "notes": effect.notes,
+                            "source_id": effect.source_id,
+                            "concentration_id": effect.concentration_id,
                             "is_concentration_target": any(
                                 effect is concentrated
                                 for concentrated in combatant.concentration_effects
@@ -115,6 +117,8 @@ class CombatStorage:
                     concentration=effect_data["concentration"],
                     enabled=effect_data["enabled"],
                     notes=effect_data["notes"],
+                    source_id=effect_data.get("source_id"),
+                    concentration_id=effect_data.get("concentration_id"),
                 )
 
                 combatant.effects.append(effect)
