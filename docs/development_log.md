@@ -107,3 +107,25 @@ UI bugs: unsaved changes (ADD / END TURN / closeEvent), rename CANCEL, rename ov
 ### Next
 - Apply / remove effects from the UI.
 - Pending: new concentration should end the previous one, drag down off by one, label borders, compact cards, app starts with demo combat / unnamed save.
+
+## 2026-10-08 to 2026-10-13
+
+### Added (branch feature/concentration)
+- Each combatant has its own id.
+- Effects know who sustains them (source_id) and which casting they belong to (concentration_id).
+- Combat.apply_concentration: one effect copy per target; with limit 1 the new concentration ends the previous one.
+- Combat.drop_concentration (all of a caster's) and drop_concentration_by_id (a single one).
+- Combatant.concentration_limit (Dual-Focused = 2). At a higher limit the model refuses and the UI must ask what to drop.
+- Concentration ids and links are saved and loaded.
+- Combatant cards show effects with remaining rounds, "∞" for effects without duration.
+
+### Removed
+- Old Combatant-held concentration API (replaced by the Combat-level model, see ADR-004).
+
+### Tests
+247 passing.
+
+### Next
+- Card for the caster shows "Concentrating: ..." (needs combat context in the widget).
+- CONCENTRATE dialog (name, duration, targets) and DROP CONCENTRATION button.
+- Ask to drop concentration when a concentrating caster drops to 0 HP.
