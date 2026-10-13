@@ -1,6 +1,9 @@
 from combat_raven.models.combatant import Combatant
 from combat_raven.ui.combatant_widget import CombatantWidget
 from combat_raven.models.combat import Combat
+from combat_raven.models.effect import Effect
+from combat_raven.models.effect_template import EffectTemplate
+
 from PySide6.QtCore import QPoint
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QMouseEvent
@@ -463,3 +466,17 @@ def test_combatant_widget_enter_applies_damage(qtbot):
     qtbot.keyClick(widget.amount_input, Qt.Key.Key_Return)
 
     assert goblin.current_hp == 4
+
+def test_combatant_widget_shows_effects_with_remaining_rounds(qtbot):
+    fighter = Combatant(name="Fighter", initiative=20, current_hp=30, max_hp=30)
+    fighter.add_effect(
+        Effect.from_template(EffectTemplate(name="Bless", default_duration=10))
+    )
+    fighter.add_effect(
+        Effect.from_template(EffectTemplate(name="Rage", default_duration=8))
+    )
+
+    widget = CombatantWidget(fighter)
+    qtbot.addWidget(widget)
+
+    assert widget.effects_label.text() == "Bless (10), Rage (8)"

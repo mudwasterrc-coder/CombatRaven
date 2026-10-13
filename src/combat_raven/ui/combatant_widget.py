@@ -28,6 +28,7 @@ class CombatantWidget(QFrame):
 
         self.name_label = QLabel()
         self.hp_label = QLabel()
+        self.effects_label = QLabel()
         self.initiative_label = QLabel()
         self.reaction_label = QLabel()
         self.legendary_action_label = QLabel()
@@ -64,6 +65,7 @@ class CombatantWidget(QFrame):
         layout.addWidget(self.initiative_label)
         layout.addWidget(self.reaction_label)
         layout.addWidget(self.legendary_action_label)
+        layout.addWidget(self.effects_label)
         layout.addWidget(self.use_reaction_button)
         layout.addWidget(self.use_legendary_action_button)
         self.refresh()
@@ -82,6 +84,14 @@ class CombatantWidget(QFrame):
             hp_text += " (DOWN)"
 
         self.hp_label.setText(hp_text)
+
+        effects_text = []
+        for effect in self.combatant.effects:
+            effects_text.append(
+                f"{effect.template.name} ({effect.remaining_rounds})"
+            )
+
+        self.effects_label.setText(", ".join(effects_text))
 
         self.initiative_label.setText(
             f"Initiative: {self.combatant.initiative}"
