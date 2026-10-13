@@ -87,9 +87,12 @@ class CombatantWidget(QFrame):
 
         effects_text = []
         for effect in self.combatant.effects:
-            effects_text.append(
-                f"{effect.template.name} ({effect.remaining_rounds})"
-            )
+            if effect.remaining_rounds is None:
+                effects_text.append(f"{effect.template.name} (∞)")
+            else:
+                effects_text.append(
+                    f"{effect.template.name} ({effect.remaining_rounds})"
+                )
 
         self.effects_label.setText(", ".join(effects_text))
 

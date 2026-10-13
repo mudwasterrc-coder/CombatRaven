@@ -480,3 +480,17 @@ def test_combatant_widget_shows_effects_with_remaining_rounds(qtbot):
     qtbot.addWidget(widget)
 
     assert widget.effects_label.text() == "Bless (10), Rage (8)"
+
+def test_combatant_widget_shows_infinity_for_effects_without_duration(qtbot):
+    wizard = Combatant(name="Wizard", initiative=14, current_hp=18, max_hp=18)
+    wizard.add_effect(
+        Effect.from_template(EffectTemplate(name="Hex", default_duration=None))
+    )
+    wizard.add_effect(
+        Effect.from_template(EffectTemplate(name="Bless", default_duration=10))
+    )
+
+    widget = CombatantWidget(wizard)
+    qtbot.addWidget(widget)
+
+    assert widget.effects_label.text() == "Hex (∞), Bless (10)"
