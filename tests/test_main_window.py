@@ -1593,3 +1593,21 @@ def test_main_window_shows_effect_source_on_target_card(qtbot):
     fighter_card = window.combatants_layout.itemAt(1).widget()
 
     assert fighter_card.effects_label.text() == "Bless (10) from Cleric"
+
+def test_drop_concentration_from_card_removes_effects(qtbot):
+    combat = Combat()
+    cleric = Combatant(name="Cleric", initiative=10, current_hp=25, max_hp=25)
+    fighter = Combatant(name="Fighter", initiative=20, current_hp=30, max_hp=30)
+    combat.add_combatant(cleric)
+    combat.add_combatant(fighter)
+    bless = EffectTemplate(name="Bless", default_duration=10, concentration=True)
+    combat.apply_concentration(cleric, [fighter], bless)
+
+    window = MainWindow(combat)
+    qtbot.addWidget(window)
+
+    cleric_card = window.combatants_layout.itemAt(0).widget()
+    cleric_card.drop_concentration_button.click()
+
+    assert fighter.effects == []
+    assert window.has_unsaved_changes is True

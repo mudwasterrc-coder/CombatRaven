@@ -141,6 +141,10 @@ class MainWindow(QMainWindow):
                 self._mark_unsaved_changes
             )
 
+            widget.drop_concentration_requested.connect(
+                self.drop_concentration
+            )
+
             self.combatants_layout.addWidget(widget)
 
         if self.combat.combatants:
@@ -390,5 +394,13 @@ class MainWindow(QMainWindow):
         Starts the combat and refreshes the UI.
         """
         self.combat.start()
+        self.has_unsaved_changes = True
+        self.refresh()
+
+    def drop_concentration(self, combatant: Combatant) -> None:
+        """
+        Drops concentration for the given combatant and refreshes the UI.
+        """
+        self.combat.drop_concentration(combatant)
         self.has_unsaved_changes = True
         self.refresh()
