@@ -958,3 +958,25 @@ def test_caster_at_a_multi_concentration_limit_must_choose_what_to_drop():
     assert len(fighter.effects) == 1
     assert len(goblin.effects) == 1
     assert wizard.effects == []
+
+def test_concentration_names_of_lists_each_concentration_once():
+    combat = Combat()
+    wizard = Combatant(
+        name="Wizard",
+        initiative=14,
+        current_hp=18,
+        max_hp=18,
+        concentration_limit=2,
+    )
+    fighter = Combatant(name="Fighter", initiative=20, current_hp=30, max_hp=30)
+    rogue = Combatant(name="Rogue", initiative=15, current_hp=22, max_hp=22)
+    goblin = Combatant(name="Goblin", initiative=12, current_hp=7, max_hp=7)
+    for combatant in (wizard, fighter, rogue, goblin):
+        combat.add_combatant(combatant)
+    haste = EffectTemplate(name="Haste", default_duration=10, concentration=True)
+    hold_person = EffectTemplate(name="Hold Person", default_duration=10, concentration=True)
+    combat.apply_concentration(wizard, [fighter, rogue], haste)
+    combat.apply_concentration(wizard, [goblin], hold_person)
+
+    assert combat.concentration_names_of(wizard) == ["Haste", "Hold Person"]
+    assert combat.concentration_names_of(fighter) == []
