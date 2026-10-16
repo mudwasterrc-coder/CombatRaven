@@ -524,3 +524,14 @@ def test_combatant_widget_shows_who_sustains_each_effect(qtbot):
     qtbot.addWidget(widget)
 
     assert widget.effects_label.text() == "Bless (10) from Cleric, Rage (8)"
+
+def test_drop_concentration_button_is_enabled_only_when_concentrating(qtbot):
+    wizard = Combatant(name="Wizard", initiative=14, current_hp=18, max_hp=18)
+
+    concentrating = CombatantWidget(wizard, concentrating_on=["Haste"])
+    idle = CombatantWidget(wizard)
+    qtbot.addWidget(concentrating)
+    qtbot.addWidget(idle)
+
+    assert concentrating.drop_concentration_button.isEnabled() is True
+    assert idle.drop_concentration_button.isEnabled() is False

@@ -50,6 +50,9 @@ class CombatantWidget(QFrame):
         self.use_legendary_action_button.clicked.connect(
             self.use_legendary_action
         )
+
+        self.drop_concentration_button = QPushButton("DROP CONCENTRATION")
+
         self.damage_button = QPushButton("DAMAGE")
         self.damage_button.clicked.connect(self.apply_damage)
 
@@ -72,6 +75,7 @@ class CombatantWidget(QFrame):
         layout.addWidget(self.legendary_action_label)
         layout.addWidget(self.effects_label)
         layout.addWidget(self.concentration_label)
+        layout.addWidget(self.drop_concentration_button)
         layout.addWidget(self.use_reaction_button)
         layout.addWidget(self.use_legendary_action_button)
         self.refresh()
@@ -109,8 +113,10 @@ class CombatantWidget(QFrame):
             self.concentration_label.setText(
                 f"Concentrating: {', '.join(self.concentrating_on)}"
             )
+            self.drop_concentration_button.setEnabled(True)
         else:
             self.concentration_label.setText("")
+            self.drop_concentration_button.setEnabled(False)
 
         self.initiative_label.setText(
             f"Initiative: {self.combatant.initiative}"
