@@ -1577,3 +1577,19 @@ def test_main_window_shows_caster_concentration_on_card(qtbot):
     cleric_card = window.combatants_layout.itemAt(0).widget()
 
     assert cleric_card.concentration_label.text() == "Concentrating: Bless"
+
+def test_main_window_shows_effect_source_on_target_card(qtbot):
+    combat = Combat()
+    cleric = Combatant(name="Cleric", initiative=10, current_hp=25, max_hp=25)
+    fighter = Combatant(name="Fighter", initiative=20, current_hp=30, max_hp=30)
+    combat.add_combatant(cleric)
+    combat.add_combatant(fighter)
+    bless = EffectTemplate(name="Bless", default_duration=10, concentration=True)
+    combat.apply_concentration(cleric, [fighter], bless)
+
+    window = MainWindow(combat)
+    qtbot.addWidget(window)
+
+    fighter_card = window.combatants_layout.itemAt(1).widget()
+
+    assert fighter_card.effects_label.text() == "Bless (10) from Cleric"

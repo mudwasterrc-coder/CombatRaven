@@ -114,12 +114,18 @@ class MainWindow(QMainWindow):
             if item.widget():
                 item.widget().deleteLater()
 
+        source_names = {
+            combatant.id: combatant.name
+            for combatant in self.combat.combatants
+        }
+
         for combatant in self.combat.combatants:
             widget = CombatantWidget(
                 combatant,
                 is_current=(
                     combatant is self.combat.current_combatant
                 ),
+                source_names=source_names,
                 concentrating_on=self.combat.concentration_names_of(combatant),
             )
 
