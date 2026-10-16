@@ -120,6 +120,7 @@ class MainWindow(QMainWindow):
                 is_current=(
                     combatant is self.combat.current_combatant
                 ),
+                concentrating_on=self.combat.concentration_names_of(combatant),
             )
 
             widget.remove_requested.connect(
