@@ -129,3 +129,21 @@ UI bugs: unsaved changes (ADD / END TURN / closeEvent), rename CANCEL, rename ov
 - Card for the caster shows "Concentrating: ..." (needs combat context in the widget).
 - CONCENTRATE dialog (name, duration, targets) and DROP CONCENTRATION button.
 - Ask to drop concentration when a concentrating caster drops to 0 HP.
+
+## 2026-10-16
+
+### Added (branch feature/concentration)
+- Combat.concentration_names_of(caster).
+- Combatant cards show "Concentrating: ..." (caster) and "Bless (10) from Cleric" (targets).
+  Design: cards stay dumb; MainWindow asks the Combat and passes plain data (ADR-004, option B).
+- DROP CONCENTRATION button on cards: enabled only when concentrating, emits a request, MainWindow drops it.
+- ConcentrationDialog (WIP): effect name and rounds; 0 rounds shows "∞" and means no limit.
+
+### Tests
+257 passing.
+
+### Next
+- ConcentrationDialog: targets with checkboxes, APPLY / CANCEL, default rounds (∞ or 10?).
+- CONCENTRATE button on cards opening the dialog.
+- Dual-Focused: ask what to drop when at the limit.
+- Ask to drop concentration when a concentrating caster drops to 0 HP.
