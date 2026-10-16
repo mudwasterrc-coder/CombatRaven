@@ -18,12 +18,14 @@ class CombatantWidget(QFrame):
         combatant: Combatant,
         is_current: bool = False,
         concentrating_on: list[str] | None = None,
+        source_names: dict[str, str] | None = None,
     ) -> None:
         super().__init__()
 
         self.combatant = combatant
         self.is_current = is_current
         self.concentrating_on = concentrating_on or []
+        self.source_names = source_names or {}
         self.drag_start_position = None
 
         layout = QVBoxLayout(self)
@@ -92,11 +94,14 @@ class CombatantWidget(QFrame):
         effects_text = []
         for effect in self.combatant.effects:
             if effect.remaining_rounds is None:
-                effects_text.append(f"{effect.template.name} (∞)")
+                text = f"{effect.template.name} (∞)"
             else:
-                effects_text.append(
-                    f"{effect.template.name} ({effect.remaining_rounds})"
-                )
+                text = f"{effect.template.name} ({effect.remaining_rounds})"
+
+            if effect.source_id in self.source_names:
+                text += f" from {self.source_names[effect.source_id]}"
+
+            effects_text.append(text)
 
         self.effects_label.setText(", ".join(effects_text))
 
@@ -134,6 +139,8 @@ class CombatantWidget(QFrame):
         self.use_reaction_button.setEnabled(
                     self.combatant.can_react()
                 )
+
+        
 
         if self.is_current:
             self.setStyleSheet(

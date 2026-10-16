@@ -508,3 +508,19 @@ def test_combatant_widget_shows_what_it_is_concentrating_on(qtbot):
 
     assert concentrating.concentration_label.text() == "Concentrating: Haste, Hold Person"
     assert idle.concentration_label.text() == ""
+
+def test_combatant_widget_shows_who_sustains_each_effect(qtbot):
+    fighter = Combatant(name="Fighter", initiative=20, current_hp=30, max_hp=30)
+    bless = Effect.from_template(
+        EffectTemplate(name="Bless", default_duration=10, concentration=True)
+    )
+    bless.source_id = "cleric-id"
+    fighter.add_effect(bless)
+    fighter.add_effect(
+        Effect.from_template(EffectTemplate(name="Rage", default_duration=8))
+    )
+
+    widget = CombatantWidget(fighter, source_names={"cleric-id": "Cleric"})
+    qtbot.addWidget(widget)
+
+    assert widget.effects_label.text() == "Bless (10) from Cleric, Rage (8)"
