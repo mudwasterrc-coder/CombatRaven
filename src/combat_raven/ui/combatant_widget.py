@@ -17,11 +17,13 @@ class CombatantWidget(QFrame):
         self,
         combatant: Combatant,
         is_current: bool = False,
+        concentrating_on: list[str] | None = None,
     ) -> None:
         super().__init__()
 
         self.combatant = combatant
         self.is_current = is_current
+        self.concentrating_on = concentrating_on or []
         self.drag_start_position = None
 
         layout = QVBoxLayout(self)
@@ -31,6 +33,7 @@ class CombatantWidget(QFrame):
         self.effects_label = QLabel()
         self.initiative_label = QLabel()
         self.reaction_label = QLabel()
+        self.concentration_label = QLabel()
         self.legendary_action_label = QLabel()
 
         self.use_reaction_button = QPushButton("USE REACTION")
@@ -66,6 +69,7 @@ class CombatantWidget(QFrame):
         layout.addWidget(self.reaction_label)
         layout.addWidget(self.legendary_action_label)
         layout.addWidget(self.effects_label)
+        layout.addWidget(self.concentration_label)
         layout.addWidget(self.use_reaction_button)
         layout.addWidget(self.use_legendary_action_button)
         self.refresh()
@@ -95,6 +99,13 @@ class CombatantWidget(QFrame):
                 )
 
         self.effects_label.setText(", ".join(effects_text))
+
+        if self.concentrating_on:
+            self.concentration_label.setText(
+                f"Concentrating: {', '.join(self.concentrating_on)}"
+            )
+        else:
+            self.concentration_label.setText("")
 
         self.initiative_label.setText(
             f"Initiative: {self.combatant.initiative}"

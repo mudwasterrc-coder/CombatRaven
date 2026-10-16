@@ -494,3 +494,17 @@ def test_combatant_widget_shows_infinity_for_effects_without_duration(qtbot):
     qtbot.addWidget(widget)
 
     assert widget.effects_label.text() == "Hex (∞), Bless (10)"
+
+def test_combatant_widget_shows_what_it_is_concentrating_on(qtbot):
+    wizard = Combatant(name="Wizard", initiative=14, current_hp=18, max_hp=18)
+
+    concentrating = CombatantWidget(
+        wizard,
+        concentrating_on=["Haste", "Hold Person"],
+    )
+    idle = CombatantWidget(wizard)
+    qtbot.addWidget(concentrating)
+    qtbot.addWidget(idle)
+
+    assert concentrating.concentration_label.text() == "Concentrating: Haste, Hold Person"
+    assert idle.concentration_label.text() == ""
