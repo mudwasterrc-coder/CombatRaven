@@ -12,6 +12,7 @@ class CombatantWidget(QFrame):
     remove_requested = Signal(Combatant)
     move_requested = Signal(Combatant, int)
     changed = Signal()
+    drop_concentration_requested = Signal(Combatant)
 
     def __init__(
         self,
@@ -47,11 +48,16 @@ class CombatantWidget(QFrame):
         self.remove_button.clicked.connect(
             lambda: self.remove_requested.emit(self.combatant)
         )
+
+        
         self.use_legendary_action_button.clicked.connect(
             self.use_legendary_action
         )
 
         self.drop_concentration_button = QPushButton("DROP CONCENTRATION")
+        self.drop_concentration_button.clicked.connect(
+            lambda: self.drop_concentration_requested.emit(self.combatant)
+        )
 
         self.damage_button = QPushButton("DAMAGE")
         self.damage_button.clicked.connect(self.apply_damage)
