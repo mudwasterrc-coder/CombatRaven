@@ -143,7 +143,7 @@ UI bugs: unsaved changes (ADD / END TURN / closeEvent), rename CANCEL, rename ov
 257 passing.
 
 ### Next
-- ConcentrationDialog: targets with checkboxes, APPLY / CANCEL, default rounds (∞ or 10?).
+- - ConcentrationDialog: targets with checkboxes, APPLY / CANCEL. (Decided: opens at ∞ by default.)
 - CONCENTRATE button on cards opening the dialog.
 - Dual-Focused: ask what to drop when at the limit.
 - Ask to drop concentration when a concentrating caster drops to 0 HP.
