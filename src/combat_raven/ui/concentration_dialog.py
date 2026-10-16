@@ -17,7 +17,8 @@ class ConcentrationDialog(QDialog):
         self.name_input = QLineEdit()
 
         self.duration_input = QSpinBox()
-        self.duration_input.setRange(1, 9999)
+        self.duration_input.setRange(0, 9999)
+        self.duration_input.setSpecialValueText("∞")
 
         layout.addRow("Effect Name:", self.name_input)
         layout.addRow("Duration (rounds):", self.duration_input)
@@ -31,6 +32,6 @@ class ConcentrationDialog(QDialog):
 
         return EffectTemplate(
             name=name,
-            default_duration=duration,
+            default_duration=None if duration == 0 else duration,
             concentration=True
         )
