@@ -13,6 +13,7 @@ class ConcentrationDialog(QDialog):
         super().__init__(parent)
 
         self.candidates = candidates or []
+        
 
         self.setWindowTitle("CONCENTRATE")
 
@@ -46,3 +47,18 @@ class ConcentrationDialog(QDialog):
             default_duration=None if duration == 0 else duration,
             concentration=True
         )
+
+    def selected_targets(self) -> list[Combatant]:
+        """
+        Returns the candidates whose checkbox is checked.
+        """
+
+        targets = []
+
+        for row in range(self.target_list.count()):
+            item = self.target_list.item(row)
+
+            if item.checkState() == Qt.CheckState.Checked:
+                targets.append(self.candidates[row])
+
+        return targets

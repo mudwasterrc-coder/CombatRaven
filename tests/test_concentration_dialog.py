@@ -39,3 +39,16 @@ def test_concentration_dialog_lists_candidates_unchecked(qtbot):
     assert dialog.target_list.item(0).text() == "Fighter"
     assert dialog.target_list.item(1).text() == "Rogue"
     assert dialog.target_list.item(0).checkState() == Qt.CheckState.Unchecked
+
+def test_concentration_dialog_returns_checked_targets(qtbot):
+    fighter = Combatant(name="Fighter", initiative=20, current_hp=30, max_hp=30)
+    rogue = Combatant(name="Rogue", initiative=15, current_hp=22, max_hp=22)
+    wizard = Combatant(name="Wizard", initiative=14, current_hp=18, max_hp=18)
+
+    dialog = ConcentrationDialog([fighter, rogue, wizard])
+    qtbot.addWidget(dialog)
+
+    dialog.target_list.item(0).setCheckState(Qt.CheckState.Checked)
+    dialog.target_list.item(2).setCheckState(Qt.CheckState.Checked)
+
+    assert dialog.selected_targets() == [fighter, wizard]
