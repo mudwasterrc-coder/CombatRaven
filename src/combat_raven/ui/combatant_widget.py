@@ -13,6 +13,7 @@ class CombatantWidget(QFrame):
     move_requested = Signal(Combatant, int)
     changed = Signal()
     drop_concentration_requested = Signal(Combatant)
+    concentrate_requested = Signal(Combatant)
 
     def __init__(
         self,
@@ -54,6 +55,11 @@ class CombatantWidget(QFrame):
             self.use_legendary_action
         )
 
+        self.concentrate_button = QPushButton("CONCENTRATE")
+        self.concentrate_button.clicked.connect(
+            lambda: self.concentrate_requested.emit(self.combatant)
+        )
+
         self.drop_concentration_button = QPushButton("DROP CONCENTRATION")
         self.drop_concentration_button.clicked.connect(
             lambda: self.drop_concentration_requested.emit(self.combatant)
@@ -81,6 +87,7 @@ class CombatantWidget(QFrame):
         layout.addWidget(self.legendary_action_label)
         layout.addWidget(self.effects_label)
         layout.addWidget(self.concentration_label)
+        layout.addWidget(self.concentrate_button)
         layout.addWidget(self.drop_concentration_button)
         layout.addWidget(self.use_reaction_button)
         layout.addWidget(self.use_legendary_action_button)
