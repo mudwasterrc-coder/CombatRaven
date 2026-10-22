@@ -78,3 +78,31 @@ def test_concentration_dialog_apply_accepts_with_name_and_target(qtbot):
     dialog.apply_button.click()
 
     assert accepted == [True]
+
+def test_concentration_dialog_apply_requires_a_name(qtbot):
+    fighter = Combatant(name="Fighter", initiative=20, current_hp=30, max_hp=30)
+    dialog = ConcentrationDialog([fighter])
+    qtbot.addWidget(dialog)
+
+    accepted = []
+    dialog.accepted.connect(lambda: accepted.append(True))
+
+    dialog.name_input.setText("   ")
+    dialog.target_list.item(0).setCheckState(Qt.CheckState.Checked)
+    dialog.apply_button.click()
+
+    assert accepted == []
+
+
+def test_concentration_dialog_apply_requires_a_target(qtbot):
+    fighter = Combatant(name="Fighter", initiative=20, current_hp=30, max_hp=30)
+    dialog = ConcentrationDialog([fighter])
+    qtbot.addWidget(dialog)
+
+    accepted = []
+    dialog.accepted.connect(lambda: accepted.append(True))
+
+    dialog.name_input.setText("Bless")
+    dialog.apply_button.click()
+
+    assert accepted == []

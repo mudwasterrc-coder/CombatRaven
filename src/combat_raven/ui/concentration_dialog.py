@@ -78,4 +78,9 @@ class ConcentrationDialog(QDialog):
         """
         Accepts the dialog and closes it.
         """
+        if not self.name_input.text().strip():
+            return
+        if not self.selected_targets():
+            return
+        
         self.accept()
