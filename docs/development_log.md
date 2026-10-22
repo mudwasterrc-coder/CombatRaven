@@ -143,7 +143,25 @@ UI bugs: unsaved changes (ADD / END TURN / closeEvent), rename CANCEL, rename ov
 257 passing.
 
 ### Next
-- - ConcentrationDialog: targets with checkboxes, APPLY / CANCEL. (Decided: opens at ∞ by default.)
+- ConcentrationDialog: targets with checkboxes, APPLY / CANCEL. (Decided: opens at ∞ by default.)
 - CONCENTRATE button on cards opening the dialog.
 - Dual-Focused: ask what to drop when at the limit.
 - Ask to drop concentration when a concentrating caster drops to 0 HP.
+
+## 2026-10-22
+
+### Added (branch feature/concentration)
+- ConcentrationDialog complete: effect name, rounds (∞ by default), targets with checkboxes,
+  APPLY (requires a name and at least one target) and CANCEL.
+- CONCENTRATE button on combatant cards: emits a request; MainWindow opens the dialog with
+  all combatants as candidates (the caster can target themselves) and applies the concentration.
+- Full concentration flow is now usable in the app: apply, see it on cards, rounds tick, drop.
+
+### Tests
+265 passing.
+
+### Next
+- Dual-Focused in the UI: when apply_concentration raises at a multi-concentration limit,
+  ask which concentration to drop first. Also a way to set concentration_limit when creating a combatant.
+- Ask to drop concentration when a concentrating caster drops to 0 HP.
+- Merge feature/concentration into main.
