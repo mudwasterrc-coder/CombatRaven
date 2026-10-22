@@ -1611,3 +1611,38 @@ def test_drop_concentration_from_card_removes_effects(qtbot):
 
     assert fighter.effects == []
     assert window.has_unsaved_changes is True
+
+def test_concentrate_from_card_applies_dialog_choice(qtbot, monkeypatch):
+    combat = Combat()
+    cleric = Combatant(name="Cleric", initiative=10, current_hp=25, max_hp=25)
+    fighter = Combatant(name="Fighter", initiative=20, current_hp=30, max_hp=30)
+    combat.add_combatant(cleric)
+    combat.add_combatant(fighter)
+
+    window = MainWindow(combat)
+    qtbot.addWidget(window)
+
+    class FakeDialog:
+        def __init__(self, candidates):
+            self.candidates = candidates
+
+        def exec(self):
+            return 1
+
+        def create_template(self):
+            return EffectTemplate(name="Bless", default_duration=10, concentration=True)
+
+        def selected_targets(self):
+            return [fighter]
+
+    monkeypatch.setattr(
+        "combat_raven.ui.main_window.ConcentrationDialog",
+        FakeDialog,
+    )
+
+    cleric_card = window.combatants_layout.itemAt(0).widget()
+    cleric_card.concentrate_button.click()
+
+    assert len(fighter.effects) == 1
+    assert fighter.effects[0].source_id == cleric.id
+    assert window.has_unsaved_changes is True

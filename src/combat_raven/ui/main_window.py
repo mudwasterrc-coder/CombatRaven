@@ -16,6 +16,7 @@ from combat_raven.repositories.combat_repository import CombatRepository
 from combat_raven.ui.open_combat_dialog import OpenCombatDialog
 from combat_raven.ui.new_combat_dialog import NewCombatDialog
 from combat_raven.ui.unsaved_changes_dialog import UnsavedChangesDialog
+from combat_raven.ui.concentration_dialog import ConcentrationDialog
 
 
 class MainWindow(QMainWindow):
@@ -143,6 +144,10 @@ class MainWindow(QMainWindow):
 
             widget.drop_concentration_requested.connect(
                 self.drop_concentration
+            )
+
+            widget.concentrate_requested.connect(
+                self.open_concentration_dialog
             )
 
             self.combatants_layout.addWidget(widget)
@@ -404,3 +409,19 @@ class MainWindow(QMainWindow):
         self.combat.drop_concentration(combatant)
         self.has_unsaved_changes = True
         self.refresh()
+
+    def open_concentration_dialog(self, caster: Combatant) -> None:
+        """
+        Opens the dialog for starting a concentration effect.
+        """
+        dialog = ConcentrationDialog(self.combat.combatants)
+
+        if dialog.exec():
+            self.combat.apply_concentration(
+                caster,
+                dialog.selected_targets(),
+                dialog.create_template(),
+            )
+
+            self.has_unsaved_changes = True
+            self.refresh()
