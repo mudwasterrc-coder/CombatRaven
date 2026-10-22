@@ -52,3 +52,29 @@ def test_concentration_dialog_returns_checked_targets(qtbot):
     dialog.target_list.item(2).setCheckState(Qt.CheckState.Checked)
 
     assert dialog.selected_targets() == [fighter, wizard]
+
+def test_concentration_dialog_cancel_rejects(qtbot):
+    dialog = ConcentrationDialog()
+    qtbot.addWidget(dialog)
+
+    rejected = []
+    dialog.rejected.connect(lambda: rejected.append(True))
+
+    dialog.cancel_button.click()
+
+    assert rejected == [True]
+
+
+def test_concentration_dialog_apply_accepts_with_name_and_target(qtbot):
+    fighter = Combatant(name="Fighter", initiative=20, current_hp=30, max_hp=30)
+    dialog = ConcentrationDialog([fighter])
+    qtbot.addWidget(dialog)
+
+    accepted = []
+    dialog.accepted.connect(lambda: accepted.append(True))
+
+    dialog.name_input.setText("Bless")
+    dialog.target_list.item(0).setCheckState(Qt.CheckState.Checked)
+    dialog.apply_button.click()
+
+    assert accepted == [True]

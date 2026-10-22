@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QDialog, QFormLayout, QLineEdit, QListWidget, QListWidgetItem, QSpinBox
+from PySide6.QtWidgets import QDialog, QFormLayout, QLineEdit, QListWidget, QListWidgetItem, QSpinBox, QPushButton, QHBoxLayout
 from PySide6.QtCore import Qt
 
 from combat_raven.models.combatant import Combatant
@@ -31,9 +31,20 @@ class ConcentrationDialog(QDialog):
             item.setCheckState(Qt.CheckState.Unchecked)
             self.target_list.addItem(item)
 
+        self.apply_button = QPushButton("APPLY")
+        self.cancel_button = QPushButton("CANCEL")
+
+        self.apply_button.clicked.connect(self._apply)
+        self.cancel_button.clicked.connect(self.reject)
+
+        button_layout = QHBoxLayout()
+        button_layout.addWidget(self.apply_button)
+        button_layout.addWidget(self.cancel_button)
+
         layout.addRow("Effect Name:", self.name_input)
         layout.addRow("Duration (rounds):", self.duration_input)
         layout.addRow("Targets:", self.target_list)
+        layout.addRow("", button_layout)
 
     def create_template(self) -> EffectTemplate:
         """
@@ -62,3 +73,9 @@ class ConcentrationDialog(QDialog):
                 targets.append(self.candidates[row])
 
         return targets
+
+    def _apply(self) -> None:
+        """
+        Accepts the dialog and closes it.
+        """
+        self.accept()
