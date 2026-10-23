@@ -1694,3 +1694,23 @@ def test_caster_going_down_keeps_concentration_if_declined(qtbot, monkeypatch):
     cleric_card.damage_button.click()
 
     assert len(fighter.effects) == 1
+
+def test_combatant_going_down_without_concentration_asks_nothing(qtbot, monkeypatch):
+    combat = Combat()
+    goblin = Combatant(name="Goblin", initiative=12, current_hp=7, max_hp=7)
+    combat.add_combatant(goblin)
+
+    window = MainWindow(combat)
+    qtbot.addWidget(window)
+
+    questions = []
+    monkeypatch.setattr(
+        "combat_raven.ui.main_window.QMessageBox.question",
+        lambda *args, **kwargs: questions.append(args),
+    )
+
+    goblin_card = window.combatants_layout.itemAt(0).widget()
+    goblin_card.amount_input.setValue(10)
+    goblin_card.damage_button.click()
+
+    assert questions == []
