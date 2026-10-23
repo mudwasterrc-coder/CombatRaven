@@ -28,3 +28,17 @@ def test_combatant_dialog_current_hp_follows_max_hp(qtbot):
     dialog.max_hp_input.setValue(45)
 
     assert dialog.current_hp_input.value() == 45
+
+def test_combatant_dialog_sets_concentration_limit(qtbot):
+    dialog = CombatantDialog()
+    qtbot.addWidget(dialog)
+
+    assert dialog.concentration_limit_input.value() == 1
+
+    dialog.name_input.setText("Wizard")
+    dialog.max_hp_input.setValue(18)
+    dialog.concentration_limit_input.setValue(2)
+
+    wizard = dialog.create_combatant()
+
+    assert wizard.concentration_limit == 2

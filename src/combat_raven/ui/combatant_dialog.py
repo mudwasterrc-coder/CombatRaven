@@ -42,6 +42,9 @@ class CombatantDialog(QDialog):
         self.create_button = QPushButton("CREATE")
         self.create_button.clicked.connect(self.accept)
 
+        self.concentration_limit_input = QSpinBox()
+        self.concentration_limit_input.setRange(1, 9)
+
         layout.addRow("Name:", self.name_input)
         layout.addRow("Max HP:", self.max_hp_input)
         layout.addRow("Current HP:", self.current_hp_input)
@@ -50,6 +53,7 @@ class CombatantDialog(QDialog):
             "Legendary Actions:",
             self.legendary_action_limit_input,
         )
+        layout.addRow("Concentration Slots:", self.concentration_limit_input)
         layout.addRow(self.create_button)
 
     def create_combatant(self) -> Combatant:
@@ -64,4 +68,5 @@ class CombatantDialog(QDialog):
             legendary_action_limit=(
                 self.legendary_action_limit_input.value()
             ),
+            concentration_limit=self.concentration_limit_input.value(),
         )
