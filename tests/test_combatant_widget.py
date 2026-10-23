@@ -559,3 +559,18 @@ def test_concentrate_button_requests_concentration(qtbot):
     widget.concentrate_button.click()
 
     assert received == [cleric]
+
+def test_combatant_widget_emits_went_down_when_reaching_zero_hp(qtbot):
+    cleric = Combatant(name="Cleric", initiative=10, current_hp=7, max_hp=25)
+    widget = CombatantWidget(cleric)
+    qtbot.addWidget(widget)
+
+    received = []
+    widget.went_down.connect(received.append)
+
+    widget.amount_input.setValue(10)
+    widget.damage_button.click()
+    widget.amount_input.setValue(5)
+    widget.damage_button.click()
+
+    assert received == [cleric]

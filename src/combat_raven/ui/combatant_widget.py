@@ -14,6 +14,7 @@ class CombatantWidget(QFrame):
     changed = Signal()
     drop_concentration_requested = Signal(Combatant)
     concentrate_requested = Signal(Combatant)
+    went_down = Signal(Combatant)
 
     def __init__(
         self,
@@ -251,7 +252,13 @@ class CombatantWidget(QFrame):
         """
         Applies the entered amount as damage to the combatant.
         """
+        was_standing = not self.combatant.is_down
+
         self.combatant.damage(self.amount_input.value())
+
+        if was_standing and self.combatant.is_down:
+            self.went_down.emit(self.combatant)
+        
         self._finish_hp_change()
 
     def apply_healing(self) -> None:
