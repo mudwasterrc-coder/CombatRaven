@@ -1766,3 +1766,56 @@ def test_concentrate_at_full_limit_asks_what_to_drop(qtbot, monkeypatch):
     assert fighter.effects == []
     assert len(goblin.effects) == 1
     assert [effect.template.name for effect in wizard.effects] == ["Fly"]
+
+def test_concentrate_at_full_limit_cancel_changes_nothing(qtbot, monkeypatch):
+    combat = Combat()
+    wizard = Combatant(
+        name="Wizard",
+        initiative=14,
+        current_hp=18,
+        max_hp=18,
+        concentration_limit=2,
+    )
+    fighter = Combatant(name="Fighter", initiative=20, current_hp=30, max_hp=30)
+    goblin = Combatant(name="Goblin", initiative=12, current_hp=7, max_hp=7)
+    for combatant in (wizard, fighter, goblin):
+        combat.add_combatant(combatant)
+    haste = EffectTemplate(name="Haste", default_duration=10, concentration=True)
+    hold_person = EffectTemplate(name="Hold Person", default_duration=10, concentration=True)
+    combat.apply_concentration(wizard, [fighter], haste)
+    combat.apply_concentration(wizard, [goblin], hold_person)
+
+    window = MainWindow(combat)
+    qtbot.addWidget(window)
+
+    fly = EffectTemplate(name="Fly", default_duration=100, concentration=True)
+
+    class FakeDialog:
+        def __init__(self, candidates):
+            pass
+
+        def exec(self):
+            return 1
+
+        def create_template(self):
+            return fly
+
+        def selected_targets(self):
+            return [wizard]
+
+    monkeypatch.setattr(
+        "combat_raven.ui.main_window.ConcentrationDialog",
+        FakeDialog,
+    )
+    monkeypatch.setattr(
+        "combat_raven.ui.main_window.QInputDialog.getItem",
+        lambda *args, **kwargs: ("", False),
+    )
+
+    wizard_card = window.combatants_layout.itemAt(0).widget()
+    wizard_card.concentrate_button.click()
+
+    assert len(fighter.effects) == 1
+    assert len(goblin.effects) == 1
+    assert wizard.effects == []
+    assert window.has_unsaved_changes is False
