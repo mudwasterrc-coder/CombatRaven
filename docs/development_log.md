@@ -165,3 +165,23 @@ UI bugs: unsaved changes (ADD / END TURN / closeEvent), rename CANCEL, rename ov
   ask which concentration to drop first. Also a way to set concentration_limit when creating a combatant.
 - Ask to drop concentration when a concentrating caster drops to 0 HP.
 - Merge feature/concentration into main.
+
+## 2026-10-23
+
+### Added
+- When a concentrating caster drops to 0 HP, MainWindow asks whether to drop the concentration
+  (branch feature/down-concentration-prompt). Combatant cards emit went_down only on the
+  transition to 0 HP.
+- Concentration slots field in the combatant dialog (Dual-Focused = 2).
+- At a multi-concentration limit, CONCENTRATE asks which concentration to drop (QInputDialog),
+  drops it and applies the new one; cancelling changes nothing (branch feature/dual-focused-ui).
+- Combat.concentrations_of(caster): concentration id → name. concentration_names_of now uses it.
+
+### Tests
+273 passing.
+
+### Next
+- Concentration is feature-complete. Remaining ideas from ADR-004: Dual-Focused round counter
+  and save DC display, concentration save DC hint when a concentrating caster takes damage.
+- Pending from earlier: drag down off by one, label borders, compact cards,
+  app starts with demo combat / unnamed save, participant library (AddParticipantDialog).
