@@ -199,14 +199,24 @@ class Combat:
         for combatant in self.combatants:
             combatant.effects = [effect for effect in combatant.effects if effect.concentration_id != concentration_id]
 
-    def concentration_names_of(self, caster: Combatant) -> list[str]:
+
+    def concentrations_of(self, caster: Combatant) -> dict[str, str]:
         """
-        Returns the names of the concentrations the caster is sustaining, sorted.
+        Returns a dictionary mapping concentration ids to their names for the concentrations the caster is currently sustaining.
         """
+
         names_by_id = {
             effect.concentration_id: effect.template.name
             for combatant in self.combatants
             for effect in combatant.effects
             if effect.source_id == caster.id
         }
+        return names_by_id
+    
+    def concentration_names_of(self, caster: Combatant) -> list[str]:
+        """
+        Returns the names of the concentrations the caster is sustaining, sorted.
+        """
+        names_by_id = self.concentrations_of(caster)
+
         return sorted(names_by_id.values())

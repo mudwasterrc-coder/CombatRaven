@@ -980,3 +980,28 @@ def test_concentration_names_of_lists_each_concentration_once():
 
     assert combat.concentration_names_of(wizard) == ["Haste", "Hold Person"]
     assert combat.concentration_names_of(fighter) == []
+
+def test_concentrations_of_maps_ids_to_names():
+    combat = Combat()
+    wizard = Combatant(
+        name="Wizard",
+        initiative=14,
+        current_hp=18,
+        max_hp=18,
+        concentration_limit=2,
+    )
+    fighter = Combatant(name="Fighter", initiative=20, current_hp=30, max_hp=30)
+    goblin = Combatant(name="Goblin", initiative=12, current_hp=7, max_hp=7)
+    for combatant in (wizard, fighter, goblin):
+        combat.add_combatant(combatant)
+    haste = EffectTemplate(name="Haste", default_duration=10, concentration=True)
+    hold_person = EffectTemplate(name="Hold Person", default_duration=10, concentration=True)
+    combat.apply_concentration(wizard, [fighter], haste)
+    combat.apply_concentration(wizard, [goblin], hold_person)
+
+    concentrations = combat.concentrations_of(wizard)
+
+    assert concentrations == {
+        fighter.effects[0].concentration_id: "Haste",
+        goblin.effects[0].concentration_id: "Hold Person",
+    }
