@@ -5,7 +5,8 @@ from PySide6.QtWidgets import (
     QLabel,
     QPushButton,
     QScrollArea,
-    QMessageBox
+    QMessageBox,
+    QInputDialog
 )
 
 from combat_raven.models.combat import Combat
@@ -418,19 +419,51 @@ class MainWindow(QMainWindow):
     def open_concentration_dialog(self, caster: Combatant) -> None:
         """
         Opens the dialog for starting a concentration effect.
+        If the caster is at their concentration limit, asks what to drop first.
         """
         dialog = ConcentrationDialog(self.combat.combatants)
 
-        if dialog.exec():
-            self.combat.apply_concentration(
-                caster,
-                dialog.selected_targets(),
-                dialog.create_template(),
-            )
+        if not dialog.exec():
+            return
 
-            self.has_unsaved_changes = True
-            self.refresh()
+        targets = dialog.selected_targets()
+        template = dialog.create_template()
 
+        try:
+            self.combat.apply_concentration(caster, targets, template)
+        except ValueError:
+            if not self._ask_concentration_to_drop(caster):
+                return
+
+            self.combat.apply_concentration(caster, targets, template)
+
+        self.has_unsaved_changes = True
+        self.refresh()
+
+    def _ask_concentration_to_drop(self, caster: Combatant) -> bool:
+        """
+        Asks which concentration to drop and drops it.
+        Returns False if the user cancelled.
+        """
+        concentrations = self.combat.concentrations_of(caster)
+        ids = list(concentrations.keys())
+        names = list(concentrations.values())
+
+        name, ok = QInputDialog.getItem(
+            self,
+            "CONCENTRATION LIMIT",
+            f"{caster.name} is at their concentration limit. Drop which one?",
+            names,
+            0,
+            False,
+        )
+
+        if not ok:
+            return False
+
+        self.combat.drop_concentration_by_id(ids[names.index(name)])
+        return True
+    
     def _on_combatant_down(self, combatant: Combatant) -> None:
         """
         Handles the event when a combatant goes down. If the combatant is concentrating on any effects, it prompts the user to drop concentration.
