@@ -5,6 +5,7 @@ from PySide6.QtWidgets import (
     QLabel,
     QPushButton,
     QScrollArea,
+    QMessageBox
 )
 
 from combat_raven.models.combat import Combat
@@ -148,6 +149,10 @@ class MainWindow(QMainWindow):
 
             widget.concentrate_requested.connect(
                 self.open_concentration_dialog
+            )
+
+            widget.went_down.connect(
+                self._on_combatant_down
             )
 
             self.combatants_layout.addWidget(widget)
@@ -425,3 +430,31 @@ class MainWindow(QMainWindow):
 
             self.has_unsaved_changes = True
             self.refresh()
+
+    def _on_combatant_down(self, combatant: Combatant) -> None:
+        """
+        Handles the event when a combatant goes down. If the combatant is concentrating on any effects, it prompts the user to drop concentration.
+        """
+        concentrating_on = self.combat.concentration_names_of(combatant)
+
+        if not concentrating_on:
+            return
+
+        effects_list = ", ".join(concentrating_on)
+        message = (
+            f"{combatant.name} is down and concentrating on {effects_list}. "
+            "Drop concentration?"
+        )
+
+        answer = QMessageBox.question(
+            self,
+            "DROP CONCENTRATION",
+            message,
+            QMessageBox.StandardButton.Yes
+            | QMessageBox.StandardButton.No,
+        )
+
+        if answer != QMessageBox.StandardButton.Yes:
+            return
+
+        self.drop_concentration(combatant)

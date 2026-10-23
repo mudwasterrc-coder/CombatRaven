@@ -1,5 +1,6 @@
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QCloseEvent
+from PySide6.QtWidgets import QMessageBox
 
 from combat_raven.models.combat import Combat
 from combat_raven.ui.main_window import MainWindow
@@ -1646,3 +1647,50 @@ def test_concentrate_from_card_applies_dialog_choice(qtbot, monkeypatch):
     assert len(fighter.effects) == 1
     assert fighter.effects[0].source_id == cleric.id
     assert window.has_unsaved_changes is True
+
+def test_caster_going_down_drops_concentration_if_confirmed(qtbot, monkeypatch):
+    combat = Combat()
+    cleric = Combatant(name="Cleric", initiative=10, current_hp=7, max_hp=25)
+    fighter = Combatant(name="Fighter", initiative=20, current_hp=30, max_hp=30)
+    combat.add_combatant(cleric)
+    combat.add_combatant(fighter)
+    bless = EffectTemplate(name="Bless", default_duration=10, concentration=True)
+    combat.apply_concentration(cleric, [fighter], bless)
+
+    window = MainWindow(combat)
+    qtbot.addWidget(window)
+
+    monkeypatch.setattr(
+        "combat_raven.ui.main_window.QMessageBox.question",
+        lambda *args, **kwargs: QMessageBox.StandardButton.Yes,
+    )
+
+    cleric_card = window.combatants_layout.itemAt(0).widget()
+    cleric_card.amount_input.setValue(10)
+    cleric_card.damage_button.click()
+
+    assert fighter.effects == []
+
+
+def test_caster_going_down_keeps_concentration_if_declined(qtbot, monkeypatch):
+    combat = Combat()
+    cleric = Combatant(name="Cleric", initiative=10, current_hp=7, max_hp=25)
+    fighter = Combatant(name="Fighter", initiative=20, current_hp=30, max_hp=30)
+    combat.add_combatant(cleric)
+    combat.add_combatant(fighter)
+    bless = EffectTemplate(name="Bless", default_duration=10, concentration=True)
+    combat.apply_concentration(cleric, [fighter], bless)
+
+    window = MainWindow(combat)
+    qtbot.addWidget(window)
+
+    monkeypatch.setattr(
+        "combat_raven.ui.main_window.QMessageBox.question",
+        lambda *args, **kwargs: QMessageBox.StandardButton.No,
+    )
+
+    cleric_card = window.combatants_layout.itemAt(0).widget()
+    cleric_card.amount_input.setValue(10)
+    cleric_card.damage_button.click()
+
+    assert len(fighter.effects) == 1
