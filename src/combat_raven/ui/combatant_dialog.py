@@ -14,8 +14,10 @@ class CombatantDialog(QDialog):
     Dialog for creating a combatant.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, combatant: Combatant | None = None) -> None:
         super().__init__()
+
+        self.combatant = combatant
 
         self.setWindowTitle("Add Combatant")
 
@@ -55,6 +57,18 @@ class CombatantDialog(QDialog):
         )
         layout.addRow("Concentration Slots:", self.concentration_limit_input)
         layout.addRow(self.create_button)
+
+        if self.combatant is not None:
+            self.name_input.setText(self.combatant.name)
+            self.max_hp_input.setValue(self.combatant.max_hp)
+            self.current_hp_input.setValue(self.combatant.current_hp)
+            self.initiative_input.setValue(self.combatant.initiative)
+            self.legendary_action_limit_input.setValue(
+                self.combatant.legendary_action_limit
+            )
+            self.concentration_limit_input.setValue(
+                self.combatant.concentration_limit
+            )
 
     def create_combatant(self) -> Combatant:
         """

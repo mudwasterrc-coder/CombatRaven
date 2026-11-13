@@ -1,3 +1,4 @@
+from combat_raven.models.combatant import Combatant
 from combat_raven.ui.combatant_dialog import CombatantDialog
 
 
@@ -42,3 +43,23 @@ def test_combatant_dialog_sets_concentration_limit(qtbot):
     wizard = dialog.create_combatant()
 
     assert wizard.concentration_limit == 2
+
+def test_combatant_dialog_prefills_from_existing_combatant(qtbot):
+    wizard = Combatant(
+        name="Wizard",
+        initiative=15,
+        current_hp=10,
+        max_hp=18,
+        legendary_action_limit=0,
+        concentration_limit=2
+    )
+
+    dialog = CombatantDialog(combatant=wizard)
+    qtbot.addWidget(dialog)
+
+    assert dialog.name_input.text() == "Wizard"
+    assert dialog.max_hp_input.value() == 18
+    assert dialog.current_hp_input.value() == 10
+    assert dialog.initiative_input.value() == 15
+    assert dialog.legendary_action_limit_input.value() == 0
+    assert dialog.concentration_limit_input.value() == 2
