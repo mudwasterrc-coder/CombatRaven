@@ -152,6 +152,8 @@ class CombatantWidget(QFrame):
             effects_text.append(text)
 
         self.effects_label.setText(", ".join(effects_text))
+        self.effects_label.setVisible(bool(effects_text))
+        
 
         if self.concentrating_on:
             self.concentration_label.setText(
@@ -161,6 +163,8 @@ class CombatantWidget(QFrame):
         else:
             self.concentration_label.setText("")
             self.drop_concentration_button.setEnabled(False)
+
+        self.concentration_label.setVisible(bool(self.concentrating_on))
 
         self.initiative_label.setText(
             f"Initiative: {self.combatant.initiative}"
@@ -181,6 +185,7 @@ class CombatantWidget(QFrame):
             f"{self.combatant.legendary_actions_used} / "
             f"{self.combatant.legendary_action_limit}"
         )
+
 
         self.use_legendary_action_button.setEnabled(
             self.combatant.can_use_legendary_action()

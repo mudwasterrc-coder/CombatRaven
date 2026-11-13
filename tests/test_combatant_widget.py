@@ -608,3 +608,23 @@ def test_combatant_widget_exposes_state_for_styling(qtbot):
 
     assert rogue_widget.property("current") is False
     assert rogue_widget.property("down") is False
+
+def test_combatant_widget_hides_empty_effect_and_concentration_labels(qtbot):
+    fighter = Combatant(name="Fighter", initiative=15, current_hp=30, max_hp=30)
+    plain_widget = CombatantWidget(fighter)
+    qtbot.addWidget(plain_widget)
+
+    assert plain_widget.effects_label.isHidden()
+    assert plain_widget.concentration_label.isHidden()
+
+    combat = Combat()
+    cleric = Combatant(name="Cleric", initiative=10, current_hp=25, max_hp=25)
+    combat.add_combatant(cleric)
+    bless = EffectTemplate(name="Bless", default_duration=10, concentration=True)
+    combat.apply_concentration(cleric, [cleric], bless)
+
+    cleric_widget = CombatantWidget(cleric, concentrating_on=["Bless"])
+    qtbot.addWidget(cleric_widget)
+
+    assert not cleric_widget.effects_label.isHidden()
+    assert not cleric_widget.concentration_label.isHidden()
