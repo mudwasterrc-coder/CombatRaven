@@ -1856,3 +1856,36 @@ def test_main_window_edits_a_combatant(qtbot, monkeypatch):
     assert received == [fighter]
     assert fighter.initiative == 20
     assert window.has_unsaved_changes
+
+def test_main_window_does_not_edit_when_dialog_is_cancelled(qtbot, monkeypatch):
+    fighter = Combatant(
+        name="Fighter",
+        initiative=15,
+        current_hp=30,
+        max_hp=30,
+    )
+    combat = Combat()
+    combat.add_combatant(fighter)
+
+    window = MainWindow(combat)
+    qtbot.addWidget(window)
+
+    class FakeDialog:
+        def __init__(self, combatant=None):
+            self.combatant = combatant
+
+        def exec(self):
+            return 0
+        
+        def apply_changes(self):
+            self.combatant.initiative = 20
+
+    monkeypatch.setattr(
+        "combat_raven.ui.main_window.CombatantDialog",
+        FakeDialog,
+    )
+
+    window.edit_combatant(fighter)
+
+    assert fighter.initiative == 15
+    assert window.has_unsaved_changes is False
