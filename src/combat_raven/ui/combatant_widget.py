@@ -191,6 +191,9 @@ class CombatantWidget(QFrame):
             self.combatant.can_use_legendary_action()
         )
 
+        self.legendary_action_label.setVisible(self.combatant.legendary_action_limit > 0)
+        self.use_legendary_action_button.setVisible(self.combatant.legendary_action_limit > 0)
+
         self.use_reaction_button.setEnabled(
                     self.combatant.can_react()
                 )

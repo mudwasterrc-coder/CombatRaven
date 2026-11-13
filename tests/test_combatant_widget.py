@@ -628,3 +628,24 @@ def test_combatant_widget_hides_empty_effect_and_concentration_labels(qtbot):
 
     assert not cleric_widget.effects_label.isHidden()
     assert not cleric_widget.concentration_label.isHidden()
+
+def test_combatant_widget_hides_legendary_actions_without_limit(qtbot):
+    fighter = Combatant(name="Fighter", initiative=15, current_hp=30, max_hp=30)
+    fighter_widget = CombatantWidget(fighter)
+    qtbot.addWidget(fighter_widget)
+
+    assert fighter_widget.legendary_action_label.isHidden()
+    assert fighter_widget.use_legendary_action_button.isHidden()
+
+    strahd = Combatant(
+        name="Strahd",
+        initiative=22,
+        current_hp=350,
+        max_hp=350,
+        legendary_action_limit=3,
+    )
+    strahd_widget = CombatantWidget(strahd)
+    qtbot.addWidget(strahd_widget)
+
+    assert not strahd_widget.legendary_action_label.isHidden()
+    assert not strahd_widget.use_legendary_action_button.isHidden()
