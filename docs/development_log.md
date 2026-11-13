@@ -185,3 +185,18 @@ UI bugs: unsaved changes (ADD / END TURN / closeEvent), rename CANCEL, rename ov
   and save DC display, concentration save DC hint when a concentrating caster takes damage.
 - Pending from earlier: drag down off by one, label borders, compact cards,
   app starts with demo combat / unnamed save, participant library (AddParticipantDialog).
+
+## 2026-11-13
+
+### Added
+- Edit an existing combatant from its card (EDIT button). CombatantDialog takes an optional
+  combatant: prefills its values, applies changes to the same object (keeps id, effects and
+  concentrations), shows "Edit Combatant" / SAVE. Cancelling changes nothing.
+- Raven night redesign mockup (dark theme, compact rows, "⋯" menu).
+
+### Tests
+279 passing.
+
+### Next
+- Stage 1 of the redesign: Raven night theme (QSS), card state as dynamic properties.
+- Stage 2: compact row layout, "⋯" menu.
