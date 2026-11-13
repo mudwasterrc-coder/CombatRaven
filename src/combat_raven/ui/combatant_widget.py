@@ -80,6 +80,13 @@ class CombatantWidget(QFrame):
         self.amount_input.setRange(0, 9999)
         self.amount_input.lineEdit().returnPressed.connect(self.apply_damage)
 
+        # Names used by the Raven night theme
+        self.name_label.setObjectName("nameLabel")
+        self.concentration_label.setObjectName("concentrationLabel")
+        self.damage_button.setObjectName("damageButton")
+        self.heal_button.setObjectName("healButton")
+        self.remove_button.setObjectName("removeButton")
+
         self.setObjectName("combatantCard")
 
         

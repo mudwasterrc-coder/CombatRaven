@@ -88,6 +88,11 @@ class MainWindow(QMainWindow):
         self.start_combat_button = QPushButton("START COMBAT")
         self.start_combat_button.clicked.connect(self.start_combat)
 
+        # Names used by the Raven night theme
+        self.end_turn_button.setObjectName("primaryButton")
+        self.round_label.setObjectName("roundLabel")
+        self.current_turn_label.setObjectName("currentTurnLabel")
+
         layout.addWidget(self.round_label)
         layout.addWidget(self.current_turn_label)
         layout.addWidget(self.combatants_scroll_area)
