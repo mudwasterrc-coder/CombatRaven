@@ -136,6 +136,10 @@ class MainWindow(QMainWindow):
                 self.remove_combatant
             )
 
+            widget.edit_requested.connect(
+                self.edit_combatant
+            )
+
             widget.move_requested.connect(
                 self.move_combatant
             )
@@ -491,3 +495,14 @@ class MainWindow(QMainWindow):
             return
 
         self.drop_concentration(combatant)
+
+    def edit_combatant(self, combatant: Combatant) -> None:
+        """
+        Opens the dialog for editing an existing combatant.
+        """
+        dialog = CombatantDialog(combatant=combatant)
+
+        if dialog.exec():
+            dialog.apply_changes()
+            self.has_unsaved_changes = True
+            self.refresh()

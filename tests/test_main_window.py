@@ -1819,3 +1819,40 @@ def test_concentrate_at_full_limit_cancel_changes_nothing(qtbot, monkeypatch):
     assert len(goblin.effects) == 1
     assert wizard.effects == []
     assert window.has_unsaved_changes is False
+
+def test_main_window_edits_a_combatant(qtbot, monkeypatch):
+    fighter = Combatant(
+        name="Fighter",
+        initiative=15,
+        current_hp=30,
+        max_hp=30,
+    )
+    combat = Combat()
+    combat.add_combatant(fighter)
+
+    window = MainWindow(combat)
+    qtbot.addWidget(window)
+
+    received = []
+
+    class FakeDialog:
+        def __init__(self, combatant=None):
+            received.append(combatant)
+            self.combatant = combatant
+
+        def exec(self):
+            return 1
+
+        def apply_changes(self):
+            self.combatant.initiative = 20
+
+    monkeypatch.setattr(
+        "combat_raven.ui.main_window.CombatantDialog",
+        FakeDialog,
+    )
+
+    window.edit_combatant(fighter)
+
+    assert received == [fighter]
+    assert fighter.initiative == 20
+    assert window.has_unsaved_changes
