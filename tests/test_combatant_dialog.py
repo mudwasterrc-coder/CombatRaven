@@ -92,3 +92,23 @@ def test_combatant_dialog_applies_changes_to_existing_combatant(qtbot):
     assert wizard.legendary_action_limit == 1
     assert wizard.concentration_limit == 2
     assert wizard.id == original_id  # Ensure the ID remains unchanged
+
+def test_combatant_dialog_shows_edit_mode_for_existing_combatant(qtbot):
+    new_dialog = CombatantDialog()
+    qtbot.addWidget(new_dialog)
+
+    assert new_dialog.windowTitle() == "Add Combatant"
+    assert new_dialog.create_button.text() == "CREATE"
+
+    wizard = Combatant(
+        name="Wizard",
+        initiative=15,
+        current_hp=18,
+        max_hp=18,
+    )
+
+    edit_dialog = CombatantDialog(combatant=wizard)
+    qtbot.addWidget(edit_dialog)
+
+    assert edit_dialog.windowTitle() == "Edit Combatant"
+    assert edit_dialog.create_button.text() == "SAVE"

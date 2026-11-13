@@ -69,6 +69,8 @@ class CombatantDialog(QDialog):
             self.concentration_limit_input.setValue(
                 self.combatant.concentration_limit
             )
+            self.setWindowTitle("Edit Combatant")
+            self.create_button.setText("SAVE")
 
     def create_combatant(self) -> Combatant:
         """
