@@ -84,3 +84,19 @@ class CombatantDialog(QDialog):
             ),
             concentration_limit=self.concentration_limit_input.value(),
         )
+
+    def apply_changes(self) -> None:
+        """
+        Applies the changes made in the dialog to the existing combatant.
+        """
+        if self.combatant is not None:
+            self.combatant.name = self.name_input.text()
+            self.combatant.max_hp = self.max_hp_input.value()
+            self.combatant.current_hp = self.current_hp_input.value()
+            self.combatant.initiative = self.initiative_input.value()
+            self.combatant.legendary_action_limit = (
+                self.legendary_action_limit_input.value()
+            )
+            self.combatant.concentration_limit = (
+                self.concentration_limit_input.value()
+            )

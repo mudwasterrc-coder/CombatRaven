@@ -63,3 +63,32 @@ def test_combatant_dialog_prefills_from_existing_combatant(qtbot):
     assert dialog.initiative_input.value() == 15
     assert dialog.legendary_action_limit_input.value() == 0
     assert dialog.concentration_limit_input.value() == 2
+
+def test_combatant_dialog_applies_changes_to_existing_combatant(qtbot):
+    wizard = Combatant(
+        name="Wizard",
+        initiative=15,
+        current_hp=10,
+        max_hp=18,
+    )
+    original_id = wizard.id
+
+    dialog = CombatantDialog(combatant=wizard)
+    qtbot.addWidget(dialog)
+
+    dialog.name_input.setText("Elminster")
+    dialog.initiative_input.setValue(20)
+    dialog.max_hp_input.setValue(30)
+    dialog.current_hp_input.setValue(12)
+    dialog.legendary_action_limit_input.setValue(1)
+    dialog.concentration_limit_input.setValue(2)
+
+    dialog.apply_changes()
+
+    assert wizard.name == "Elminster"
+    assert wizard.initiative == 20
+    assert wizard.max_hp == 30
+    assert wizard.current_hp == 12
+    assert wizard.legendary_action_limit == 1
+    assert wizard.concentration_limit == 2
+    assert wizard.id == original_id  # Ensure the ID remains unchanged
