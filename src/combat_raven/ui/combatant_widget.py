@@ -10,6 +10,7 @@ class CombatantWidget(QFrame):
     Visual representation of a combatant.
     """
     remove_requested = Signal(Combatant)
+    edit_requested = Signal(Combatant)
     move_requested = Signal(Combatant, int)
     changed = Signal()
     drop_concentration_requested = Signal(Combatant)
@@ -50,8 +51,11 @@ class CombatantWidget(QFrame):
         self.remove_button.clicked.connect(
             lambda: self.remove_requested.emit(self.combatant)
         )
+        self.edit_button = QPushButton("EDIT")
+        self.edit_button.clicked.connect(
+            lambda: self.edit_requested.emit(self.combatant)
+        )
 
-        
         self.use_legendary_action_button.clicked.connect(
             self.use_legendary_action
         )
@@ -94,7 +98,7 @@ class CombatantWidget(QFrame):
         layout.addWidget(self.use_legendary_action_button)
         self.refresh()
         layout.addWidget(self.remove_button)
-        
+        layout.addWidget(self.edit_button)
 
     def refresh(self) -> None:
         """

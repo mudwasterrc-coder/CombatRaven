@@ -574,3 +574,22 @@ def test_combatant_widget_emits_went_down_when_reaching_zero_hp(qtbot):
     widget.damage_button.click()
 
     assert received == [cleric]
+
+def test_combatant_widget_can_request_edit(qtbot):
+    fighter = Combatant(
+        name="Fighter",
+        initiative=15,
+        current_hp=30,
+        max_hp=30,
+    )
+
+    widget = CombatantWidget(fighter)
+    qtbot.addWidget(widget)
+
+    received = []
+
+    widget.edit_requested.connect(received.append)
+
+    widget.edit_button.click()
+
+    assert received == [fighter]
