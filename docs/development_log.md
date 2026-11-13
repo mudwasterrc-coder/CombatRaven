@@ -200,3 +200,16 @@ UI bugs: unsaved changes (ADD / END TURN / closeEvent), rename CANCEL, rename ov
 ### Next
 - Stage 1 of the redesign: Raven night theme (QSS), card state as dynamic properties.
 - Stage 2: compact row layout, "⋯" menu.
+
+### Added
+...
+- Raven night theme (stage 1 of the redesign): dark QSS in ui/theme.py applied at startup;
+  cards expose "current" and "down" as properties instead of setting their own stylesheet
+  (also fixes the borders around every label).
+
+### Tests
+281 passing.
+
+### Next
+- Stage 2 of the redesign: card as a horizontal row, hide empty labels, HP bar with
+  bloodied/critical, "⋯" menu, top bar (New/Open/Save) and turn bar, Cinzel + raven logo.
