@@ -193,16 +193,6 @@ UI bugs: unsaved changes (ADD / END TURN / closeEvent), rename CANCEL, rename ov
   combatant: prefills its values, applies changes to the same object (keeps id, effects and
   concentrations), shows "Edit Combatant" / SAVE. Cancelling changes nothing.
 - Raven night redesign mockup (dark theme, compact rows, "⋯" menu).
-
-### Tests
-279 passing.
-
-### Next
-- Stage 1 of the redesign: Raven night theme (QSS), card state as dynamic properties.
-- Stage 2: compact row layout, "⋯" menu.
-
-### Added
-...
 - Raven night theme (stage 1 of the redesign): dark QSS in ui/theme.py applied at startup;
   cards expose "current" and "down" as properties instead of setting their own stylesheet
   (also fixes the borders around every label).
