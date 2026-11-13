@@ -71,6 +71,9 @@ class CombatantDialog(QDialog):
             )
             self.setWindowTitle("Edit Combatant")
             self.create_button.setText("SAVE")
+        else:
+            self.setWindowTitle("Add Combatant")
+            self.create_button.setText("CREATE")
 
     def create_combatant(self) -> Combatant:
         """

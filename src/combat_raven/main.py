@@ -7,10 +7,12 @@ from combat_raven.models.combat import Combat
 from combat_raven.models.combatant import Combatant
 from combat_raven.repositories.combat_repository import CombatRepository
 from combat_raven.ui.main_window import MainWindow
+from combat_raven.ui.theme import apply_theme
 
 
 def main() -> None:
     app = QApplication(sys.argv)
+    apply_theme(app)
 
     combat = Combat()
 
