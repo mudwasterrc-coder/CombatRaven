@@ -80,6 +80,8 @@ class CombatantWidget(QFrame):
         self.amount_input.setRange(0, 9999)
         self.amount_input.lineEdit().returnPressed.connect(self.apply_damage)
 
+        self.setObjectName("combatantCard")
+
         
 
         layout.addWidget(self.name_label)
@@ -164,16 +166,11 @@ class CombatantWidget(QFrame):
                     self.combatant.can_react()
                 )
 
-        
+        self.setProperty("current", self.is_current)
+        self.setProperty("down", self.combatant.is_down)
 
-        if self.is_current:
-            self.setStyleSheet(
-                "QFrame { border: 2px solid #d4af37; border-radius: 8px; }"
-            )
-        else:
-            self.setStyleSheet(
-                "QFrame { border: 1px solid #666; border-radius: 8px; }"
-            )
+        self.style().unpolish(self)
+        self.style().polish(self)
 
     def use_reaction(self) -> None:
         """

@@ -593,3 +593,18 @@ def test_combatant_widget_can_request_edit(qtbot):
     widget.edit_button.click()
 
     assert received == [fighter]
+
+def test_combatant_widget_exposes_state_for_styling(qtbot):
+    fallen = Combatant(name="Fighter", initiative=15, current_hp=0, max_hp=30)
+    fallen_widget = CombatantWidget(fallen, is_current=True)
+    qtbot.addWidget(fallen_widget)
+
+    assert fallen_widget.property("current") is True
+    assert fallen_widget.property("down") is True
+
+    rogue = Combatant(name="Rogue", initiative=12, current_hp=20, max_hp=20)
+    rogue_widget = CombatantWidget(rogue)
+    qtbot.addWidget(rogue_widget)
+
+    assert rogue_widget.property("current") is False
+    assert rogue_widget.property("down") is False
