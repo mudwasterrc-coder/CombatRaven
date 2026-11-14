@@ -153,6 +153,26 @@ QScrollBar::handle:vertical {
 QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
     height: 0;
 }
+
+QProgressBar {
+    background: #2E2E3B;
+    border: none;
+    border-radius: 5px;
+    max-height: 10px;
+}
+
+QProgressBar::chunk {
+    background: #4CC38A;
+    border-radius: 5px;
+}
+
+QProgressBar[health="bloodied"]::chunk {
+    background: #F2B24C;
+}
+
+QProgressBar[health="critical"]::chunk {
+    background: #FF5C5C;
+}
 """
 
 

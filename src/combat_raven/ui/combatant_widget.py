@@ -147,6 +147,9 @@ class CombatantWidget(QFrame):
         self.hp_bar.setMaximum(self.combatant.max_hp)
         self.hp_bar.setValue(self.combatant.current_hp)
         self.hp_bar.setTextVisible(False)
+        self.hp_bar.setProperty("health", self.combatant.health_state)
+        self.hp_bar.style().unpolish(self.hp_bar)
+        self.hp_bar.style().polish(self.hp_bar)
         
         effects_text = []
         for effect in self.combatant.effects:

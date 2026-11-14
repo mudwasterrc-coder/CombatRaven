@@ -662,3 +662,15 @@ def test_combatant_widget_shows_hp_bar(qtbot):
     widget.damage_button.click()
 
     assert widget.hp_bar.value() == 31
+
+def test_hp_bar_exposes_health_state_for_styling(qtbot):
+    aaron = Combatant(name="Aaron", initiative=18, current_hp=41, max_hp=87)
+    widget = CombatantWidget(aaron)
+    qtbot.addWidget(widget)
+
+    assert widget.hp_bar.property("health") == "bloodied"
+
+    widget.amount_input.setValue(41)
+    widget.damage_button.click()
+
+    assert widget.hp_bar.property("health") == "down"
