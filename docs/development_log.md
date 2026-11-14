@@ -196,10 +196,15 @@ UI bugs: unsaved changes (ADD / END TURN / closeEvent), rename CANCEL, rename ov
 - Raven night theme (stage 1 of the redesign): dark QSS in ui/theme.py applied at startup;
   cards expose "current" and "down" as properties instead of setting their own stylesheet
   (also fixes the borders around every label).
+- pyproject declares dependencies: `pip install -e ".[dev]"` sets up any machine.
+- Stage 2 of the redesign (branch feature/compact-card): card laid out as a row,
+  empty effect/concentration labels hidden, legendary actions hidden without a limit,
+  HP bar colored by health state.
+- Combatant.health_state: healthy, bloodied (≤ 50%), critical (≤ 25%), down.
 
 ### Tests
-281 passing.
+286 passing.
 
 ### Next
-- Stage 2 of the redesign: card as a horizontal row, hide empty labels, HP bar with
-  bloodied/critical, "⋯" menu, top bar (New/Open/Save) and turn bar, Cinzel + raven logo.
+- Stage 2, continued: BLOODIED/CRITICAL/DOWN tags on the card, "⋯" menu,
+  top bar (New/Open/Save) and turn bar, Cinzel + raven logo.
