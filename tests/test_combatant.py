@@ -251,3 +251,22 @@ def test_each_combatant_has_a_unique_id():
 
     assert first.id
     assert first.id != second.id
+
+def test_combatant_health_state_follows_hp():
+    hero = Combatant(name="Hero", initiative=10, current_hp=40, max_hp=40)
+    assert hero.health_state == "healthy"
+
+    hero.current_hp = 21
+    assert hero.health_state == "healthy"
+
+    hero.current_hp = 20
+    assert hero.health_state == "bloodied"
+
+    hero.current_hp = 11
+    assert hero.health_state == "bloodied"
+
+    hero.current_hp = 10
+    assert hero.health_state == "critical"
+
+    hero.current_hp = 0
+    assert hero.health_state == "down"

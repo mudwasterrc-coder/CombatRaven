@@ -133,3 +133,20 @@ class Combatant:
         Returns True if the combatant has a legendary action available to use.
         """
         return self._legendary_actions_used < self.legendary_action_limit
+
+    @property
+    def health_state(self) -> str:
+        """
+        Returns how hurt the combatant is : down, critical, bloodied or healthy.
+        """
+        if self.is_down:
+            return "down"
+
+        if self.current_hp <= self.max_hp / 4:
+            return "critical"
+
+        if self.current_hp <= self.max_hp / 2:
+            return "bloodied"
+
+        
+        return "healthy"
