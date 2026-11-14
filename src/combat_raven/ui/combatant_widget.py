@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import (QFrame, QGridLayout, QHBoxLayout, QVBoxLayout, QLabel, QPushButton, QSpinBox, QApplication)
+from PySide6.QtWidgets import (QFrame, QGridLayout, QHBoxLayout, QProgressBar, QVBoxLayout, QLabel, QPushButton, QSpinBox, QApplication)
 
 from combat_raven.models.combatant import Combatant
 from PySide6.QtCore import Qt, Signal, QMimeData
@@ -78,6 +78,11 @@ class CombatantWidget(QFrame):
         self.amount_input.setRange(0, 9999)
         self.amount_input.lineEdit().returnPressed.connect(self.apply_damage)
 
+        self.hp_bar = QProgressBar()
+        self.hp_bar.setObjectName("hpBar")
+        self.hp_bar.setTextVisible(False)
+        self.hp_bar.setAccessibleName("Hit points")
+
         # Names used by the Raven night theme
         self.name_label.setObjectName("nameLabel")
         self.concentration_label.setObjectName("concentrationLabel")
@@ -94,6 +99,7 @@ class CombatantWidget(QFrame):
         info_column = QVBoxLayout()
         info_column.addWidget(self.name_label)
         info_column.addWidget(self.hp_label)
+        info_column.addWidget(self.hp_bar)
         info_column.addWidget(self.effects_label)
         info_column.addWidget(self.concentration_label)
         
@@ -138,7 +144,10 @@ class CombatantWidget(QFrame):
             hp_text += " (DOWN)"
 
         self.hp_label.setText(hp_text)
-
+        self.hp_bar.setMaximum(self.combatant.max_hp)
+        self.hp_bar.setValue(self.combatant.current_hp)
+        self.hp_bar.setTextVisible(False)
+        
         effects_text = []
         for effect in self.combatant.effects:
             if effect.remaining_rounds is None:

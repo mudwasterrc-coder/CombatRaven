@@ -649,3 +649,16 @@ def test_combatant_widget_hides_legendary_actions_without_limit(qtbot):
 
     assert not strahd_widget.legendary_action_label.isHidden()
     assert not strahd_widget.use_legendary_action_button.isHidden()
+
+def test_combatant_widget_shows_hp_bar(qtbot):
+    aaron = Combatant(name="Aaron", initiative=18, current_hp=41, max_hp=87)
+    widget = CombatantWidget(aaron)
+    qtbot.addWidget(widget)
+
+    assert widget.hp_bar.maximum() == 87
+    assert widget.hp_bar.value() == 41
+
+    widget.amount_input.setValue(10)
+    widget.damage_button.click()
+
+    assert widget.hp_bar.value() == 31
