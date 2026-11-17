@@ -208,3 +208,16 @@ UI bugs: unsaved changes (ADD / END TURN / closeEvent), rename CANCEL, rename ov
 ### Next
 - Stage 2, continued: BLOODIED/CRITICAL/DOWN tags on the card, "⋯" menu,
   top bar (New/Open/Save) and turn bar, Cinzel + raven logo.
+
+## 2026-11-17
+
+### Added
+- Health tag next to the combatant's name: BLOODIED / CRITICAL / DOWN, colored by the theme,
+  hidden while healthy (branch feature/health-tags).
+
+### Tests
+287 passing.
+
+### Next
+- "⋯" menu on each card (cards overflow on narrow windows because of the 6 buttons).
+- Top bar (New/Open/Save) and turn bar, Cinzel + raven logo.
