@@ -221,3 +221,10 @@ UI bugs: unsaved changes (ADD / END TURN / closeEvent), rename CANCEL, rename ov
 ### Next
 - "⋯" menu on each card (cards overflow on narrow windows because of the 6 buttons).
 - Top bar (New/Open/Save) and turn bar, Cinzel + raven logo.
+- Bug: legendary actions should reset at the start of the creature's own turn,
+  not for everyone at the start of the round (same rule in 2014 and 2024).
+- Start with an empty combat (remove the Aaron/Strahd demo from main.py) and ask for
+  an encounter name on the first save.
+- Participant library (AddParticipantDialog) to add saved PCs and monsters.
+- Edition-friendly conditions: free text plus suggested lists (2014 / 2024), exhaustion counter.
+- Later, before publishing: choose a license, SRD 5.2 attribution, packaging (PyInstaller).
