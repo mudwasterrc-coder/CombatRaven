@@ -674,3 +674,22 @@ def test_hp_bar_exposes_health_state_for_styling(qtbot):
     widget.damage_button.click()
 
     assert widget.hp_bar.property("health") == "down"
+
+def test_combatant_widget_shows_health_tag(qtbot):
+    aaron = Combatant(name="Aaron", initiative=18, current_hp=87, max_hp=87)
+    widget = CombatantWidget(aaron)
+    qtbot.addWidget(widget)
+
+    assert widget.health_tag.isHidden()
+
+    widget.amount_input.setValue(50)
+    widget.damage_button.click()
+
+    assert not widget.health_tag.isHidden()
+    assert widget.health_tag.text() == "BLOODIED"
+    assert widget.health_tag.property("health") == "bloodied"
+
+    widget.amount_input.setValue(37)
+    widget.damage_button.click()
+
+    assert widget.health_tag.text() == "DOWN"

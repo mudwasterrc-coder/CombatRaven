@@ -39,6 +39,7 @@ class CombatantWidget(QFrame):
         self.reaction_label = QLabel()
         self.concentration_label = QLabel()
         self.legendary_action_label = QLabel()
+        self.health_tag = QLabel()
 
         self.use_reaction_button = QPushButton("USE REACTION")
         self.use_reaction_button.clicked.connect(self.use_reaction)
@@ -92,17 +93,21 @@ class CombatantWidget(QFrame):
 
         self.setObjectName("combatantCard")
 
-        
+        self.health_tag.setObjectName("healthTag")
 
         row =  QHBoxLayout(self)
 
         info_column = QVBoxLayout()
-        info_column.addWidget(self.name_label)
+        name_row = QHBoxLayout()
+        name_row.addWidget(self.name_label)
+        name_row.addWidget(self.health_tag, alignment=Qt.AlignmentFlag.AlignVCenter)
+        name_row.addStretch()
+
+        info_column.addLayout(name_row)
         info_column.addWidget(self.hp_label)
         info_column.addWidget(self.hp_bar)
         info_column.addWidget(self.effects_label)
         info_column.addWidget(self.concentration_label)
-        
         hp_row = QHBoxLayout()
         hp_row.addWidget(self.amount_input)
         hp_row.addWidget(self.damage_button)
@@ -146,11 +151,14 @@ class CombatantWidget(QFrame):
         self.hp_label.setText(hp_text)
         self.hp_bar.setMaximum(self.combatant.max_hp)
         self.hp_bar.setValue(self.combatant.current_hp)
-        self.hp_bar.setTextVisible(False)
         self.hp_bar.setProperty("health", self.combatant.health_state)
         self.hp_bar.style().unpolish(self.hp_bar)
         self.hp_bar.style().polish(self.hp_bar)
-        
+        self.health_tag.setText(self.combatant.health_state.upper())
+        self.health_tag.setProperty("health", self.combatant.health_state)
+        self.health_tag.style().unpolish(self.health_tag)
+        self.health_tag.style().polish(self.health_tag)
+        self.health_tag.setVisible(self.combatant.health_state != "healthy")
         effects_text = []
         for effect in self.combatant.effects:
             if effect.remaining_rounds is None:

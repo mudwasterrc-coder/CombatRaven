@@ -173,6 +173,27 @@ QProgressBar[health="bloodied"]::chunk {
 QProgressBar[health="critical"]::chunk {
     background: #FF5C5C;
 }
+QLabel#healthTag {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 9px;
+}
+
+QLabel#healthTag[health="bloodied"] {
+    background: #3A2E17;
+    color: #F2B24C;
+}
+
+QLabel#healthTag[health="critical"] {
+    background: #3A1F22;
+    color: #FF8C8C;
+}
+
+QLabel#healthTag[health="down"] {
+    background: #ECEAF4;
+    color: #111117;
+}
 """
 
 
