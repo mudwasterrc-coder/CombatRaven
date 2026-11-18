@@ -45,9 +45,20 @@ class CombatantWidget(QFrame):
         self.menu_button.setText("⋯")
 
         menu = QMenu(self)
+
         self.edit_action = menu.addAction("EDIT")
         self.edit_action.triggered.connect(
             lambda: self.edit_requested.emit(self.combatant)
+        )
+
+        self.concentrate_action = menu.addAction("CONCENTRATE")
+        self.concentrate_action.triggered.connect(
+            lambda: self.concentrate_requested.emit(self.combatant)
+        )
+
+        self.drop_concentration_action = menu.addAction("DROP CONCENTRATION")
+        self.drop_concentration_action.triggered.connect(
+            lambda: self.drop_concentration_requested.emit(self.combatant)
         )
 
         self.menu_button.setMenu(menu)
@@ -72,10 +83,6 @@ class CombatantWidget(QFrame):
             lambda: self.concentrate_requested.emit(self.combatant)
         )
 
-        self.drop_concentration_button = QPushButton("DROP CONCENTRATION")
-        self.drop_concentration_button.clicked.connect(
-            lambda: self.drop_concentration_requested.emit(self.combatant)
-        )
 
         self.damage_button = QPushButton("DAMAGE")
         self.damage_button.clicked.connect(self.apply_damage)
@@ -129,7 +136,6 @@ class CombatantWidget(QFrame):
         status_column.addWidget(self.legendary_action_label)
 
         buttons_grid = QGridLayout()
-        buttons_grid.addWidget(self.drop_concentration_button, 0, 1)
         buttons_grid.addWidget(self.menu_button, 0, 2)
         buttons_grid.addWidget(self.use_reaction_button, 1, 0)
         buttons_grid.addWidget(self.use_legendary_action_button, 1, 1)
@@ -187,10 +193,10 @@ class CombatantWidget(QFrame):
             self.concentration_label.setText(
                 f"Concentrating: {', '.join(self.concentrating_on)}"
             )
-            self.drop_concentration_button.setEnabled(True)
+            self.drop_concentration_action.setEnabled(True)
         else:
             self.concentration_label.setText("")
-            self.drop_concentration_button.setEnabled(False)
+            self.drop_concentration_action.setEnabled(False)
 
         self.concentration_label.setVisible(bool(self.concentrating_on))
 

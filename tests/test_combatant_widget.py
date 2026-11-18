@@ -533,8 +533,8 @@ def test_drop_concentration_button_is_enabled_only_when_concentrating(qtbot):
     qtbot.addWidget(concentrating)
     qtbot.addWidget(idle)
 
-    assert concentrating.drop_concentration_button.isEnabled() is True
-    assert idle.drop_concentration_button.isEnabled() is False
+    assert concentrating.drop_concentration_action.isEnabled() is True
+    assert idle.drop_concentration_action.isEnabled() is False
 
 def test_drop_concentration_button_requests_dropping(qtbot):
     wizard = Combatant(name="Wizard", initiative=14, current_hp=18, max_hp=18)
@@ -544,7 +544,7 @@ def test_drop_concentration_button_requests_dropping(qtbot):
     received = []
     widget.drop_concentration_requested.connect(received.append)
 
-    widget.drop_concentration_button.click()
+    widget.drop_concentration_action.trigger()
 
     assert received == [wizard]
 

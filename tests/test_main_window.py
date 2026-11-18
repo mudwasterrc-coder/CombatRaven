@@ -1608,7 +1608,7 @@ def test_drop_concentration_from_card_removes_effects(qtbot):
     qtbot.addWidget(window)
 
     cleric_card = window.combatants_layout.itemAt(0).widget()
-    cleric_card.drop_concentration_button.click()
+    cleric_card.drop_concentration_action.trigger()
 
     assert fighter.effects == []
     assert window.has_unsaved_changes is True
