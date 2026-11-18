@@ -1941,3 +1941,32 @@ def test_first_save_with_blank_name_keeps_default_name(qtbot, monkeypatch, tmp_p
 
     assert saved is not None
     assert saved.name == "Unnamed Encounter"
+
+def test_closing_is_cancelled_if_the_first_save_is_cancelled(
+    qtbot, monkeypatch, tmp_path
+):
+    repository = CombatRepository(tmp_path)
+    combat = Combat()
+    window = MainWindow(combat, repository)
+    qtbot.addWidget(window)
+    window.has_unsaved_changes = True
+
+    class FakeDialog:
+        selected_action = "save"
+
+        def exec(self):
+            return 1
+
+    monkeypatch.setattr(
+        "combat_raven.ui.main_window.UnsavedChangesDialog",
+        FakeDialog,
+    )
+    monkeypatch.setattr(
+        "combat_raven.ui.main_window.QInputDialog.getText",
+        lambda *args, **kwargs: ("", False),
+    )
+
+    event = QCloseEvent()
+    window.closeEvent(event)
+
+    assert event.isAccepted() is False
