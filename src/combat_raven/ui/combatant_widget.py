@@ -98,6 +98,7 @@ class CombatantWidget(QFrame):
         self.damage_button.setObjectName("damageButton")
         self.heal_button.setObjectName("healButton")
         self.remove_button.setObjectName("removeButton")
+        self.menu_button.setObjectName("menuButton")
 
         self.setObjectName("combatantCard")
 

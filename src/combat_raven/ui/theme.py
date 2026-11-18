@@ -194,6 +194,46 @@ QLabel#healthTag[health="down"] {
     background: #ECEAF4;
     color: #111117;
 }
+QToolButton#menuButton {
+    background: transparent;
+    color: #ECEAF4;
+    border: 1px solid #2E2E3B;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: 700;
+    min-width: 36px;
+    min-height: 32px;
+}
+
+QToolButton#menuButton:hover {
+    background: #2A2A36;
+}
+
+QToolButton#menuButton::menu-indicator {
+    image: none;
+    width: 0;
+}
+
+QMenu {
+    background: #1E1E28;
+    color: #ECEAF4;
+    border: 1px solid #34343F;
+    border-radius: 10px;
+    padding: 6px;
+}
+
+QMenu::item {
+    padding: 8px 18px;
+    border-radius: 6px;
+}
+
+QMenu::item:selected {
+    background: #2A2A36;
+}
+
+QMenu::item:disabled {
+    color: #5C5A6B;
+}
 """
 
 
