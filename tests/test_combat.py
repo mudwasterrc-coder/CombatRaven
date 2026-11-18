@@ -1005,3 +1005,30 @@ def test_concentrations_of_maps_ids_to_names():
         fighter.effects[0].concentration_id: "Haste",
         goblin.effects[0].concentration_id: "Hold Person",
     }
+
+def test_legendary_actions_reset_at_the_start_of_the_creatures_own_turn():
+    fighter = Combatant(name="Fighter", max_hp=30, current_hp=30, initiative=20)
+    dragon = Combatant(
+        name="Dragon",
+        max_hp=200,
+        current_hp=200,
+        initiative=10,
+        legendary_action_limit=3,
+    )
+
+    combat = Combat()
+    combat.add_combatant(fighter)
+    combat.add_combatant(dragon)
+    combat.start()                      # round 1, Fighter's turn
+
+    combat.next_turn()                  # Dragon's turn
+    dragon.use_legendary_action()
+    dragon.use_legendary_action()
+
+    combat.next_turn()                  # round 2, Fighter's turn
+
+    assert dragon.legendary_actions_used == 2
+
+    combat.next_turn()                  # Dragon's turn again
+
+    assert dragon.legendary_actions_used == 0
