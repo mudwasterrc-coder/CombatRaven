@@ -427,11 +427,11 @@ class MainWindow(QMainWindow):
                 return
 
             if dialog.selected_action == "save":
-                self.save_combat()
+                    self.save_combat()
 
-            if self.has_unsaved_changes:
-                event.ignore()
-                return
+                    if self.has_unsaved_changes:
+                        event.ignore()
+                        return
 
         event.accept()
 
