@@ -1642,7 +1642,7 @@ def test_concentrate_from_card_applies_dialog_choice(qtbot, monkeypatch):
     )
 
     cleric_card = window.combatants_layout.itemAt(0).widget()
-    cleric_card.concentrate_button.click()
+    cleric_card.concentrate_action.trigger()
 
     assert len(fighter.effects) == 1
     assert fighter.effects[0].source_id == cleric.id
@@ -1761,7 +1761,7 @@ def test_concentrate_at_full_limit_asks_what_to_drop(qtbot, monkeypatch):
     )
 
     wizard_card = window.combatants_layout.itemAt(0).widget()
-    wizard_card.concentrate_button.click()
+    wizard_card.concentrate_action.trigger()
 
     assert fighter.effects == []
     assert len(goblin.effects) == 1
@@ -1813,7 +1813,7 @@ def test_concentrate_at_full_limit_cancel_changes_nothing(qtbot, monkeypatch):
     )
 
     wizard_card = window.combatants_layout.itemAt(0).widget()
-    wizard_card.concentrate_button.click()
+    wizard_card.concentrate_action.trigger()
 
     assert len(fighter.effects) == 1
     assert len(goblin.effects) == 1

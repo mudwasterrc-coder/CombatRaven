@@ -67,8 +67,8 @@ class CombatantWidget(QFrame):
             self.use_legendary_action
         )
 
-        self.concentrate_button = QPushButton("CONCENTRATE")
-        self.concentrate_button.clicked.connect(
+        self.concentrate_action = menu.addAction("CONCENTRATE")
+        self.concentrate_action.triggered.connect(
             lambda: self.concentrate_requested.emit(self.combatant)
         )
 
@@ -129,7 +129,6 @@ class CombatantWidget(QFrame):
         status_column.addWidget(self.legendary_action_label)
 
         buttons_grid = QGridLayout()
-        buttons_grid.addWidget(self.concentrate_button, 0, 0)
         buttons_grid.addWidget(self.drop_concentration_button, 0, 1)
         buttons_grid.addWidget(self.menu_button, 0, 2)
         buttons_grid.addWidget(self.use_reaction_button, 1, 0)

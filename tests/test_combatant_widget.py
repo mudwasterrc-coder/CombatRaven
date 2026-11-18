@@ -548,7 +548,7 @@ def test_drop_concentration_button_requests_dropping(qtbot):
 
     assert received == [wizard]
 
-def test_concentrate_button_requests_concentration(qtbot):
+def test_concentrate_action_triggered_requests_concentration(qtbot):
     cleric = Combatant(name="Cleric", initiative=10, current_hp=25, max_hp=25)
     widget = CombatantWidget(cleric)
     qtbot.addWidget(widget)
@@ -556,7 +556,7 @@ def test_concentrate_button_requests_concentration(qtbot):
     received = []
     widget.concentrate_requested.connect(received.append)
 
-    widget.concentrate_button.click()
+    widget.concentrate_action.trigger()
 
     assert received == [cleric]
 
