@@ -236,18 +236,22 @@ UI bugs: unsaved changes (ADD / END TURN / closeEvent), rename CANCEL, rename ov
   at the start of the round (same rule in 2014 and 2024).
 - Cancelling the encounter name no longer loses the combat: closing, NEW ENCOUNTER and
   OPEN ENCOUNTER stop if the save didn't happen.
+- DISCARD closes the window again (new test covers it).
+- main.py entry point restored (lost when build_window was split out).
 
 ### Added
 - The app starts with an empty combat (Aaron/Strahd demo removed). main.py split into
   build_window() (testable) and main().
 - First save of an unnamed encounter asks for a name. Cancel saves nothing; a blank name
   keeps "Unnamed Encounter" (it will ask again next time).
+- "⋯" menu on each card: Edit…, Concentrate…, Drop concentration, Remove (after a separator).
+  Use reaction / Use legendary action stay visible. Menu themed.
 
 ### Tests
-295 passing.
+296 passing.
 
 ### Next
-- "⋯" menu on each card (cards overflow on narrow windows because of the 6 buttons).
+- Before START, no combatant should be marked as current ("ROUND 0 / CURRENT TURN: Pepe").
 - Top bar (New/Open/Save) and turn bar, Cinzel + raven logo.
 - Participant library (AddParticipantDialog) to add saved PCs and monsters.
 - Edition-friendly conditions: free text plus suggested lists (2014 / 2024), exhaustion counter.
