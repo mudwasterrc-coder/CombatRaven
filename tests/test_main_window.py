@@ -151,7 +151,7 @@ def test_main_window_can_remove_a_combatant(qtbot):
 
     widget = window.combatants_layout.itemAt(0).widget()
 
-    widget.remove_button.click()
+    widget.remove_action.trigger()
 
     assert combat.combatants == []
 

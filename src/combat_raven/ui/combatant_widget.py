@@ -61,6 +61,13 @@ class CombatantWidget(QFrame):
             lambda: self.drop_concentration_requested.emit(self.combatant)
         )
 
+        menu.addSeparator()
+
+        self.remove_action = menu.addAction("REMOVE")
+        self.remove_action.triggered.connect(
+            lambda: self.remove_requested.emit(self.combatant)
+        )
+
         self.menu_button.setMenu(menu)
         self.menu_button.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
 
@@ -68,10 +75,6 @@ class CombatantWidget(QFrame):
         self.use_reaction_button.clicked.connect(self.use_reaction)
         self.use_legendary_action_button = QPushButton(
             "USE LEGENDARY ACTION"
-        )
-        self.remove_button = QPushButton("REMOVE")
-        self.remove_button.clicked.connect(
-            lambda: self.remove_requested.emit(self.combatant)
         )
 
         self.use_legendary_action_button.clicked.connect(
@@ -104,7 +107,6 @@ class CombatantWidget(QFrame):
         self.concentration_label.setObjectName("concentrationLabel")
         self.damage_button.setObjectName("damageButton")
         self.heal_button.setObjectName("healButton")
-        self.remove_button.setObjectName("removeButton")
         self.menu_button.setObjectName("menuButton")
 
         self.setObjectName("combatantCard")
@@ -138,9 +140,7 @@ class CombatantWidget(QFrame):
         buttons_grid = QGridLayout()
         buttons_grid.addWidget(self.menu_button, 0, 2)
         buttons_grid.addWidget(self.use_reaction_button, 1, 0)
-        buttons_grid.addWidget(self.use_legendary_action_button, 1, 1)
-        buttons_grid.addWidget(self.remove_button, 1, 2)
-        
+        buttons_grid.addWidget(self.use_legendary_action_button, 1, 1)        
 
         row.addLayout(info_column)
         row.addLayout(hp_row)

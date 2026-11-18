@@ -174,7 +174,7 @@ def test_combatant_widget_has_remove_button(qtbot):
     widget = CombatantWidget(fighter)
     qtbot.addWidget(widget)
 
-    assert widget.remove_button.text() == "REMOVE"
+    assert widget.remove_action.text() == "REMOVE"
 
 def test_combatant_widget_emits_remove_request(qtbot):
     fighter = Combatant(
@@ -191,7 +191,7 @@ def test_combatant_widget_emits_remove_request(qtbot):
 
     widget.remove_requested.connect(received.append)
 
-    widget.remove_button.click()
+    widget.remove_action.trigger()
 
     assert received == [fighter]
 
