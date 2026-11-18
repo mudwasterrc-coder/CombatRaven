@@ -18,9 +18,6 @@ def main() -> None:
 
     sys.exit(app.exec())
 
-    if __name__ == "__main__":
-        main()
-
 
 def build_window(encounters_dir: Path) -> MainWindow:
     """
@@ -31,3 +28,6 @@ def build_window(encounters_dir: Path) -> MainWindow:
     repository = CombatRepository(encounters_dir)
     window = MainWindow(combat, repository)
     return window
+
+if __name__ == "__main__":
+    main()
