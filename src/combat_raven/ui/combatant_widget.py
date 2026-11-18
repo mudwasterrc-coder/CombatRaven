@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import (QFrame, QGridLayout, QHBoxLayout, QProgressBar, QVBoxLayout, QLabel, QPushButton, QSpinBox, QApplication)
+from PySide6.QtWidgets import (QFrame, QGridLayout, QHBoxLayout, QProgressBar, QToolButton, QMenu, QVBoxLayout, QLabel, QPushButton, QSpinBox, QApplication)
 
 from combat_raven.models.combatant import Combatant
 from PySide6.QtCore import Qt, Signal, QMimeData
@@ -41,6 +41,18 @@ class CombatantWidget(QFrame):
         self.legendary_action_label = QLabel()
         self.health_tag = QLabel()
 
+        self.menu_button = QToolButton()
+        self.menu_button.setText("⋯")
+
+        menu = QMenu(self)
+        self.edit_action = menu.addAction("EDIT")
+        self.edit_action.triggered.connect(
+            lambda: self.edit_requested.emit(self.combatant)
+        )
+
+        self.menu_button.setMenu(menu)
+        self.menu_button.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
+
         self.use_reaction_button = QPushButton("USE REACTION")
         self.use_reaction_button.clicked.connect(self.use_reaction)
         self.use_legendary_action_button = QPushButton(
@@ -49,10 +61,6 @@ class CombatantWidget(QFrame):
         self.remove_button = QPushButton("REMOVE")
         self.remove_button.clicked.connect(
             lambda: self.remove_requested.emit(self.combatant)
-        )
-        self.edit_button = QPushButton("EDIT")
-        self.edit_button.clicked.connect(
-            lambda: self.edit_requested.emit(self.combatant)
         )
 
         self.use_legendary_action_button.clicked.connect(
@@ -122,7 +130,7 @@ class CombatantWidget(QFrame):
         buttons_grid = QGridLayout()
         buttons_grid.addWidget(self.concentrate_button, 0, 0)
         buttons_grid.addWidget(self.drop_concentration_button, 0, 1)
-        buttons_grid.addWidget(self.edit_button, 0, 2)
+        buttons_grid.addWidget(self.menu_button, 0, 2)
         buttons_grid.addWidget(self.use_reaction_button, 1, 0)
         buttons_grid.addWidget(self.use_legendary_action_button, 1, 1)
         buttons_grid.addWidget(self.remove_button, 1, 2)

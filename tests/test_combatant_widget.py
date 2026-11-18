@@ -590,9 +590,10 @@ def test_combatant_widget_can_request_edit(qtbot):
 
     widget.edit_requested.connect(received.append)
 
-    widget.edit_button.click()
+    widget.edit_action.trigger()
 
     assert received == [fighter]
+    assert widget.edit_action in widget.menu_button.menu().actions()
 
 def test_combatant_widget_exposes_state_for_styling(qtbot):
     fallen = Combatant(name="Fighter", initiative=15, current_hp=0, max_hp=30)
