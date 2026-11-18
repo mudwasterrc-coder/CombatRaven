@@ -1905,3 +1905,21 @@ def test_first_save_asks_for_an_encounter_name(qtbot, monkeypatch, tmp_path):
 
     assert combat.name == "Cripta de Strahd"
     assert repository.get_by_id(combat.id).name == "Cripta de Strahd"
+
+def test_cancelling_first_save_saves_nothing(qtbot, monkeypatch, tmp_path):
+    combat = Combat()
+    repository = CombatRepository(tmp_path)
+    window = MainWindow(combat, repository)
+    qtbot.addWidget(window)
+    window.has_unsaved_changes = True
+
+    monkeypatch.setattr(
+        "combat_raven.ui.main_window.QInputDialog.getText",
+        lambda *args, **kwargs: ("", False),
+    )
+
+    window.save_combat()
+
+    assert repository.get_by_id(combat.id) is None
+    assert combat.name == "Unnamed Encounter"
+    assert window.has_unsaved_changes
