@@ -1923,3 +1923,21 @@ def test_cancelling_first_save_saves_nothing(qtbot, monkeypatch, tmp_path):
     assert repository.get_by_id(combat.id) is None
     assert combat.name == "Unnamed Encounter"
     assert window.has_unsaved_changes
+
+def test_first_save_with_blank_name_keeps_default_name(qtbot, monkeypatch, tmp_path):
+    combat = Combat()
+    repository = CombatRepository(tmp_path)
+    window = MainWindow(combat, repository)
+    qtbot.addWidget(window)
+
+    monkeypatch.setattr(
+        "combat_raven.ui.main_window.QInputDialog.getText",
+        lambda *args, **kwargs: ("   ", True),
+    )
+
+    window.save_combat()
+
+    saved = repository.get_by_id(combat.id)
+
+    assert saved is not None
+    assert saved.name == "Unnamed Encounter"

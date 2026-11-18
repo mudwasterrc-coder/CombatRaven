@@ -272,7 +272,10 @@ class MainWindow(QMainWindow):
             if not ok:
                 return
 
-            self.combat.name = name
+            clean_name = name.strip()
+
+            if clean_name:
+                self.combat.name = clean_name      
 
         self.combat_repository.save(self.combat)
         self.has_unsaved_changes = False
