@@ -387,7 +387,7 @@ class MainWindow(QMainWindow):
         """
         if self.unsaved_changes_dialog.selected_action == "save":
             self.save_combat()
-            
+
             if self.has_unsaved_changes:
                 return
 
@@ -401,6 +401,9 @@ class MainWindow(QMainWindow):
         """
         if self.unsaved_changes_dialog.selected_action == "save":
             self.save_combat()
+
+            if self.has_unsaved_changes:
+                return
 
         self.has_unsaved_changes = False
 
