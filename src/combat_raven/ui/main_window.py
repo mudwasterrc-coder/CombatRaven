@@ -386,7 +386,10 @@ class MainWindow(QMainWindow):
         Continues creating a new combat after resolving unsaved changes.
         """
         if self.unsaved_changes_dialog.selected_action == "save":
-            self. save_combat()
+            self.save_combat()
+            
+            if self.has_unsaved_changes:
+                return
 
 
         self.has_unsaved_changes = False

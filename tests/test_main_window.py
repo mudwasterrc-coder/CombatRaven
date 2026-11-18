@@ -1970,3 +1970,22 @@ def test_closing_is_cancelled_if_the_first_save_is_cancelled(
     window.closeEvent(event)
 
     assert event.isAccepted() is False
+
+def test_new_combat_stops_if_the_first_save_is_cancelled(
+    qtbot, monkeypatch, tmp_path
+):
+    repository = CombatRepository(tmp_path)
+    combat = Combat()
+    window = MainWindow(combat, repository)
+    qtbot.addWidget(window)
+    window.has_unsaved_changes = True
+
+    monkeypatch.setattr(
+        "combat_raven.ui.main_window.QInputDialog.getText",
+        lambda *args, **kwargs: ("", False),
+    )
+
+    window.new_combat()
+    window.unsaved_changes_dialog.save_button.click()
+
+    assert window.has_unsaved_changes is True
