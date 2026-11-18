@@ -1889,3 +1889,19 @@ def test_main_window_does_not_edit_when_dialog_is_cancelled(qtbot, monkeypatch):
 
     assert fighter.initiative == 15
     assert window.has_unsaved_changes is False
+
+def test_first_save_asks_for_an_encounter_name(qtbot, monkeypatch, tmp_path):
+    combat = Combat()
+    repository = CombatRepository(tmp_path)
+    window = MainWindow(combat, repository)
+    qtbot.addWidget(window)
+
+    monkeypatch.setattr(
+        "combat_raven.ui.main_window.QInputDialog.getText",
+        lambda *args, **kwargs: ("Cripta de Strahd", True),
+    )
+
+    window.save_combat()
+
+    assert combat.name == "Cripta de Strahd"
+    assert repository.get_by_id(combat.id).name == "Cripta de Strahd"

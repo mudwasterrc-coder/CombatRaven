@@ -256,11 +256,23 @@ class MainWindow(QMainWindow):
     def save_combat(self) -> None:
         """
         Saves the current combat through the combat repository.
+        Asks for a name the first time an unnamed encounter is saved.
         """
         if self.combat_repository is None:
             raise RuntimeError(
                 "Cannot save combat without a combat repository."
             )
+        if self.combat.name == "Unnamed Encounter":
+            name, ok = QInputDialog.getText(
+                self,
+                "Save Combat",
+                "Enter a name for the combat encounter:"
+            )
+
+            if not ok:
+                return
+
+            self.combat.name = name
 
         self.combat_repository.save(self.combat)
         self.has_unsaved_changes = False
@@ -268,6 +280,7 @@ class MainWindow(QMainWindow):
         self.status_label.setText(
             f"COMBAT SAVED: {self.combat.name}"
         )
+
 
     def open_combat(self) -> None:
         """
