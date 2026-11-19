@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import (QFrame, QGridLayout, QHBoxLayout, QProgressBar, QToolButton, QMenu, QVBoxLayout, QLabel, QPushButton, QSpinBox, QApplication)
+from PySide6.QtWidgets import (QFrame, QHBoxLayout, QProgressBar, QToolButton, QMenu, QVBoxLayout, QLabel, QPushButton, QSpinBox, QApplication)
 
 from combat_raven.models.combatant import Combatant
 from PySide6.QtCore import Qt, Signal, QMimeData
@@ -137,16 +137,15 @@ class CombatantWidget(QFrame):
         status_column.addWidget(self.reaction_label)
         status_column.addWidget(self.legendary_action_label)
 
-        buttons_grid = QGridLayout()
-        buttons_grid.addWidget(self.menu_button, 0, 2)
-        buttons_grid.addWidget(self.use_reaction_button, 1, 0)
-        buttons_grid.addWidget(self.use_legendary_action_button, 1, 1)        
+        actions_row = QHBoxLayout()
+        actions_row.addWidget(self.use_reaction_button)
+        actions_row.addWidget(self.use_legendary_action_button)
+        actions_row.addWidget(self.menu_button)
 
         row.addLayout(info_column)
         row.addLayout(hp_row)
         row.addLayout(status_column)
-        row.addLayout(buttons_grid)
-
+        row.addLayout(actions_row)
 
         self.refresh()
 
