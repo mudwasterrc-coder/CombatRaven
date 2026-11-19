@@ -31,7 +31,9 @@ class ParticipantStorage:
                     "max_hp": participant.max_hp,
                     "legendary_action_limit": (
                         participant.legendary_action_limit
-                    ),
+                    )
+                    ,
+                    "concentration_limit": participant.concentration_limit,
                 }
             )
 
@@ -63,7 +65,9 @@ class ParticipantStorage:
                 max_hp=item["max_hp"],
                 legendary_action_limit=item[
                     "legendary_action_limit"
-                ],
+                ]
+                ,
+                concentration_limit=item.get("concentration_limit", 1),
             )
 
             repository.add(participant)
