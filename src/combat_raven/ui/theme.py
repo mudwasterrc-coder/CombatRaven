@@ -3,6 +3,10 @@ Raven night theme for Combat Raven.
 """
 
 from PySide6.QtWidgets import QApplication
+from pathlib import Path
+from PySide6.QtGui import QFontDatabase
+
+ASSETS_DIR = Path(__file__).resolve().parent.parent / "assets"
 
 RAVEN_STYLESHEET = """
 QMainWindow, QDialog, QMessageBox, QInputDialog {
@@ -129,12 +133,14 @@ QLabel#concentrationLabel {
 }
 
 QLabel#roundLabel {
+    font-family: "Cinzel";
     font-size: 22px;
     font-weight: 700;
 }
 
 QLabel#currentTurnLabel {
     color: #8E7DFF;
+    font-family: "Cinzel";
     font-size: 20px;
     font-weight: 700;
 }
@@ -241,4 +247,5 @@ def apply_theme(app: QApplication) -> None:
     """
     Applies the Raven night theme to the whole application.
     """
+    QFontDatabase.addApplicationFont(str(ASSETS_DIR / "fonts" / "Cinzel-wght.ttf"))
     app.setStyleSheet(RAVEN_STYLESHEET)
