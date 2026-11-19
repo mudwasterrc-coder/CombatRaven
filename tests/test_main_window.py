@@ -527,7 +527,7 @@ def test_main_window_refreshes_after_loading_combat(
     window.open_combat_dialog.open_button.click()
 
     assert window.round_label.text() == "ROUND 0"
-    assert window.current_turn_label.text() == "CURRENT TURN: Fighter"
+    assert window.current_turn_label.text() == "COMBAT NOT STARTED"
     assert (
         window.combatants_layout.itemAt(0).widget().combatant
         is window.combat.combatants[0]
@@ -2032,3 +2032,23 @@ def test_closing_with_discard_closes_without_saving(qtbot, monkeypatch, tmp_path
 
     assert event.isAccepted() is True
     assert repository.get_by_id(combat.id) is None
+
+def test_no_combatant_is_current_before_the_combat_starts(qtbot):
+    combat = Combat()
+    pepe = Combatant(name="Pepe", initiative=2, current_hp=51, max_hp=51)
+    combat.add_combatant(pepe)
+
+    window = MainWindow(combat)
+    qtbot.addWidget(window)
+
+    card = window.combatants_layout.itemAt(0).widget()
+
+    assert card.property("current") is False
+    assert window.current_turn_label.text() == "COMBAT NOT STARTED"
+
+    window.start_combat()
+
+    card = window.combatants_layout.itemAt(0).widget()
+
+    assert card.property("current") is True
+    assert window.current_turn_label.text() == "CURRENT TURN: Pepe"

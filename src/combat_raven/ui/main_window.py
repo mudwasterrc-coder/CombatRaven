@@ -131,6 +131,7 @@ class MainWindow(QMainWindow):
             widget = CombatantWidget(
                 combatant,
                 is_current=(
+                    self.combat.started and
                     combatant is self.combat.current_combatant
                 ),
                 source_names=source_names,
@@ -167,14 +168,14 @@ class MainWindow(QMainWindow):
 
             self.combatants_layout.addWidget(widget)
 
-        if self.combat.combatants:
-            self.current_turn_label.setText(
-                f"CURRENT TURN: {self.combat.current_combatant.name}"
-            )
+        if not self.combat.combatants:
+            self.current_turn_label.setText("NO COMBATANTS")
+        elif not self.combat.started:
+            self.current_turn_label.setText("COMBAT NOT STARTED")
         else:
             self.current_turn_label.setText(
-                "NO COMBATANTS"
-            )
+                f"CURRENT TURN: {self.combat.current_combatant.name}"
+            )        
 
         self.start_combat_button.setEnabled(not self.combat.started and bool(self.combat.combatants))
         self.end_turn_button.setEnabled(self.combat.started)
