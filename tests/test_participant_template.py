@@ -72,3 +72,15 @@ def test_participant_template_can_have_specific_id():
     )
 
     assert goblin.id == participant_id
+
+def test_template_passes_concentration_limit_to_combatant():
+    wizard = ParticipantTemplate(
+        name="Wizard",
+        combatant_type=CombatantType.ALLY,
+        max_hp=18,
+        concentration_limit=2,
+    )
+
+    combatant = wizard.create_combatant(initiative=14)
+
+    assert combatant.concentration_limit == 2

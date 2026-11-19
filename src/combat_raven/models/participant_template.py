@@ -14,6 +14,7 @@ class ParticipantTemplate:
     combatant_type: CombatantType
     max_hp: int
     legendary_action_limit: int = 0
+    concentration_limit: int = 1
     id: str = None
 
     def __post_init__(self) -> None:
@@ -30,5 +31,6 @@ class ParticipantTemplate:
             current_hp=self.max_hp,
             max_hp=self.max_hp,
             legendary_action_limit=self.legendary_action_limit,
+            concentration_limit=self.concentration_limit,
             combatant_type=self.combatant_type,
         )
