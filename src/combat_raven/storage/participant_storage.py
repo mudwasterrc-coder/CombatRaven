@@ -29,6 +29,7 @@ class ParticipantStorage:
                     "name": participant.name,
                     "combatant_type": participant.combatant_type.value,
                     "max_hp": participant.max_hp,
+                    "initiative_bonus": participant.initiative_bonus,
                     "legendary_action_limit": (
                         participant.legendary_action_limit
                     )
@@ -63,6 +64,7 @@ class ParticipantStorage:
                     item["combatant_type"]
                 ),
                 max_hp=item["max_hp"],
+                initiative_bonus=item.get("initiative_bonus", 0),
                 legendary_action_limit=item[
                     "legendary_action_limit"
                 ]

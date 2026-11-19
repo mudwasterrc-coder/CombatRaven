@@ -155,3 +155,34 @@ def test_storage_loads_old_files_without_concentration_limit(tmp_path):
     loaded = ParticipantStorage(path).load().get_by_id("abc")
 
     assert loaded.concentration_limit == 1
+
+def test_storage_preserves_initiative_bonus(tmp_path):
+    path = tmp_path / "participants.json"
+    repository = ParticipantRepository()
+
+    goblin = ParticipantTemplate(
+        name="Goblin",
+        combatant_type=CombatantType.ENEMY,
+        max_hp=7,
+        initiative_bonus=2,
+    )
+    repository.add(goblin)
+
+    storage = ParticipantStorage(path)
+    storage.save(repository)
+
+    loaded = storage.load().get_by_id(goblin.id)
+
+    assert loaded.initiative_bonus == 2
+
+def test_storage_loads_old_files_without_initiative_bonus(tmp_path):
+    path = tmp_path / "participants.json"
+    path.write_text(
+        '[{"id": "abc", "name": "Goblin", "combatant_type": "enemy", '
+        '"max_hp": 7, "legendary_action_limit": 0}]',
+        encoding="utf-8",
+    )
+
+    loaded = ParticipantStorage(path).load().get_by_id("abc")
+
+    assert loaded.initiative_bonus == 0

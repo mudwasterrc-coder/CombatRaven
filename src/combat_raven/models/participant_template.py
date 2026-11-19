@@ -13,6 +13,7 @@ class ParticipantTemplate:
     name: str
     combatant_type: CombatantType
     max_hp: int
+    initiative_bonus: int = 0
     legendary_action_limit: int = 0
     concentration_limit: int = 1
     id: str = None
