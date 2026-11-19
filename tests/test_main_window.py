@@ -2052,3 +2052,10 @@ def test_no_combatant_is_current_before_the_combat_starts(qtbot):
 
     assert card.property("current") is True
     assert window.current_turn_label.text() == "CURRENT TURN: Pepe"
+
+def test_main_window_shows_raven_logo_and_title(qtbot):
+    window = MainWindow(Combat())
+    qtbot.addWidget(window)
+
+    assert not window.logo_label.pixmap().isNull()
+    assert window.title_label.text() == "Combat Raven"

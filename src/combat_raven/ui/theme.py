@@ -7,6 +7,7 @@ from pathlib import Path
 from PySide6.QtGui import QFontDatabase
 
 ASSETS_DIR = Path(__file__).resolve().parent.parent / "assets"
+RAVEN_LOGO = ASSETS_DIR / "raven.svg"
 
 RAVEN_STYLESHEET = """
 QMainWindow, QDialog, QMessageBox, QInputDialog {
@@ -239,6 +240,12 @@ QMenu::item:selected {
 
 QMenu::item:disabled {
     color: #5C5A6B;
+}
+
+QLabel#appTitle {
+    font-family: "Cinzel";
+    font-size: 20px;
+    font-weight: 700;
 }
 """
 

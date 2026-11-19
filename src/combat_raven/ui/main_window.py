@@ -9,8 +9,10 @@ from PySide6.QtWidgets import (
     QMessageBox,
     QInputDialog
 )
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QSize
+from PySide6.QtGui import QIcon
 
+from combat_raven.ui.theme import RAVEN_LOGO
 from combat_raven.models.combat import Combat
 from combat_raven.models.combatant import Combatant
 from combat_raven.ui.combatant_widget import CombatantWidget
@@ -47,6 +49,9 @@ class MainWindow(QMainWindow):
 
         layout = QVBoxLayout(central_widget)
 
+        self.logo_label = QLabel()
+        self.logo_label.setPixmap(QIcon(str(RAVEN_LOGO)).pixmap(QSize(36, 36)))
+        self.title_label = QLabel("Combat Raven")
         self.round_label = QLabel()
         self.current_turn_label = QLabel()
         self.status_label = QLabel()
@@ -92,11 +97,14 @@ class MainWindow(QMainWindow):
         self.start_combat_button.clicked.connect(self.start_combat)
 
         # Names used by the Raven night theme
+        self.title_label.setObjectName("appTitle")
         self.end_turn_button.setObjectName("primaryButton")
         self.round_label.setObjectName("roundLabel")
         self.current_turn_label.setObjectName("currentTurnLabel")
 
         header_bar = QHBoxLayout()
+        header_bar.addWidget(self.logo_label)
+        header_bar.addWidget(self.title_label)
         header_bar.addStretch()
         header_bar.addWidget(self.new_combat_button)
         header_bar.addWidget(self.open_combat_button)
