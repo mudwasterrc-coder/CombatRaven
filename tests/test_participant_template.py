@@ -84,3 +84,15 @@ def test_template_passes_concentration_limit_to_combatant():
     combatant = wizard.create_combatant(initiative=14)
 
     assert combatant.concentration_limit == 2
+
+def test_template_rolls_initiative_with_its_bonus():
+    goblin = ParticipantTemplate(
+        name="Goblin",
+        combatant_type=CombatantType.ENEMY,
+        max_hp=7,
+        initiative_bonus=2,
+    )
+
+    loaded_die = lambda: 12
+
+    assert goblin.roll_initiative(d20=loaded_die) == 14

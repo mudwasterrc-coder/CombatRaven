@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from random import random
 from uuid import uuid4
 
 from combat_raven.models.combatant import Combatant, CombatantType
@@ -35,3 +36,9 @@ class ParticipantTemplate:
             concentration_limit=self.concentration_limit,
             combatant_type=self.combatant_type,
         )
+
+    def roll_initiative(self, d20=lambda: random.randint(1, 20)) -> int:
+        """
+        Rolls initiative: a d20 plus this template's initiative bonus.
+        """
+        return d20() + self.initiative_bonus
