@@ -9,6 +9,7 @@ from PySide6.QtWidgets import (
     QMessageBox,
     QInputDialog
 )
+from PySide6.QtCore import Qt
 
 from combat_raven.models.combat import Combat
 from combat_raven.models.combatant import Combatant
@@ -55,6 +56,7 @@ class MainWindow(QMainWindow):
         self.combatants_layout = QVBoxLayout(
             self.combatants_container
         )
+        self.combatants_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.combatants_scroll_area.setWidget(
             self.combatants_container
         )
