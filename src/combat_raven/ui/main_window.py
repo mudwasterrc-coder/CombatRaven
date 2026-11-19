@@ -2,6 +2,7 @@ from PySide6.QtWidgets import (
     QMainWindow,
     QWidget,
     QVBoxLayout,
+    QHBoxLayout,
     QLabel,
     QPushButton,
     QScrollArea,
@@ -93,18 +94,25 @@ class MainWindow(QMainWindow):
         self.round_label.setObjectName("roundLabel")
         self.current_turn_label.setObjectName("currentTurnLabel")
 
-        layout.addWidget(self.round_label)
-        layout.addWidget(self.current_turn_label)
+        header_bar = QHBoxLayout()
+        header_bar.addStretch()
+        header_bar.addWidget(self.new_combat_button)
+        header_bar.addWidget(self.open_combat_button)
+        header_bar.addWidget(self.save_combat_button)
+
+        turn_bar = QHBoxLayout()
+        turn_bar.addWidget(self.round_label)
+        turn_bar.addWidget(self.current_turn_label)
+        turn_bar.addStretch()
+        turn_bar.addWidget(self.sort_by_initiative_button)
+        turn_bar.addWidget(self.add_combatant_button)
+        turn_bar.addWidget(self.start_combat_button)
+        turn_bar.addWidget(self.end_turn_button)
+
+        layout.addLayout(header_bar)
+        layout.addLayout(turn_bar)
         layout.addWidget(self.combatants_scroll_area)
-        layout.addWidget(self.sort_by_initiative_button)
-        layout.addWidget(self.add_combatant_button)
-        layout.addWidget(self.save_combat_button)
-        layout.addWidget(self.new_combat_button)
-        layout.addWidget(self.open_combat_button)
-        layout.addWidget(self.start_combat_button)
-        layout.addWidget(self.end_turn_button)
         layout.addWidget(self.status_label)
-        
 
         self.refresh()
 
