@@ -268,13 +268,22 @@ UI bugs: unsaved changes (ADD / END TURN / closeEvent), rename CANCEL, rename ov
   (round, current turn, Sort/Add/Start/End turn). Cards keep their natural height.
 - Cinzel font bundled in assets/fonts (SIL Open Font License, OFL.txt included) and loaded
   by apply_theme; used for the title, round and current turn.
+- Card columns aligned across rows (fixed status width, legendary button keeps its space).
+- Participant library (models): templates remember concentration slots and an initiative
+  bonus (stored in JSON, old files load with defaults); roll_initiative() = d20 + bonus,
+  with an injectable die for tests.
+
+### Decisions
+- Library: one list with Ally/Enemy type. Initiative: the app proposes d20 + bonus and the
+  DM can override it. Several copies at once, numbered (Goblin 1, Goblin 2…), sharing
+  one initiative roll.
 
 ### Tests
-299 passing.
+305 passing.
 
 ### Next
-- Align card columns across rows (fixed widths for status and actions).
-- Participant library (AddParticipantDialog) to add saved PCs and monsters.
+- Library: numbered copies, then the UI (library window, "Add from library" with count and
+  proposed initiative).
 - Edition-friendly conditions: free text plus suggested lists (2014 / 2024), exhaustion counter.
 - Later, before publishing: choose a license, SRD 5.2 attribution, packaging (PyInstaller,
   include assets as package data).
