@@ -131,6 +131,17 @@ class CombatantWidget(QFrame):
         hp_row.addWidget(self.damage_button)
         hp_row.addWidget(self.heal_button)
 
+        # Same widths on every card, so columns line up like a table
+        for label in (
+            self.initiative_label,
+            self.reaction_label,
+            self.legendary_action_label,
+        ):
+            label.setFixedWidth(180)
+
+        policy = self.use_legendary_action_button.sizePolicy()
+        policy.setRetainSizeWhenHidden(True)
+        self.use_legendary_action_button.setSizePolicy(policy)
 
         status_column = QVBoxLayout()
         status_column.addWidget(self.initiative_label)
