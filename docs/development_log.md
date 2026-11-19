@@ -256,3 +256,25 @@ UI bugs: unsaved changes (ADD / END TURN / closeEvent), rename CANCEL, rename ov
 - Participant library (AddParticipantDialog) to add saved PCs and monsters.
 - Edition-friendly conditions: free text plus suggested lists (2014 / 2024), exhaustion counter.
 - Later, before publishing: choose a license, SRD 5.2 attribution, packaging (PyInstaller).
+
+## 2026-11-19
+
+### Fixed
+- Before START no combatant is marked as current; the turn label says "COMBAT NOT STARTED".
+
+### Added
+- Card actions in a single row: Use reaction, Use legendary action, "⋯".
+- Main window: top bar (raven logo, "Combat Raven" title, New/Open/Save) and turn bar
+  (round, current turn, Sort/Add/Start/End turn). Cards keep their natural height.
+- Cinzel font bundled in assets/fonts (SIL Open Font License, OFL.txt included) and loaded
+  by apply_theme; used for the title, round and current turn.
+
+### Tests
+299 passing.
+
+### Next
+- Align card columns across rows (fixed widths for status and actions).
+- Participant library (AddParticipantDialog) to add saved PCs and monsters.
+- Edition-friendly conditions: free text plus suggested lists (2014 / 2024), exhaustion counter.
+- Later, before publishing: choose a license, SRD 5.2 attribution, packaging (PyInstaller,
+  include assets as package data).
