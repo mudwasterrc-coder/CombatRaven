@@ -4,6 +4,7 @@ from uuid import uuid4
 from combat_raven.models.combatant import Combatant 
 from combat_raven.models.effect import Effect
 from combat_raven.models.effect_template import EffectTemplate
+from combat_raven.models.participant_template import ParticipantTemplate
 
 @dataclass
 class Combat:
@@ -233,3 +234,16 @@ class Combat:
         ]
 
         return max(existing_numbers, default=0) + 1
+
+    def add_from_template(self, template: ParticipantTemplate, count: int, initiative: int) -> list[Combatant]:
+        """
+        Adds numbered copies of a template, continuing the existing numbering.
+        """
+        first_number = self.next_copy_number(template.name)
+
+        combatants = template.create_combatants(count=count, initiative=initiative, first_number=first_number)
+
+        for combatant in combatants:
+            self.add_combatant(combatant)
+
+        return combatants

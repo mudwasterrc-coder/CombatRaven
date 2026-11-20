@@ -1,7 +1,8 @@
+from combat_raven.models.participant_template import ParticipantTemplate
 import pytest
 
 from combat_raven.models.combat import Combat
-from combat_raven.models.combatant import Combatant
+from combat_raven.models.combatant import Combatant, CombatantType
 from combat_raven.models.effect import Effect
 from combat_raven.models.effect_template import EffectTemplate
 
@@ -1044,3 +1045,21 @@ def test_combat_finds_next_copy_number():
     combat.add_combatant(Combatant(name="Goblin Boss 5", initiative=14, current_hp=21, max_hp=21))
 
     assert combat.next_copy_number("Goblin") == 3
+
+def test_combat_adds_reinforcements_from_a_template():
+    goblin = ParticipantTemplate(
+        name="Goblin",
+        combatant_type=CombatantType.ENEMY,
+        max_hp=7,
+    )
+    combat = Combat()
+
+    combat.add_from_template(goblin, count=2, initiative=12)
+    combat.add_from_template(goblin, count=2, initiative=9)
+
+    assert [c.name for c in combat.combatants] == [
+        "Goblin 1",
+        "Goblin 2",
+        "Goblin 3",
+        "Goblin 4",
+    ]
