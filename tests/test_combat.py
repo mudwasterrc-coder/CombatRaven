@@ -1063,3 +1063,16 @@ def test_combat_adds_reinforcements_from_a_template():
         "Goblin 3",
         "Goblin 4",
     ]
+
+def test_plain_name_counts_as_the_first_copy():
+    goblin = ParticipantTemplate(
+        name="Goblin",
+        combatant_type=CombatantType.ENEMY,
+        max_hp=7,
+    )
+    combat = Combat()
+
+    combat.add_from_template(goblin, count=1, initiative=12)
+    combat.add_from_template(goblin, count=1, initiative=9)
+
+    assert [c.name for c in combat.combatants] == ["Goblin", "Goblin 2"]

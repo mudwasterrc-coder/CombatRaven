@@ -233,6 +233,9 @@ class Combat:
             if combatant.name.startswith(prefix) and combatant.name[len(prefix):].isdigit()
         ]
 
+        if any(combatant.name == base_name for combatant in self.combatants):
+            existing_numbers.append(1)
+        
         return max(existing_numbers, default=0) + 1
 
     def add_from_template(self, template: ParticipantTemplate, count: int, initiative: int) -> list[Combatant]:
