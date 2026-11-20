@@ -287,3 +287,26 @@ UI bugs: unsaved changes (ADD / END TURN / closeEvent), rename CANCEL, rename ov
 - Edition-friendly conditions: free text plus suggested lists (2014 / 2024), exhaustion counter.
 - Later, before publishing: choose a license, SRD 5.2 attribution, packaging (PyInstaller,
   include assets as package data).
+
+## 2026-11-20
+
+### Fixed
+- roll_initiative() used `from random import random` and crashed with the real die; a new
+  test now covers the default d20 (the injected-die test never ran that path).
+
+### Added
+- Numbered copies: ParticipantTemplate.create_combatants(count, initiative, first_number);
+  a single first copy keeps its plain name.
+- Combat.next_copy_number(base_name) ("Goblin Boss 5" and "Goblinoid 4" don't count;
+  a plain "Goblin" counts as 1) and Combat.add_from_template(template, count, initiative)
+  for reinforcements that continue the numbering.
+
+### Tests
+312 passing.
+
+### Next
+- Library UI: "⋯ → Save to library" on the card, "FROM LIBRARY" button with count and
+  proposed initiative (rerollable, DM can override), later edit/remove templates.
+- Edition-friendly conditions: free text plus suggested lists (2014 / 2024), exhaustion counter.
+- Later, before publishing: choose a license, SRD 5.2 attribution, packaging (PyInstaller,
+  include assets as package data).
