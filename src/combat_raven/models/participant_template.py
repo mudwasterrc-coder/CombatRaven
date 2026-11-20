@@ -43,16 +43,16 @@ class ParticipantTemplate:
         """
         return d20() + self.initiative_bonus
 
-    def create_combatants(self, count: int, initiative: int) -> list[Combatant]:
+    def create_combatants(self, count: int, initiative: int, first_number: int = 1) -> list[Combatant]:
         """
         Creates numbered copies of this template, all sharing one initiative.
         """
-        if count == 1:
+        if count == 1 and first_number == 1:
             return [self.create_combatant(initiative)]
 
         combatants = []
 
-        for number in range(1, count + 1):
+        for number in range(first_number, count + first_number):
             combatant = self.create_combatant(initiative)
             combatant.name = f"{combatant.name} {number}"
             combatants.append(combatant)

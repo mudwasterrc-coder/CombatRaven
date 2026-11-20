@@ -132,3 +132,18 @@ def test_template_single_copy_keeps_its_plain_name():
     combatants = aaron.create_combatants(count=1, initiative=18)
 
     assert [c.name for c in combatants] == ["Aaron"]
+
+def test_template_numbers_copies_from_a_given_number():
+    goblin = ParticipantTemplate(
+        name="Goblin",
+        combatant_type=CombatantType.ENEMY,
+        max_hp=7,
+    )
+
+    reinforcements = goblin.create_combatants(count=2, initiative=9, first_number=3)
+
+    assert [g.name for g in reinforcements] == ["Goblin 3", "Goblin 4"]
+
+    lone = goblin.create_combatants(count=1, initiative=9, first_number=3)
+
+    assert [g.name for g in lone] == ["Goblin 3"]
