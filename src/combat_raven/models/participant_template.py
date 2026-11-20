@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from random import random
+import random
 from uuid import uuid4
 
 from combat_raven.models.combatant import Combatant, CombatantType

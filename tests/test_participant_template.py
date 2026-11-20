@@ -96,3 +96,15 @@ def test_template_rolls_initiative_with_its_bonus():
     loaded_die = lambda: 12
 
     assert goblin.roll_initiative(d20=loaded_die) == 14
+
+def test_template_rolls_a_real_d20_by_default():
+    goblin = ParticipantTemplate(
+        name="Goblin",
+        combatant_type=CombatantType.ENEMY,
+        max_hp=7,
+        initiative_bonus=2,
+    )
+
+    rolls = [goblin.roll_initiative() for _ in range(200)]
+
+    assert all(3 <= roll <= 22 for roll in rolls)
