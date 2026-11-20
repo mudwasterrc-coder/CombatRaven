@@ -42,3 +42,16 @@ class ParticipantTemplate:
         Rolls initiative: a d20 plus this template's initiative bonus.
         """
         return d20() + self.initiative_bonus
+
+    def create_combatants(self, count: int, initiative: int) -> list[Combatant]:
+        """
+        Creates numbered copies of this template, all sharing one initiative.
+        """
+        combatants = []
+
+        for number in range(1, count + 1):
+            combatant = self.create_combatant(initiative)
+            combatant.name = f"{combatant.name} {number}"
+            combatants.append(combatant)
+
+        return combatants

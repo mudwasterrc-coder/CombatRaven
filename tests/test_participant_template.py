@@ -108,3 +108,16 @@ def test_template_rolls_a_real_d20_by_default():
     rolls = [goblin.roll_initiative() for _ in range(200)]
 
     assert all(3 <= roll <= 22 for roll in rolls)
+
+def test_template_creates_numbered_copies():
+    goblin = ParticipantTemplate(
+        name="Goblin",
+        combatant_type=CombatantType.ENEMY,
+        max_hp=7,
+    )
+
+    goblins = goblin.create_combatants(count=3, initiative=12)
+
+    assert [g.name for g in goblins] == ["Goblin 1", "Goblin 2", "Goblin 3"]
+    assert all(g.initiative == 12 for g in goblins)
+    assert len({g.id for g in goblins}) == 3
