@@ -47,6 +47,9 @@ class ParticipantTemplate:
         """
         Creates numbered copies of this template, all sharing one initiative.
         """
+        if count == 1:
+            return [self.create_combatant(initiative)]
+
         combatants = []
 
         for number in range(1, count + 1):

@@ -121,3 +121,14 @@ def test_template_creates_numbered_copies():
     assert [g.name for g in goblins] == ["Goblin 1", "Goblin 2", "Goblin 3"]
     assert all(g.initiative == 12 for g in goblins)
     assert len({g.id for g in goblins}) == 3
+
+def test_template_single_copy_keeps_its_plain_name():
+    aaron = ParticipantTemplate(
+        name="Aaron",
+        combatant_type=CombatantType.ALLY,
+        max_hp=87,
+    )
+
+    combatants = aaron.create_combatants(count=1, initiative=18)
+
+    assert [c.name for c in combatants] == ["Aaron"]
