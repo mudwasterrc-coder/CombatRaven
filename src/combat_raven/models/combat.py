@@ -218,3 +218,18 @@ class Combat:
         names_by_id = self.concentrations_of(caster)
 
         return sorted(names_by_id.values())
+
+    def next_copy_number(self, base_name: str) -> int:
+        """
+        Returns the next copy number for a given participant template.
+        """
+        prefix = f"{base_name} "
+
+
+        existing_numbers = [
+            int(combatant.name[len(prefix):])
+            for combatant in self.combatants
+            if combatant.name.startswith(prefix) and combatant.name[len(prefix):].isdigit()
+        ]
+
+        return max(existing_numbers, default=0) + 1

@@ -1032,3 +1032,15 @@ def test_legendary_actions_reset_at_the_start_of_the_creatures_own_turn():
     combat.next_turn()                  # Dragon's turn again
 
     assert dragon.legendary_actions_used == 0
+
+def test_combat_finds_next_copy_number():
+    combat = Combat()
+
+    assert combat.next_copy_number("Goblin") == 1
+
+    combat.add_combatant(Combatant(name="Goblin 1", initiative=12, current_hp=7, max_hp=7))
+    combat.add_combatant(Combatant(name="Goblin 2", initiative=12, current_hp=7, max_hp=7))
+    combat.add_combatant(Combatant(name="Goblin Boss", initiative=14, current_hp=21, max_hp=21))
+    combat.add_combatant(Combatant(name="Goblin Boss 5", initiative=14, current_hp=21, max_hp=21))
+
+    assert combat.next_copy_number("Goblin") == 3
